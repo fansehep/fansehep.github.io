@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/1.http_basic/</url>
+    <title>1.HTTP_基础</title>
+    <url>/2022/04/30/http/1.http_basic/</url>
     <content><![CDATA[<h2 id="Http-介绍"><a href="#Http-介绍" class="headerlink" title="Http 介绍"></a>Http 介绍</h2><h4 id="Tcp-x2F-ip-的分层管理"><a href="#Tcp-x2F-ip-的分层管理" class="headerlink" title="Tcp &#x2F; ip 的分层管理"></a>Tcp &#x2F; ip 的分层管理</h4><ul>
 <li><ol>
 <li><p>应用层决定了向用户提供应用服务时的通信的活动</p>
@@ -69,8 +69,8 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/9.%E5%9F%BA%E4%BA%8EHTTP%E7%9A%84%E5%8A%9F%E8%83%BD%E8%BF%BD%E5%8A%A0%E5%8D%8F%E8%AE%AE/</url>
+    <title>9.基于HTTP的功能追加协议</title>
+    <url>/2022/04/30/http/9.%E5%9F%BA%E4%BA%8EHTTP%E7%9A%84%E5%8A%9F%E8%83%BD%E8%BF%BD%E5%8A%A0%E5%8D%8F%E8%AE%AE/</url>
     <content><![CDATA[<h4 id="基于-HTTP-的功能追加协议"><a href="#基于-HTTP-的功能追加协议" class="headerlink" title="基于 HTTP 的功能追加协议"></a>基于 HTTP 的功能追加协议</h4><ul>
 <li>Google 在 2010 年发布了 SPDY <ul>
 <li>主要目的是解决 HTTP 性能瓶颈。</li>
@@ -135,8 +135,8 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/HTTP%E5%A4%B4%E9%83%A8/</url>
+    <title>HTTP 头部</title>
+    <url>/2022/04/30/http/HTTP%E5%A4%B4%E9%83%A8/</url>
     <content><![CDATA[<h4 id="HTTP-首部"><a href="#HTTP-首部" class="headerlink" title="HTTP 首部"></a>HTTP 首部</h4><p>HTTP 报文结构</p>
 <p><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/2021-12-31%2022-26-25%20%E7%9A%84%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"></p>
 <p>报文首部由几个字段构成</p>
@@ -329,8 +329,8 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/Http%E6%8A%A5%E6%96%87%E7%9A%84Http%E4%BF%A1%E6%81%AF/</url>
+    <title>HTTP 报文的HTTP信息</title>
+    <url>/2022/04/30/http/Http%E6%8A%A5%E6%96%87%E7%9A%84Http%E4%BF%A1%E6%81%AF/</url>
     <content><![CDATA[<h4 id="HTTP-报文内的-HTTP-信息"><a href="#HTTP-报文内的-HTTP-信息" class="headerlink" title="HTTP 报文内的 HTTP 信息"></a>HTTP 报文内的 HTTP 信息</h4><ul>
 <li>HTTP 报文<ul>
 <li>用于 HTTP 协议交互的信息被称为 HTTP 报文。<ul>
@@ -428,9 +428,9 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h4 id="Http-协议结构-x2F-http-version-x3D-1-1"><a href="#Http-协议结构-x2F-http-version-x3D-1-1" class="headerlink" title="Http 协议结构 &#x2F; http - version &#x3D; 1.1"></a>Http 协议结构 &#x2F; http - version &#x3D; 1.1</h4><ul>
+    <title>Web及网络基础</title>
+    <url>/2022/04/30/http/web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h3 id="Http-协议结构-x2F-http-version-x3D-1-1"><a href="#Http-协议结构-x2F-http-version-x3D-1-1" class="headerlink" title="Http 协议结构 &#x2F; http - version &#x3D; 1.1"></a>Http 协议结构 &#x2F; http - version &#x3D; 1.1</h3><ul>
 <li><p>http 协议几乎都使用的是 c &#x2F; s 模型</p>
 </li>
 <li><p>通过请求和响应的交换达成通信</p>
@@ -491,8 +491,8 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <title>与HTTP 协作的 Web 服务器</title>
+    <url>/2022/04/30/http/%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h4 id="与HTTP-协作的-Web-服务器"><a href="#与HTTP-协作的-Web-服务器" class="headerlink" title="与HTTP 协作的 Web 服务器"></a>与HTTP 协作的 Web 服务器</h4><ul>
 <li>用单台虚拟主体实现多个域名<ul>
 <li>一台服务器上往往搭载多个 http 服务。</li>
@@ -580,8 +580,8 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/%E7%A1%AE%E4%BF%9DWeb%E5%AE%89%E5%85%A8%E7%9A%84HTTPS/</url>
+    <title>确保web安全的 HTTPS</title>
+    <url>/2022/04/30/http/%E7%A1%AE%E4%BF%9DWeb%E5%AE%89%E5%85%A8%E7%9A%84HTTPS/</url>
     <content><![CDATA[<h4 id="确保Web安全的HTTPS"><a href="#确保Web安全的HTTPS" class="headerlink" title="确保Web安全的HTTPS"></a>确保Web安全的HTTPS</h4><ul>
 <li><p>在HTTP协议中，有可能存在信息窃听或身份伪装等安全问题。</p>
 </li>
@@ -773,8 +773,8 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/http/%E7%A1%AE%E8%AE%A4%E8%AE%BF%E9%97%AE%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD%E7%9A%84%E8%AE%A4%E8%AF%81/</url>
+    <title>确认访问用户身份的认证</title>
+    <url>/2022/04/30/http/%E7%A1%AE%E8%AE%A4%E8%AE%BF%E9%97%AE%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD%E7%9A%84%E8%AE%A4%E8%AF%81/</url>
     <content><![CDATA[<h4 id="确认访问用户身份的认证"><a href="#确认访问用户身份的认证" class="headerlink" title="确认访问用户身份的认证"></a>确认访问用户身份的认证</h4><ul>
 <li>何为认证 ?<ul>
 <li>密码 : 只有本人才会知道的字符串信息</li>
@@ -790,6 +790,158 @@
 <li>SSL 客户端认证</li>
 <li>FormBase 认证 ( 基于表单认证 )</li>
 <li>此处省略一些内容 ，详情请见本书 P 168</li>
+</ul>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>hello</title>
+    <url>/2022/04/30/hello/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>HTTP 状态玛</title>
+    <url>/2022/04/30/http/HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/</url>
+    <content><![CDATA[<h3 id="返回结果的-HTTP-状态码"><a href="#返回结果的-HTTP-状态码" class="headerlink" title="返回结果的 HTTP 状态码"></a>返回结果的 HTTP 状态码</h3><ul>
+<li><p>HTTP 状态码 负责表示 客户端 HTTP 请求的返回结果。</p>
+</li>
+<li><p>标记服务器端的处理是否正常，通知出现的错误等工作。</p>
+</li>
+<li><p>状态码如 200OK ,由 3 位 数字 和 原因短语组成</p>
+<ul>
+<li><p>第一个数字表示响应类别，后两位无分类。</p>
+</li>
+<li><table>
+<thead>
+<tr>
+<th align="center">数字</th>
+<th align="left">类别</th>
+<th>原因短语</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1 XX</td>
+<td align="left">Informational ( 信息性状态码)</td>
+<td>接受的请求正在处理</td>
+</tr>
+<tr>
+<td align="center">2XX</td>
+<td align="left">Success (成功状态码)</td>
+<td>请求正常处理完毕</td>
+</tr>
+<tr>
+<td align="center">3XX</td>
+<td align="left">Redirection (重定向状态码)</td>
+<td>需要进行附加操作以完成请求</td>
+</tr>
+<tr>
+<td align="center">4XX</td>
+<td align="left">Client Error (客户端错误状态码)</td>
+<td>服务器无法处理请求</td>
+</tr>
+<tr>
+<td align="center">5XX</td>
+<td align="left">Server Error (服务器错误状态码)</td>
+<td>服务器处理请求出错</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li><p>仅仅记录在 RFC2616 的 HTTP 状态码 就有 40 种。再加上。。。(乱七八糟的 )种类繁多。</p>
+<ul>
+<li>这里我们介绍一下具有代表性的 14 个状态码</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>200 OK	</p>
+<ul>
+<li>表示从客户端发送来的请求在服务器端被正常处理了</li>
+</ul>
+</li>
+<li><p>204 No Content</p>
+<ul>
+<li>请求处理成功，但没有资源返回。<ul>
+<li>比如当从浏览器发出请求处理后，返回 204 响应，那么浏览器显示的页面不发生更新。</li>
+<li>一般只需要在客户端往服务器发送信息，而对客户端不需要发送信息内容的情况下使用。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>206 Partial Content</p>
+<ul>
+<li>该状态码表示客户端进行了范围请求，而服务器成功执行了这部分的 GET 请求。</li>
+<li>响应报文中包含由 Content-Range 指定范围的实体内容</li>
+</ul>
+</li>
+</ul>
+<p>3XX重定向</p>
+<p>3XX 响应结果表明浏览器需要执行某些特殊的处理以正确处理请求</p>
+<ul>
+<li>301 Moved Permanently<ul>
+<li>永久性重定向。<ul>
+<li>该状态码表示请求的资源已被分配了新的 URI , 以后应使用资源现在所指的 URI 。也就是说，如果已经把资源对应的 URI 保存为书签了。这时应该按照 Location 首部字段提示的 URI 重新保存。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>302 Found<ul>
+<li>暂时性重定向。该状态码表示请求的资源已经被分配了新的 URI , 希望用户 ( 本次 )能使用新的 URI 访问。</li>
+</ul>
+</li>
+<li>303 See Other<ul>
+<li>该状态码表示由于请求对应的资源存在着另一个 URI , 应使用 GET 方法获取请求的资源。</li>
+<li>303 和 302 有着相同的功能。但是 303 明确表示客户端应当采用 GET 方法获取资源。</li>
+<li>当 301 ，302，303 响应状态码返回时，几乎所有的浏览器都会把 POST 改成 GET.并删除请求报文内的主体。之后请求会自动再次发送。</li>
+</ul>
+</li>
+<li>304 Not Modified<ul>
+<li>该状态码表示客户端发送附带条件的请求时，服务器允许请求访问资源，但未满足条件的情况。304 状态码返回时，不包含任何响应的主体部分。</li>
+</ul>
+</li>
+<li>307  Temporary Redirect<ul>
+<li>临时重定向。</li>
+</ul>
+</li>
+</ul>
+<p>4XX 客户端错误</p>
+<ul>
+<li>400 Bad request<ul>
+<li>表示该状态码在表示请求报文中存在语法错误。</li>
+<li>当错误发生时，需修改请求的内容后再次发送请求。</li>
+<li>此外，浏览器会像 200 OK 一样对待该状态码。</li>
+</ul>
+</li>
+<li>401 Unauthorized<ul>
+<li>该状态码表示发送的请求需要通过 HTTP 认证。( BASIC 认证，DIGEST 认证)的认证信息。</li>
+<li>若之前已经有过 1 次请求。则表示用户认证失败。</li>
+</ul>
+</li>
+<li>403 Forbidden<ul>
+<li>表示对请求资源的访问被服务器所拒绝了。</li>
+<li>服务器并没有给出拒绝的详细理由，想做说明的话，实体部分的主体部分做说明即可。</li>
+<li>未获得文件系统的访问授权，访问权限出现某些问题 ( 从未授权的发送源 IP 地址试图访问 ) 等列举的情况都可能是发生 403 的原因。</li>
+</ul>
+</li>
+<li>404 NOt Found<ul>
+<li>表明服务器上无法找到请求的资源。<ul>
+<li>除此以外，还可以在服务端拒绝请求而且不想说明理由时使用。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>5XX服务器错误</p>
+<ul>
+<li>500 Internal Server Error	<ul>
+<li>表示服务器端在执行请求时发生了错误，也可能是 Web应用存在的 bug 或某些临时的故障。</li>
+</ul>
+</li>
+<li>503 Service Unavailable<ul>
+<li>该状态码表示服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。</li>
 </ul>
 </li>
 </ul>
