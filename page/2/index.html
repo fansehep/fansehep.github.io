@@ -50,7 +50,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2022-05-01 12:41:24'
+  postUpdate: '2022-05-01 12:56:48'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -139,153 +139,167 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><hr/></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/LuaFunction/" title="5. Lua Function">5. Lua Function</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">LuaFunction
-Lua 支持多返回值
-
-&#96;&#96;&#96;luareturn value_1, value_2, … 1234567- 在获取函数多返回值时，应该用特殊的方式获得。  - ```lua    function too0 () end    function too1 () return &quot;a&quot; end    function too2 () return &quot;a&quot;, &quot;b&quot; end
-
-
-x, y = foo2()	-- x = &quot;a&quot;, y = &quot;b&quot;
-x = foo2()		-- x = &quot;a&quot;, &quot;b&quot; 被丢弃
-x, y, z = 10, foo2() -- x = 10, y = &quot;a&quot;, z = &quot;b&quot;
-123456789- 如果一个函数无返回值或者返回值个数不够，那么Lua语言将会使用nil来补充缺失的值。- 表构造器会完整地的接受函数调用的所有返回值。  ```l ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/StrandTableLibrary/" title="6. Lua Table">6. Lua Table</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">表标准库
-table.insert() 向序列中的指定位置插入一个元素。其他元素依次后移动
-
-&#96;&#96;&#96;luatable.insert(tablename, index, value)t &#x3D; {10, 20, 30}table.insert(t, 1, 15)print(t) – t &#x3D; {15, 10, 20, 30}12345  - table.remove() 则删除并返回指定位置的元素  - ```lua    table.remove(tablename, index)
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Server/%E8%BF%9B%E7%A8%8B%E6%B1%A0/" title="3. 进程池">3. 进程池</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Server/">Server</a></span></div><div class="content">
+池的结构就是会预分配一些资源，以减少使用时再分配的时间的消耗。
+主进程使用某种算法来主动选择子进程。最简单，最常用的算法是随机算法和Round Robin(轮流选取算法)，还有很多算法哦
+主进程和所有子进程通过一个工作队列来同步。子进程都睡眠在该工作队列上。
 
 
-exercise
-
-local sunday = &quot;monday&quot;
-local monday = &quot;sunday&quot;
-local t = &#123;sunday = &quot;monday&quot;, [sunday] = monday&#125;
-print(t.sunday, t[sunday], t[t.sunday])
--- --&gt; monday sunday sunday
-12345678910- ```l ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/string/" title="8. Lua String">8. Lua String</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">String
-lua 使用 8 个bit 来存储 char 类型。
-
-string.gsub(stringname, target name, needname);
-
-string.gsub 能对目标选中字符串进行更改。
-1234a = &quot;one string&quot;b = string.gsub(a, &quot;one&quot;, &quot;another&quot;)print(b)-- b = another string
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Server/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/" title="2. 高性能服务器程序框架">2. 高性能服务器程序框架</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Server/">Server</a></span></div><div class="content">
+同步 IO 模型就是要求用户自己去把内核区的数据读出来，异步 IO 就是由内核帮助你完成 IO 操作。
+同步IO
+用户可以直接对 IO 执行读写操作，这些操作告诉内核用户读写缓冲区的位置，以及 IO 操作完成之后内核通知应用程序的方式。
+也就是说，同步 IO 模型要求用户代码自己执行 IO 操作，将数据从内核缓冲区读到用户缓冲区，或将数据从用户缓冲区写入到内核缓冲区。
 
 
-
-取字符串长度
-12print(#a)-- #a = 10 without &#x27;\n&#x27;
-
-
-..
-
-.. 用来连接字符串。如果连接过程中存在数字，那么就会将数字转化为字符串。
-1234a = &quot;123&quot;b = &quot;456&quot;print(a .. b)-- a .. b = &quot;123456&quot;
-
-lua 中，注意，字符串是一个不可变的量(常量)
+异步IO
+而异步IO机制则有内核来执行 IO 操作，数据在内核缓冲区和用户缓冲区的移动是由内核在后台完成的。
 
 
-
-lua 支持使用 ‘ ‘ or “ “ 来声明字符串。但双引号声明的字符串中出现单引号时可以不用转义。
-
-对于长字符串 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/string_2UTF8/" title="7. Lua String">7. Lua String</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">UTF8 字符库
-函数 utf8.char() 和 utf8.codepoint() 在 utf8 环境下等价于 string.char() 和 string.byte()
-这个具体我就不研究了
-
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/table/" title="9. Lua Table">9. Lua Table</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">Table
-Table 是 lua 语言 最主要 唯一的数据结构。
-
-使用 表 lua 可以用一种简单的统一且高效的方式表示数组集合，记录其他数据结构
-
-lua 语言也可以使用表来表示 包 ( package ) 和其他对象
-
-当调用 math.sin() 时，我们可能认为是调用了 math库的sin函数，但实际上对于 lua语言来说，其实际含义是 “ 以字符串 sin “ 为健值来检索表 math
-
-我们使用 构造器表达式来创建表 ( constructor expression ) 创建表
-
-a = &#123; &#125;
-12345678910111213141516171819202122232425262728  - 表永远是匿名的，表本身和保存表的变量之间没有固定的关系  - 对一个表而言，当程序中不再有指向他的引用时，垃圾收集器会最终删除这个表并重用其占用的内存。- 注意  a.x 和 a[x] 的区别  - 实际上， a.x 表示 a[ &quot;x&quot; ], 即由字符串 &quot;x&quot; 索引的表  - a[x] 则表示由变量 x 对应的值索引 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" title="1. Lua 入门_1">1. Lua 入门_1</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">入门学习
-Lua 是一种脚本语言，目的是解决繁琐的 c&#x2F;c++程序更新问题，并在此之上损失少量性能却换来更高效的开发。
-
-作为一门解释型语言，lua 的解释器代码短的可怜。其解释器为 #!&#x2F;bin&#x2F;lua
-
-lua 注释
-12-- 单行注释--[[  ]] 多行注释
-
-Lua 中，全局变量无须声明即可使用，使用未经初始化过的全局变量也不会导致错误。但结果是 nil
-
-同时，如果将nil赋值给某一个全局变量时，lua会回收该变量。
+总结
+同步 IO 是向用户程序通知的是 IO 就绪事件
+异步 IO 就是向用户程序通知的是 IO 完成事件Reactor 模式
 
 
-nil
-
-nil 表示无效值 non-value
-
-
-Boolean
-
-将 Boolen 值 false 和 nil 外的所有其他值均视为真。
+Reactor ： 要求主线程( I&#x2F;O 处理单元，下同 ) 只负责监听文件描述符上是否有事件发生，有的话就立即将该事件通知工作线程，除此以外，主线程不做任何其他的工作。读写数据，接受新的连接，以及处理客户请求均在工作线程中完成。
+详情请见本书 P128Proactor
 
 
-and &amp;&amp;   
+Proactor : proactor 模式则要求所有的 IO 操作都将给主线程和内核完成 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Server/%E9%AB%98%E7%BA%A7%20I%20_%20O%20%E5%87%BD%E6%95%B0/" title="1. 高级 IO 函数">1. 高级 IO 函数</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Server/">Server</a></span></div><div class="content">
+1.pipe12#include &lt;unistd.h&gt;int pipe( int fd[2] );
+pipe函数会创建一个管道，我们规定数据只能从 fd[1] 中写入，只能从 fd[0] 中读出。12int socketpair(int domain,int type,int protocol,int fd[2]);//成功时返回0，失败时返回1。
+2.dup and dup212int dup(int file_descriptor);int dup2(int file_descriptor_one,int file_descriptor_two);
+dup函数会创建一个新的文件描述，该文件描述符和原文件描述符指向相同的文件，管道，或者网络连接，dup总是返回系统中最小的可用文件描述符
+dup2和dup类似，但他将返回第一个不小于file_descriptor_one的整数值
+dup和dup2函数调用失败就会返回-1并设置errno
+3.readv 和 writev
+readv函数会将数据从文件描述符读到分散的内存块中，writev则会将多块分散的内存数据一起写入文件描 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/DistributedSystem/GFS/" title="Google FileSystem">Google FileSystem</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></span></div><div class="content">Google FileSystem 总结
+谷歌文件系统是谷歌为了支持自身大流量的服务所定制的文件系统。
 
-or ||
-
-type 可以获取到一个值的类型，该返回值是 string类型，可以从 type( type( x) )  考证。
+引言 :
 
 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0_2/" title="2. Lua 入门_2">2. Lua 入门_2</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">入门学习_2
-math library
+GFS 由成千上百台廉价设备组成的存储节点组成。以及各种bug
+文件比传统标准更大，数GB大小的文件是十分常见的。
+大部分文件会以”append”的方式来进行变更，而非 “overwrite”. 
+在实际场景中，几乎不存在对文件的随机写入。文件一旦被写入，即为只读的。且通常仅被顺序读取。
 
-random number
 
-math.random 用来生成伪随机数，
-
-不带参数调用，返回 [0, 1) 范围内均匀分布的伪随机实数。
-
-整型时，返回一个在[1, n] 范围内的伪随机整数
-
-两个整型时，[left, right]
-
-randomseed 设置伪随机数种子，系统默认以 1 为种子初始化伪随机数发生器。通常调用
-1math.randomseed(os.time())
+同时设计应用程序和文件系统API便于提高整个系统的灵活性。
+google 放宽了GFS 的一致性协议，从而大幅度简化了系统。
 
 
 
 
-去整函数
-
-floor 向负无穷取整
-ceil 向正无穷去整
-modf 向 0 去整
 
 
-strand lua 使用 64 bit 保存 int类型。64 bit 保存 双精度。
+设计概述
+
+…
 
 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F(%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D)/" title="3. Lua regax">3. Lua regax</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">
-本章详见本书 lua 程序设计 P123 该章
+接口
+
+…
 
 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E9%97%AD%E5%8C%85/" title="10. Lua Function 闭包">10. Lua Function 闭包</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">闭包
-在lua中，所有的函数都是匿名的，例如 math.sin 只是 math.sin 这个变量指向sin该函数
-1234a = &#123;p = print&#125;a.p(&quot;hello, world!&quot;)math.sin = a.pmath.sin(10, 20) -- 10 20
-
-也就是说，函数也属于第一类值，
+架构
 
 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/EPOLL/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">epoll
-epoll是linux下特有的 IO 复用函数，epoll使用一组函数完成任务，而不是单个函数。
-epoll会将用户关心的文件描述符上的事件放在内核中的一个事件表中。
-但是epoll需要使用一个额外的文件描述符，来唯一标识内核中的这个事件表。该文件描述符由 epoll_create 创建
-epoll_create12#include &lt;sys/epoll.h&gt;int epoll_create ( int size );
-size 参数我们一般认为无效，大概告诉内核这个事件表需要多大。该函数的返回的文件描述符将用作其他所有epoll系统系统调用的第一个参数。
-epoll_ctl1int epoll_ctl(int epfd,int op,int fd,struct epoll_event* event);
-epfd 表示需要操作的文件描述符
-该函数成功返回 0 ，失败返回 -1 并且设置 errno
-op 的选项123EPOLL_CTL_ADD		//在事件表中注册fd上的事件EPOLL_CTL_MOD		//修改fd上的注册事件EPOLL_CTL_DEL		// ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+文件被划分为了多个固定大小的chunk,  每个chunk 被一个不可变的全局唯一的 64 位 chunk handle 唯一标识。chunk handle 在chunk被创建时由主节点分配。chunkserver 将 chunk 作为 linux 文件存储到本地磁盘中。通过 chunk handle 和 byte range 字节范围 来确定需要被读写的chunk 和 chunk 中的数据。为了可 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/DistributedSystem/MapReduce/" title="Google MapReduce">Google MapReduce</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></span></div><div class="content">MapReduce
+MapReduce 是 Google 于 2004 年提出的一种分布式任务框架。
+
+论文链接 chrome-extension:&#x2F;&#x2F;bocbaocobfecmglnmeaeppambideimao&#x2F;pdf&#x2F;viewer.html?file&#x3D;http%3A%2F%2Fnil.csail.mit.edu%2F6.824%2F2020%2Fpapers%2Fmapreduce.pdf
+
+
+其主要思想则是 : 
+
+map(k1 , v1)   —-&gt; list(k2, v2)
+reduce(k2, list(v2)) —-&gt; list(v2)
+
+
+我们将多个任务不在单机执行，将其分配到多个worker中。
+
+在这些分配的过程，我们发现他们满足某种&lt;key, value&gt; 键值对的关系。
+但是由于在多机运行，我们必须要考虑一些同步的问题。
+
+
+我在 6.824 中的实现
+
+6.824 已经帮助我实现了大致框架，并且已经给了我 RPC 调用的方法。
+所以我只需要实现 leader 和 多个 worker  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E6%80%9D%E8%80%83%E9%A2%98--%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%EF%BC%8C%E7%BA%A4%E7%A8%8B/" title="5.进程">5.进程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">1.为什么不用类似 fork 的方法创建线程呢?
+答 : fork创建进程会复制很多父进程的资源，其实在我们实际编程之中，很多数据其实是没必要复制的，比如你的一个线程仅仅需要exec一个程序，很多东西复制就是浪费。2.一个多线程的进程使用fork生成了一个新进程，新进程中会存在几个线程 ？
+答 : 新进程只会存在一个线程，而新进程里的线程会复制调用它的线程。并且子进程会自动继承父进程中互斥锁( 条件变量 之类的 )。也就是说，父进程中已经被加锁的互斥锁在子进程中其实也是被锁住的。3.fork失败的原因
+答 : 1. 当前操作系统进程资源达到上限，无法创建更多的进程。例如文件描述符，网络套接字，进程数量过多，内存资源不够充分。  2. 你的程序或者操作系统出现了一些不可描述的错误。4.参考以上的一些进程创建方式，请设计出一种比较好的优化策略123456789int fan_fork(int flags, const char* path);/*fan_fork的flags参数用于指定需要创建进程的一些选项	F_UN_CLONE  不复制父进程的虚拟地址内存	F_CH_FIRST  子进程 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%20(1)/" title="1.操作系统">1.操作系统</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">
+一 操作系统的抽象需求
+1.服务应用
+2.管理应用
+
+
+二  具体服务
+1.为应用提供计算资源的抽象
+CPU 进程&#x2F;线程
+内存 虚拟内存
+I &#x2F; O 设备
+
+
+2.为应用提供线程间的同步
+操作系统可以实现自己的同步原语 spinlock
+操作系统提供了更高效的同步原语 与线程切换配合 pthread_mutex
+
+
+3.为应用提供进程间的通信
+应用可以利用网络进行进程的通信 
+操作系统提供了更高效的本地通信机制 pipe 
+shell pipe 的例子
+
+
+
+
+
+
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E7%AE%A1%E7%90%86%20(1)/" title="6.内存分配">6.内存分配</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">物理内存
+物理内存分配设计有两个重要的评价维度，一方面，物理内存分配器需要追求更高的内存资源利用率，即尽可能减少资源浪费。这里先介绍内存碎片的概念，
+内存脆片 : 内存碎片指的是无法被利用的内存，其直接导致内存资源利用率的下降。
+如何减少内存碎片是内存分配器设计者最关心的一个问题。内存碎片又被分为内部碎片 ( external fragmentation ) 和外部碎片 ( internal fragmentation )
+一种解决方式是，将物理内存以固定大小( 能够满足最大分配请求 ）划分为若干块，然后每次用一个块服务一个分配请求。如此一来，外部碎片的问题看似迎刃而解，但又会导致严重内部碎片问题。例如，我分配的内存大于一个应用程序所需要的内存。
+同时，物理内存分配器要追求更好的性能，主要是尽可能降低分配延迟和节约CPU资源，通过精密的算法细致地解决碎片问题。
+如果通过精密的算法细致的解决碎片问题固然能够有效的提高内存资源利用率，但却可能带来高昂的性能开销。
+
+
+
+
+伙伴系统伙伴系统( buddy system ) 在现代操作系统中被广泛地用于分配连续的物理内存页。其基本思想就是将物理 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/" title="7. 纤程">7. 纤程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">纤程由于主流的操作系统都采取一对一的线程模型。用户态线程和内核态线程具有一对一的关系。可以认为用户态线程的执行几乎完全收到操作系统调度器的管理。但是随着计算机的发展，应用程序也变得越来越复杂，在这些复杂的应用程序中，每个线程各司其职,有的负责计算，有的负责网络通信，有的大量读写内存。与操作系统调度器相比，应用程序对线程的语义和执行状态更加了解，因此可能做出更好的调度决策。此外用户态线程更利于提高整个程序的可扩展性。在这样的背景下，操作系统开始提供更多对用户态线程，即纤程的支持。
+对纤程的需求经典例子 生产者消费者模型
+生产者负责”生产“数据，即生成一些用于处理的数据；消费者则负责”消费“数据，就是处理生产者生成的数据。
+Example
+现在假设一个进程中拥有两个线程，一个生产者，一个消费者，生产者在共享内存中写入数据，消费者从内存中使用。在线程的一次切换需要一次上下文切换( 即生产者到消费者 ),才能完成数据处理。但是在真正的服务器上时，一台计算机跑的程序上千个，调度器并不知道你这两个线程拥有生产者消费者这种关系。有时候并不总是优先生产者开始调度。而且消费者可能需要经历很长的一部分时间 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/" title="8. 线程">8. 线程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">引言 : 在早期操作系统中，进程就是操作系统用来管理运行程序的最小单位。随着电子技术的发展，计算机拥有了更多的 CPU 核心，程序的可并行度提高，但是进程这层抽象又显得过于笨重。
+
+创建进程的开销太大了，
+1.创建独立的地址空间.
+
+载入数据和代码段，初始化堆栈等等
+
+
+
+即使调用 fork之类的接口创建进程，那么也需要大量的复制操作。
+
+
+
+
+由于单个进程彼此独立，各自拥有自己的虚拟地址空间，在进程间进行数据共享比较麻烦。传统的共享虚拟页( 粒度较粗 )  和  进程间通信 (管道，本地套接字，信号，内存映射文件(mmap) )这些开销都太高，
+所以研究人员就在进程内部添加可独立执行的单元，他们共享进程间的地址空间，但又各自保存运行时所需要的状态(上下文切换 )，这就是线程。然后线程便取代进程成为操作系统调度和管理程序的最小单位。线程也继承了操作系统为进程定义的部分概念。
+
+
+多线程的地址空间布局
+
+**  分离的内核栈与用户栈**
+由于每个线程执行相对独立，进程为每个线程都准备了不同的栈，供他们存放临时数据。在内核中，每个线程也有对应的内核栈。当现成饭切换到内核中执行时，他的栈指针 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/3/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="fas fa-folder-open"></i>
             <span>分类</span>
             
             </div>
             <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Lua-language/"><span class="card-category-list-name">Lua language</span><span class="card-category-list-count">10</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/http-%E5%8D%8F%E8%AE%AE/"><span class="card-category-list-name">http 协议</span><span class="card-category-list-count">9</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/HTTP/" style="font-size: 1.1em; color: #999">HTTP</a> <a href="/tags/Lua/" style="font-size: 1.5em; color: #99a9bf">Lua</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">19</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">15</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">34</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">17.5k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-05-01T04:41:24.058Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Lua-language/"><span class="card-category-list-name">Lua language</span><span class="card-category-list-count">10</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/OS/"><span class="card-category-list-name">OS</span><span class="card-category-list-count">11</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Server/"><span class="card-category-list-name">Server</span><span class="card-category-list-count">14</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/http-%E5%8D%8F%E8%AE%AE/"><span class="card-category-list-name">http 协议</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"><span class="card-category-list-name">分布式</span><span class="card-category-list-count">2</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/HTTP/" style="font-size: 1.2em; color: #999da3">HTTP</a> <a href="/tags/Lua/" style="font-size: 1.3em; color: #99a1ac">Lua</a> <a href="/tags/OS/" style="font-size: 1.4em; color: #99a5b6">OS</a> <a href="/tags/Server/" style="font-size: 1.5em; color: #99a9bf">Server</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.1em; color: #999">分布式</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">36</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/1998/12/"><span class="card-archive-list-date">十二月 1998</span><span class="card-archive-list-count">10</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">47</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">44.2k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-05-01T04:56:48.414Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

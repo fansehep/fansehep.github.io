@@ -50,7 +50,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2022-05-01 12:41:24'
+  postUpdate: '2022-05-01 12:56:48'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -139,145 +139,153 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><hr/></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/I%20%20_%20O%20%E5%A4%8D%E7%94%A8%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content"></div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/Poll/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">Poll
-select 已经可以处理多个 socket了，但 Poll 也可以实现同样的功能, 且调用方法十分简单
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/" title="10. 虚拟内存(2)">10. 虚拟内存(2)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">页替换策略1234当我们需要分配物理页时，若空闲的物理页已经用完或者小于一个阈值。那么此时操作系统会选择 页替换策略 选择一个或者一些物理页换出到磁盘以便让出空间。当已经被换出的内存页再次被访问时，必须重新从磁盘加载到物理内存，十分耗时！！！
 
-struct pollfd&#123;
-  int fd;	// 文件描述符
-  short events;	// 对文件描述符fd感兴趣的事件
-  short revents; // 文件描述符fd上当前实际发生的事件
-&#125;;
-int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
+页替换策略是根据硬件所提供的页访问信息，来猜测页应该被换出 ( 比如短时间内再次被换入的小概率的页 )，从而最小化缺页异常的发生次数以提升性能。与此同时，操作系统也需要考量 页替换策略本身执行所带来的开销。不同的页替换策略 有其各自适合的应用场景。
 
 
-poll 函数使用pollfd 结构体来监控一组文件句柄，
+MIN 策略 &#x2F; OPT 策略
+MIN 策略又称 OPT 策略。
+这一策略在选择被换出的页时，优先选择未来不会再访问的页，或者在很长时间内不会再访问的页。123这一策略理论上来说，是最优秀的页替换策略，但在实际场景中通常很难实现。页访问顺序取决于应用程序，而操作系统通常无法预先得知应用程序未来访问页的顺序。该策略主要作为一个标准，来衡量其他页替换策略的优劣。
+我们来模拟一下，假设物理内存中可以存放三个物理页，初始为空，一个应用程序需要访问物理页 1 – 5，顺序为 “3  2  3   ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(3)%20---%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8/" title="11. 共享内存">11. 共享内存</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">共享内存  共享内存( shared memory )允许同一个物理页在不同的应用程序间共享。
 
-ufds 是要监控的文件句柄集合，nfds 是监控的文件句柄数量，即前面 pollfd 结构体的数量，timeout 则是等待的毫秒数。无论文件描述符是否准备好，都即可返回。
+例如，应用程序 A 的虚拟页 V1 呗映射到物理页 P，若应用程序 B 的虚拟页 V2也被映射到物理页 P，则物理页 P 是应用程序 A 和 应用程序 B 的共享内存。
+应用程序 A 能读取虚拟页 V1 和 应用程序B 读取 虚拟页 V2将得到相同的内容，互相也能看到对方修改的内容。
+共享内存可以让不同的程序之间互相通信，传递数据。
+基于这种共享内存的思想，操作系统又从中衍生出诸如写实拷贝和内存去重等功能这里引入 Linux &#x2F; c下的一个函数1234567891011#include &lt;sys/mman.h&gt;void* mmap(void* addr, size_t length, int prot, \				int flags, int fd, off_t offset );void munmap(void* addr, size_t length);/* mmap 用于创建内存映射文件的函数，用于实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98--%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8/" title="9. 虚拟内存">9. 虚拟内存</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">虚拟内存- MMU 和 TLB - 多级页表
+在计算机中，我们直接操作物理地址，是一种效率底下的的方式，而虚拟的出现，则大大加速了程序员的开发能力。(虽然这降低了性能，不过是 Trade off 罢了)。
+在 CPU 中**内存管理单元( Memory Management Unit , MMU )**，负责虚拟地址到物理地址的转换。
+随着计算机的发展，人们发现对于这种方式，不是很高效，于是便引入了 **转址旁路缓存 ( Translation Lookaside Buffer , TLB )**。
 
-timeout 为负数则无线等待。timeout 为 0 表示调用后立即返回。
-returnValue &#x3D; 0
-
-表示超时之前没有任何事件发生
-
-
-returnValue &#x3D; -1
-
-表示失败
-
-
-returnValue &gt;&#x3D; 0
-
-表示 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/TCP_IP%20API/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">1.关闭连接1int close( int fd );
-
-close的调用并非总是立即关闭一个连接，而是将fd的引用计数减去1，只有当fd的引用计数为0时，才真正关闭连接。多进程程序中， fork之后的，会将父进程中所有的socket引用计数加一，当我们需要关闭连接时，必须关闭父子进程中的socket。1int shutdown( int sockfd, int howto );
-但我们无论何时都要立即终止连接时，可以调用shutdown函数1234// howto的可选项 SHUT_RD		关闭读选项SHUT_WR		关闭写选项SHUT_RDWR	SHUT_RD &amp;&amp; SHUT_RDWR
-2. The API for TCP &#x2F; UDP
-TCP12ssize_t recv(int sockfd,void* buf,size_t buf,int flags);ssize_t send(int sockfd,const void* buf,size_t len,int flags);
-函数具体就不介绍了12看flags函数的参数详情请见 本书高性能 P82
-UD ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/epoll%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">Epoll
-三组函数
-
-int epoll_create(int size);
-// 创建一个epoll句柄，size则用来告诉内核这个监听数目有多少
-// 同时该返回的描述符在使用完毕之后也必须关闭(close())
-1234567891011121314151617181920212223- ```c  int epoll_ctl(int epfd, int op, int fd, struct epoll_event* event);  // int epfd epoll_create() 的返回值  // int op 你需要做什么  	// EPOLL_CTL_ADD	注册 fd 到 epfd 中  	// EPOLL_CTL_MOD	修改已经注册的fd的监听事件  	// EPOLL_CTL_DEL	从 epfd 中删除 fd  // int fd 所操作的文件描述符  // struct epoll_event* event   typedef union epoll_data  &#123;    void* ptr;    int fd;    uint32_t u3 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/linux%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F%E8%A7%84%E8%8C%83/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">Linux 服务器程序规范
-日志
-工欲善其事，必先利其器。服务器的调试和维护都需要一个专业的日志系统。
-Linux提供了一个守护进程来处理系统日志—-syslogd,不过现在的linux操作系统使用的都是他的升级版rsyslogd
-这个文件主要是在 &#x2F;var&#x2F;log&#x2F;debug 文件1234567891011#include &lt;syslog.h&gt;void syslog(int priority,const char* message,...);// 关于 priority#define LOG_EMEGR	//系统不可用#define LOG_ALERT	//报警，需要立即采取行动#define LOG_CRIT	//非常严重的情况#define LOG_ERR		//错误#define LOG_WARNING	//警告#define LOG_NOTICE	//通知#define L0G_INFO	//信息#define LOG_DEBUG	//调试
+分段与分页机制
+MMU将虚拟地址翻译为物理地址的主要机制有两种。
+分段机制
+分页机制
 
 
-下面这个函数可以改变syslog的默认输出方式，进一步结构化日志内容1void openl ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/select/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">Select12345int select(int n,	// n 等待测试的文件描述符基数，他的值是待测试的最大描述符 +1           fd_set* readset,// 读 描述符 集合           fd_set* writeset,// 写 描述符 集合           fd_set* exceptset,// 异常描述符 集合           const struct timeval* timeout);// select 函数的超时时间，等待多久即放弃
+
+分段机制
+分段机制下，操作系统以 “段” ( 一段连续的物理内存) 的形式来管理&#x2F;分配内存。
+一个应用程序的虚拟地址空间由若干个大小不同的段组成，有代码段，数据段。
+当 CPU 访问虚拟地址空间中的某一个段时，MMU 会通过查询段表得到该段的物理内存区域。
+一个虚拟地址由两部分组成
+第一个段表示段号，标识该虚拟地址属于整个虚拟地址空间的哪一段
+第二个表示段内地址，相当于段内偏移。
+这个过 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E8%B0%83%E5%BA%A6%20(1)%20---%E5%85%A5%E9%97%A8/" title="2.调度">2.调度</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">引言:小凡是个喜欢打LOL的同学，一天他又在摆弄他的2GB运行内存的笔记本了，他先双击了 LOL，再双击了 网易云音乐，这个 电脑太卡了，足足等待了 30 min 才打开了 LOL，然后再打开了网易云音乐。然后他十分生气，决定再也不玩了，然后就去换了个 调度器,让这两个程序能够可以达到并发执行。因而播放器可以每隔一段时间将音频输出到音频设备上。造成小明听不到音乐的情况。所以系统的调度不仅需要调度任务，还需要满足应用程序的要求。
+什么是调度呢 ?
+一般来说，一个系统会同时处理多个请求，但是他的资源是有限的，调度就是用来协调每个请求对资源的使用方法。调度不仅仅是计算机中的概念，她同时也能在我们的实际生活中找到很多例子，比如银行的服务排队。有时候我们还能看到 VIP优先 ,这就体现了调度中优先级的概念。 又比如小明和小红约定一个人玩 10 min的游戏机后，就换另外一个人玩，这就体现了调度中时间片( time slice)的概念，表示每个请求一次占用后多长时间的资源。再举个例子，人们每天都有很多不同的时间需要完成。那么应该先做哪件，再做哪件?这也需要运用调度的思想,在生活中，这样的例子数不胜 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E8%B0%83%E5%BA%A6(2)%20---%20%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/" title="3.调度(2)">3.调度(2)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">单核调度策略
+
+下面我们为大家介绍一些常见的，经典的调度策略。这些调度策略都假设当前 CPU 只有一个可用的 CPU 核心，每个任务都有自己的 到达事件 ( arrival time ) 和 运行时间 ( run time ), 到达时间用于表示该任务何时被发起并处于预备状态，运行时间用于表示该任务从何时执行到结束总共花费的时间。
+在单核上进行调度时：调度器应该要回到以下两个问题:
+
+当前应该调度哪个任务 ?
 
 
-Select是为了解决多个文件描述符读写的问题。
 
-struct timeval
-&#123;
-  long tv_sec;	// s
-  long tv_usec;	// ms
-&#125;;
-1234567891011121314151617- select 函数超时返回 0, 失败返回 -1，成功返回大于 0 的整数  - 该整数即是就绪文件描述符的数目- 宏函数  - ```c    #include &lt;sys/select.h&gt;    // fdset 变量的所有位设为 0 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/std::mutex/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">std::mutex
-对资源进行保护
-std::lock_guardstd::mutex 
-Rall 手法包装的mutex,离开作用域时析构
-
-
-std::lock(std::mutex arg1, ….)
-同时锁多个锁，阻塞
-只会都锁住，或者都没锁住，如果没有全部加锁，则释放所有锁
-记得对单个锁unlock
-
-
-std::lock_guardstd::mutex mutex_name(mutex_1, std::adopt_lock)
-同时锁多个锁的RALL包装的锁
-std::lock_guard 是一个结构体对象，起一个标记作用。表示这个mutex已经被lock过，无需调用构造函数。
-
-
-std::unique_lock 是个类模板
-std::adpot_lock 表示mutex已经被lock了
-std::try_to_lock 
-尝试用mutex的lock锁住mutex,如果失败，会立即返回。不会阻塞
-
-
-std::defer_lock
+被调度的任务应该持久多少 ?
 
 
 
 
 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/std::thread/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">std::thread
-std::thread class 是 c++ 11  后引入的一个封装线程类。
-构造函数
-std::thread threadtypename(function_name, arg_1, arg_2)
-std::thread threadtypename(&amp;namespacename::functionname, class, arg_1, agr_2)
-注意 std::thread 类的构造函数都是会拷贝的，如果需要传入引用的话，需要 std::ref()
-但请注意变量的生命周期。
 
 
-传入class时，如果不使用 std::ref
-默认是在主线程，即调用该函数的线程中构造
-然后thread默认会拷贝类函数的类或者数据类型。即默认会以拷贝传入
-但请注意，这里禁止调用默认构造函数即传入类型需要默认转化为函数形参类型
-析构函数默认会在构造他的函数中调用。
-隐式构造类的对象会在子线程中构造，而此时，如果在子线程中构造，则析构也在子线程。
-如果显示转换则在主线程中转换
+经典调度策略
+先到先得
+
+在调度策略中，一种比较直观的策略就是先到先得 ( First Come First Served, FCFS )策略，这一类策略也被称之为先进先出( First In First Out, FIFO ) 策略。
+
+在该策略中，我们会在操作系统中维护一个运行队列，这个队列中的元素是处于预备状态，等待执行的任务。在决定需要执行的任务时，FCFS 策略会选取运行队列中的队尾，运行队列能够起到多个任务确定顺序的作用，保证任务的执行顺序与其进入运行队列的顺序一致。
+
+FCFS 策略仅仅需要开发者维护一个队列，就可以 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/os/%E8%BF%9B%E7%A8%8B%20--%20(1)/" title="4.进程">4.进程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/OS/">OS</a></span></div><div class="content">进程1.进程的状态
+一般来说进程有一下几种状态
+
+新生状态 ：刚刚被创建出来，还没有完成初始化，不能被调度执行。在被初始化之后，会进入预备状态。
+预备状态 ：该状态表示进程可以被调度执行，但是还没有被调度器选择，由于 CPU 数量可能少于进程数量，在某一个时刻只有部分进程能被调度到 CPU 上运行，此时，系统中其他的可被调度的进程都处于预备状态。在被调度器选择执行厚，进程迁移到运行状态。
+运行状态 ：该进程正在 CPU 上运行，当一个进程执行一段时间后，调度器可以选择中断它的执行并且重新将它放回调度队列，他就迁移到 预备状态，当该进程运行结束后，他就会迁移至终止状态。如果一个进程需要等待某些外部事件，他就可以放弃 CPU 并迁移到阻塞状态。
+阻塞状态 ：该状态表示进程需要等待外部事件 ( 比如某个 IO 的请求完成),暂时无法被调度。当进程等待的外部事件完成之后，他就会迁移到预备状态。
+终止状态 ：该状态表示该进程已经完成了执行，而且不会再被调度。  进程的内存空间布局
+进程具有独立的虚拟内存空间。
+
+  
+
+用户栈 : 栈保存了进程需要使用的各种临时数据，如临时变量的值。栈是一种可以 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/IO/" title="4. Lua IO">4. Lua IO</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">LUA
+完整 I &#x2F; O 模型
+
+
+io.open(“…”, “mode”)
+12345678io.open(&quot;filename&quot;, &quot;mode&quot;)[[	r 只读	w 只写	a 追加	b 二进制文件	返回值是一个指针，FIFE*应该是]]
+
+assert()
+1local f = assert(io.open(filename, mode))
+
+
+assert( ) 函数类似断言一样，io.open 如果打开失败的话，这个程序就挂掉了。
+
+
+我们来看一个完整的IO读取文件操作
+1234local f = assert(io.open(filename, &quot;r&quot;))local t = f:read(&quot;a&quot;)f:close()print(t)
+
+
+关于冒号运算符后面再说
+
+
+IO库提供了三个预定义的c语言流的句柄，io.stdin, io.stdout, io.stderr, 
+1io.stderr:write(message)
+
+
+io.input 和 io.output 允许混用完整的 IO 模型 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/LuaFunction/" title="5. Lua Function">5. Lua Function</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">LuaFunction
+Lua 支持多返回值
+
+&#96;&#96;&#96;luareturn value_1, value_2, … 1234567- 在获取函数多返回值时，应该用特殊的方式获得。  - ```lua    function too0 () end    function too1 () return &quot;a&quot; end    function too2 () return &quot;a&quot;, &quot;b&quot; end
+
+
+x, y = foo2()	-- x = &quot;a&quot;, y = &quot;b&quot;
+x = foo2()		-- x = &quot;a&quot;, &quot;b&quot; 被丢弃
+x, y, z = 10, foo2() -- x = 10, y = &quot;a&quot;, z = &quot;b&quot;
+123456789- 如果一个函数无返回值或者返回值个数不够，那么Lua语言将会使用nil来补充缺失的值。- 表构造器会完整地的接受函数调用的所有返回值。  ```l ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/StrandTableLibrary/" title="6. Lua Table">6. Lua Table</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">表标准库
+table.insert() 向序列中的指定位置插入一个元素。其他元素依次后移动
+
+&#96;&#96;&#96;luatable.insert(tablename, index, value)t &#x3D; {10, 20, 30}table.insert(t, 1, 15)print(t) – t &#x3D; {15, 10, 20, 30}12345  - table.remove() 则删除并返回指定位置的元素  - ```lua    table.remove(tablename, index)
+
+
+exercise
+
+local sunday = &quot;monday&quot;
+local monday = &quot;sunday&quot;
+local t = &#123;sunday = &quot;monday&quot;, [sunday] = monday&#125;
+print(t.sunday, t[sunday], t[t.sunday])
+-- --&gt; monday sunday sunday
+12345678910- ```l ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/string/" title="8. Lua String">8. Lua String</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">String
+lua 使用 8 个bit 来存储 char 类型。
+
+string.gsub(stringname, target name, needname);
+
+string.gsub 能对目标选中字符串进行更改。
+1234a = &quot;one string&quot;b = string.gsub(a, &quot;one&quot;, &quot;another&quot;)print(b)-- b = another string
 
 
 
-
-join
-阻塞当前调用的线程，直到该thread结束
-
-
-detach
-将thre ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/%E4%B8%89%E7%BB%84%20IO%20%E5%A4%8D%E7%94%A8%E5%87%BD%E6%95%B0%E7%9A%84%E6%AF%94%E8%BE%83/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">
-
-select and poll 都只能工作相对低效的 LT 模式，而 epoll 还可以工作在 ET 高效模式。并且 epoll 还支持 EPOLLONESHOT 事件。
+取字符串长度
+12print(#a)-- #a = 10 without &#x27;\n&#x27;
 
 
+..
 
-select and poll 每次都必须使用轮训的方式，即每次调用都要扫描整个注册文件描述符的集合，并将其中就绪的文件描述符返回给应用程序，因此他们检测就绪事件的算法的时间复杂度是 O(n) , epoll_wait 它采用的是回调的方式。内核检测到就绪的文件描述符时，将触发回调函数，回调函数就将该文件描述符上对应的事件插入内核就绪
+.. 用来连接字符串。如果连接过程中存在数字，那么就会将数字转化为字符串。
+1234a = &quot;123&quot;b = &quot;456&quot;print(a .. b)-- a .. b = &quot;123456&quot;
+
+lua 中，注意，字符串是一个不可变的量(常量)
 
 
-详情请见本书 P162
 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/%E4%B8%A4%E7%A7%8D%E9%AB%98%E6%95%88%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">1. 半同步 &#x2F; 半异步模式
-详情请见本书 P132
-半同步 &#x2F; 半异步模型中，同步线程用于处理客户逻辑，相当于当 8-4 中的逻辑单元，异步线程用于处理 IO 事件。
-这个其实我也没有看太明白
+lua 支持使用 ‘ ‘ or “ “ 来声明字符串。但双引号声明的字符串中出现单引号时可以不用转义。
 
-领导者 &#x2F; 追随者 模式
-多个工作线程轮流获得事件源集合，轮流监听,分发处理事件的一种模式。在任意时间点，程序都仅有一个领导者线程，他负责监听 IO事件，而其他线程都是追随者，他们休眠在线程池中等待成为领导者线程，领导者则调用绑定到Handle上的事件处理器来处理事件。领导者将Handle和事件处理器是通过调用句柄集中的register_handle方法来实现的。
-详情请见本书 P13有限状态机
-有的应用层协议头部包含数据包类型字段，每种类型都可以映射为逻辑单元的一种执行状态，服务器可以根据它来编写相应的处理逻辑。
-此处请看书 P143
-
-</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#content-inner">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/4/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+对于长字符串 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/#content-inner">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/4/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="fas fa-folder-open"></i>
             <span>分类</span>
             
             </div>
             <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Lua-language/"><span class="card-category-list-name">Lua language</span><span class="card-category-list-count">10</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/http-%E5%8D%8F%E8%AE%AE/"><span class="card-category-list-name">http 协议</span><span class="card-category-list-count">9</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/HTTP/" style="font-size: 1.1em; color: #999">HTTP</a> <a href="/tags/Lua/" style="font-size: 1.5em; color: #99a9bf">Lua</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">19</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">15</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">34</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">17.5k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-05-01T04:41:24.058Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Lua-language/"><span class="card-category-list-name">Lua language</span><span class="card-category-list-count">10</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/OS/"><span class="card-category-list-name">OS</span><span class="card-category-list-count">11</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Server/"><span class="card-category-list-name">Server</span><span class="card-category-list-count">14</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/http-%E5%8D%8F%E8%AE%AE/"><span class="card-category-list-name">http 协议</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"><span class="card-category-list-name">分布式</span><span class="card-category-list-count">2</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/HTTP/" style="font-size: 1.2em; color: #999da3">HTTP</a> <a href="/tags/Lua/" style="font-size: 1.3em; color: #99a1ac">Lua</a> <a href="/tags/OS/" style="font-size: 1.4em; color: #99a5b6">OS</a> <a href="/tags/Server/" style="font-size: 1.5em; color: #99a9bf">Server</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.1em; color: #999">分布式</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">36</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/1998/12/"><span class="card-archive-list-date">十二月 1998</span><span class="card-archive-list-count">10</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">47</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">44.2k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-05-01T04:56:48.414Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

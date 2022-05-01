@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>7. 纤程 | fan 的 Blog</title><meta name="keywords" content="OS"><meta name="author" content="fan"><meta name="copyright" content="fan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="纤程由于主流的操作系统都采取一对一的线程模型。用户态线程和内核态线程具有一对一的关系。可以认为用户态线程的执行几乎完全收到操作系统调度器的管理。但是随着计算机的发展，应用程序也变得越来越复杂，在这些复杂的应用程序中，每个线程各司其职,有的负责计算，有的负责网络通信，有的大量读写内存。与操作系统调度器相比，应用程序对线程的语义和执行状态更加了解，因此可能做出更好的调度决策。此外用户态线程更利于提高整">
+<meta property="og:type" content="article">
+<meta property="og:title" content="7. 纤程">
+<meta property="og:url" content="http://example.com/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/index.html">
+<meta property="og:site_name" content="fan 的 Blog">
+<meta property="og:description" content="纤程由于主流的操作系统都采取一对一的线程模型。用户态线程和内核态线程具有一对一的关系。可以认为用户态线程的执行几乎完全收到操作系统调度器的管理。但是随着计算机的发展，应用程序也变得越来越复杂，在这些复杂的应用程序中，每个线程各司其职,有的负责计算，有的负责网络通信，有的大量读写内存。与操作系统调度器相比，应用程序对线程的语义和执行状态更加了解，因此可能做出更好的调度决策。此外用户态线程更利于提高整">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-04-30T03:41:40.000Z">
+<meta property="article:modified_time" content="2022-05-01T04:51:14.039Z">
+<meta property="article:author" content="fan">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: fan","link":"链接: ","source":"来源: fan 的 Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '7. 纤程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-01 12:51:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">7. 纤程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-01T04:51:14.039Z" title="更新于 2022-05-01 12:51:14">2022-05-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OS/">OS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>3分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="7. 纤程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div><article class="post-content" id="article-container"><h2 id="纤程"><a href="#纤程" class="headerlink" title="纤程"></a><font color = Teal>纤程<font color = black></h2><p>由于主流的操作系统都采取一对一的线程模型。用户态线程和内核态线程具有一对一的关系。可以认为用户态线程的执行几乎完全收到操作系统调度器的管理。但是随着计算机的发展，应用程序也变得越来越复杂，在这些复杂的应用程序中，每个线程<font color = red>各司其职<font color = black>,有的负责计算，有的负责网络通信，有的大量读写内存。与操作系统调度器相比，应用程序对线程的语义和执行状态更加了解，因此可能做出更好的调度决策。此外用户态线程更利于提高整个程序的可扩展性。在这样的背景下，操作系统开始提供更多对用户态线程，即纤程的支持。</p>
+<h3 id="对纤程的需求"><a href="#对纤程的需求" class="headerlink" title="对纤程的需求"></a>对纤程的需求</h3><h4 id="经典例子-生产者消费者模型"><a href="#经典例子-生产者消费者模型" class="headerlink" title="经典例子 生产者消费者模型"></a>经典例子<font color = blue> 生产者消费者模型<font color = black></h4><ul>
+<li>生产者负责”<font color = red>生产<font color = black>“数据，即生成一些用于处理的数据；消费者则负责”<font color = red>消费<font color = black>“数据，就是处理生产者生成的数据。</li>
+<li><font color = DeepSkyBlue>Example<font color = black><ul>
+<li>现在假设一个进程中拥有两个线程，一个生产者，一个消费者，生产者在共享内存中写入数据，消费者从内存中使用。在线程的一次切换需要一次上下文切换( 即生产者到消费者 ),才能完成数据处理。但是在真正的服务器上时，一台计算机跑的程序上千个，调度器并不知道你这两个线程拥有生产者消费者这种关系。有时候并不总是优先生产者开始调度。而且消费者可能需要经历很长的一部分时间才能拿到数据。为了消除这部分延迟，计算机科学家引入了纤程。<h4 id="POSIX的纤程支持"><a href="#POSIX的纤程支持" class="headerlink" title="POSIX的纤程支持"></a>POSIX的纤程支持</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ucontext.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">getcontext</span><span class="params">(<span class="type">ucontext_t</span>*  ucp)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">setcontext</span><span class="params">(<span class="type">const</span> <span class="type">ucontext_t</span>* ucp)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">makecontext</span><span class="params">(<span class="type">ucontext_t</span>* ucp, <span class="type">void</span> (*func)(), </span></span><br><span class="line"><span class="params">							<span class="type">int</span> argc,....)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	getcontext 可以用来保存当前的上下文，而setcontext则可以用来</span></span><br><span class="line"><span class="comment">切换到另一个上下文。</span></span><br><span class="line"><span class="comment">	setcontext 则用来切换到另一个上下文。</span></span><br><span class="line"><span class="comment">	makecontext 可以创建一个全新的上下文，并将其保存在第一个参数</span></span><br><span class="line"><span class="comment">ucp中。</span></span><br><span class="line"><span class="comment">由于这些上下文属于纤程，因此并不会保存到内核中TCB，而是完全保存在</span></span><br><span class="line"><span class="comment">第一个参数ucp中。由于这些上下文属于纤程，因此并不会保存到内核中</span></span><br><span class="line"><span class="comment">的TCB，而是完全保存在用户态。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<h4 id="纤程的上下文切换"><a href="#纤程的上下文切换" class="headerlink" title="纤程的上下文切换"></a>纤程的上下文切换</h4></li>
+</ul>
+</li>
+<li>纤程的上下文切换的触发机制与内核态存在较大不同。由于操作系统可以通过中断的方式抢占当前的 CPU 并进行上下文切换。这种切换是强制的，所以我们一般称之为<font color = red>抢占式多任务处理<font color = black>( preemptive multitasking )模式，但是纤程并不具备使用中断抢占其他纤程的权限，因此无法使用这种模式。所以纤程一般会提供&#x3D;&#x3D;yield&#x3D;&#x3D;接口，该接口与一对一模型的yield接口相似，都会暂时放弃 CPU，允许其他纤程的调度。这种调度方式被称为<font color = red>合作式多任务处理<font color = black> ( cooperative multitasking ),需要多个纤程进行协作以完成调度。</li>
+<li>除了 POSIX 定义的 ucontext 以外，Windows操作系统也提供了对纤程的支持，模型与context类似。(此处不做过多赘述)。</li>
+<li>除了操作系统以外，很多程序语言也提供对纤程的支持。从操作系统的支持来看，我们一般称之为纤程，一般将程序语言提供的纤程支持称之为<font color = red>协程<font color = black>,现在很多语言都提供了对携程的支持，而这一特性常常被用在上下文频繁切换的应用场景中( Web服务 )。随着应用种类变得复杂，支持协程已经成为程序语言的一大发展趋势。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">fan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/">http://example.com/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">fan 的 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OS/">OS</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/04/30/os/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E7%AE%A1%E7%90%86%20(1)/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">6.内存分配</div></div></a></div><div class="next-post pull-right"><a href="/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">8. 线程</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/04/30/os/%E6%80%9D%E8%80%83%E9%A2%98--%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%EF%BC%8C%E7%BA%A4%E7%A8%8B/" title="5.进程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">5.进程</div></div></a></div><div><a href="/2022/04/30/os/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%20(1)/" title="1.操作系统"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">1.操作系统</div></div></a></div><div><a href="/2022/04/30/os/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E7%AE%A1%E7%90%86%20(1)/" title="6.内存分配"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">6.内存分配</div></div></a></div><div><a href="/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/" title="8. 线程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">8. 线程</div></div></a></div><div><a href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/" title="10. 虚拟内存(2)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">10. 虚拟内存(2)</div></div></a></div><div><a href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(3)%20---%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8/" title="11. 共享内存"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">11. 共享内存</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%A4%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">纤程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E7%BA%A4%E7%A8%8B%E7%9A%84%E9%9C%80%E6%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">对纤程的需求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8%E4%BE%8B%E5%AD%90-%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">经典例子 生产者消费者模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#POSIX%E7%9A%84%E7%BA%A4%E7%A8%8B%E6%94%AF%E6%8C%81"><span class="toc-number">1.1.2.</span> <span class="toc-text">POSIX的纤程支持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%A4%E7%A8%8B%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2"><span class="toc-number">1.1.3.</span> <span class="toc-text">纤程的上下文切换</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

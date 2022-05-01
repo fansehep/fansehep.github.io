@@ -1469,8 +1469,8 @@ end
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/EPOLL/</url>
+    <title>5. epoll</title>
+    <url>/1998/12/12/Server/EPOLL/</url>
     <content><![CDATA[<h1 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h1><ul>
 <li>epoll是linux下特有的 IO 复用函数，epoll使用一组函数完成任务，而不是单个函数。</li>
 <li>epoll会将用户关心的文件描述符上的事件放在内核中的一个事件表中。</li>
@@ -1495,6 +1495,12 @@ end
 <li>但同时我们处理完这个socket后，必须重置这个socket上的 EPOLLONESHOT 事件，以确保这个socket下一次可读时，其EPOLLIN事件能被触发，从而让其他工作线程有机会继续处理这个socket。</li>
 </ol>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
     <title></title>
@@ -1502,8 +1508,8 @@ end
     <content><![CDATA[]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/Poll/</url>
+    <title>8. poll</title>
+    <url>/1998/12/12/Server/Poll/</url>
     <content><![CDATA[<h2 id="Poll"><a href="#Poll" class="headerlink" title="Poll"></a>Poll</h2><ul>
 <li><p>select 已经可以处理多个 socket了，但 Poll 也可以实现同样的功能, 且调用方法十分简单</p>
 </li>
@@ -1547,10 +1553,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/TCP_IP%20API/</url>
+    <title>11. TCP / IP 接口</title>
+    <url>/1998/12/12/Server/TCP_IP%20API/</url>
     <content><![CDATA[<h1 id="1-关闭连接"><a href="#1-关闭连接" class="headerlink" title="1.关闭连接"></a>1.关闭连接</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">close</span><span class="params">( <span class="type">int</span> fd )</span></span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>close的调用并非总是立即关闭一个连接，而是将fd的引用计数减去1，只有当fd的引用计数为0时，才真正关闭连接。多进程程序中， fork之后的，会将父进程中所有的socket引用计数加一，当我们需要关闭连接时，必须关闭父子进程中的socket。<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">shutdown</span><span class="params">( <span class="type">int</span> sockfd, <span class="type">int</span> howto )</span></span>;</span><br></pre></td></tr></table></figure></li>
@@ -1570,10 +1582,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 
 <p>&#96;&#96;&#96;c++<br>但这里介绍一下，当我们的服务器因为一些特殊原因关闭时，会处于TIME_WAIT状态，此时我们再创建套接字会失败，此时我们可以使用 SO_REUSEADDR 选项，可以强<br>制使用处于TIME_WAIT的状态的套接字。<br>setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, &amp;reuse, sizeof(reuse));<br>&#96;&#96;</p>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/epoll%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</url>
+    <title>6. epoll source</title>
+    <url>/1998/12/12/Server/epoll%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</url>
     <content><![CDATA[<h2 id="Epoll"><a href="#Epoll" class="headerlink" title="Epoll"></a>Epoll</h2><ul>
 <li><p>三组函数</p>
 <ul>
@@ -1608,10 +1626,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/linux%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F%E8%A7%84%E8%8C%83/</url>
+    <title>7. Linux 服务器框架</title>
+    <url>/1998/12/12/Server/linux%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F%E8%A7%84%E8%8C%83/</url>
     <content><![CDATA[<h1 id="Linux-服务器程序规范"><a href="#Linux-服务器程序规范" class="headerlink" title="Linux 服务器程序规范"></a>Linux 服务器程序规范</h1><ul>
 <li><h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><ul>
 <li>工欲善其事，必先利其器。服务器的调试和维护都需要一个专业的日志系统。</li>
@@ -1627,10 +1651,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/select/</url>
+    <title>9. select</title>
+    <url>/1998/12/12/Server/select/</url>
     <content><![CDATA[<h2 id="Select"><a href="#Select" class="headerlink" title="Select"></a>Select</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">select</span><span class="params">(<span class="type">int</span> n,	<span class="comment">// n 等待测试的文件描述符基数，他的值是待测试的最大描述符 +1</span></span></span><br><span class="line"><span class="params">           fd_set* readset,<span class="comment">// 读 描述符 集合</span></span></span><br><span class="line"><span class="params">           fd_set* writeset,<span class="comment">// 写 描述符 集合</span></span></span><br><span class="line"><span class="params">           fd_set* exceptset,<span class="comment">// 异常描述符 集合</span></span></span><br><span class="line"><span class="params">           <span class="type">const</span> <span class="keyword">struct</span> timeval* timeout)</span>;<span class="comment">// select 函数的超时时间，等待多久即放弃</span></span><br></pre></td></tr></table></figure>
 
 <ul>
@@ -1678,10 +1708,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/std::mutex/</url>
+    <title>10. std::mutex</title>
+    <url>/1998/12/12/Server/std::mutex/</url>
     <content><![CDATA[<h3 id="std-mutex"><a href="#std-mutex" class="headerlink" title="std::mutex"></a>std::mutex</h3><ul>
 <li>对资源进行保护<ul>
 <li>std::lock_guard<a href="std::mutex">std::mutex</a> <ul>
@@ -1712,10 +1748,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/std::thread/</url>
+    <title>10. std::thread</title>
+    <url>/1998/12/12/Server/std::thread/</url>
     <content><![CDATA[<h3 id="std-thread"><a href="#std-thread" class="headerlink" title="std::thread"></a>std::thread</h3><ul>
 <li>std::thread class 是 c++ 11  后引入的一个封装线程类。<ul>
 <li>构造函数<ul>
@@ -1755,10 +1797,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/%E4%B8%89%E7%BB%84%20IO%20%E5%A4%8D%E7%94%A8%E5%87%BD%E6%95%B0%E7%9A%84%E6%AF%94%E8%BE%83/</url>
+    <title>4. IO 复用</title>
+    <url>/1998/12/12/Server/%E4%B8%89%E7%BB%84%20IO%20%E5%A4%8D%E7%94%A8%E5%87%BD%E6%95%B0%E7%9A%84%E6%AF%94%E8%BE%83/</url>
     <content><![CDATA[<ul>
 <li><ol>
 <li>select and poll 都只能工作相对低效的 LT 模式，而 epoll 还可以工作在 ET 高效模式。并且 epoll 还支持 EPOLLONESHOT 事件。</li>
@@ -1771,10 +1819,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 <li>详情请见本书 P162</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/%E4%B8%A4%E7%A7%8D%E9%AB%98%E6%95%88%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</url>
+    <title>3. 并发模型</title>
+    <url>/2022/04/30/Server/%E4%B8%A4%E7%A7%8D%E9%AB%98%E6%95%88%E7%9A%84%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/</url>
     <content><![CDATA[<h1 id="1-半同步-x2F-半异步模式"><a href="#1-半同步-x2F-半异步模式" class="headerlink" title="1. 半同步 &#x2F; 半异步模式"></a>1. 半同步 &#x2F; 半异步模式</h1><ul>
 <li>详情请见本书 P132</li>
 <li>半同步 &#x2F; 半异步模型中，同步线程用于处理客户逻辑，相当于当 8-4 中的逻辑单元，异步线程用于处理 IO 事件。</li>
@@ -1787,10 +1841,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 <li>此处请看书 P143</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/%E4%BF%A1%E5%8F%B7/</url>
+    <title>5. Signal</title>
+    <url>/1998/12/12/Server/%E4%BF%A1%E5%8F%B7/</url>
     <content><![CDATA[<h2 id="Linux信号概述"><a href="#Linux信号概述" class="headerlink" title="Linux信号概述"></a>Linux信号概述</h2><ul>
 <li>linux下，一个进程给其他进程发送信号的API是kill函数。<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">kill</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span> sig)</span></span>;</span><br></pre></td></tr></table></figure>
 <table>
@@ -1857,10 +1917,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 <li></li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/%E8%BF%9B%E7%A8%8B%E6%B1%A0/</url>
+    <title>3. 进程池</title>
+    <url>/2022/04/30/Server/%E8%BF%9B%E7%A8%8B%E6%B1%A0/</url>
     <content><![CDATA[<ul>
 <li>池的结构就是会预分配一些资源，以减少使用时再分配的时间的消耗。</li>
 <li>主进程使用某种算法来主动选择子进程。最简单，最常用的算法是随机算法和Round Robin(轮流选取算法)，还有很多算法哦</li>
@@ -1868,10 +1934,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 <li></li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/</url>
+    <title>2. 高性能服务器程序框架</title>
+    <url>/2022/04/30/Server/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/</url>
     <content><![CDATA[<ul>
 <li>同步 IO 模型就是要求用户自己去把内核区的数据读出来，异步 IO 就是由内核帮助你完成 IO 操作。</li>
 <li><h1 id="同步IO"><a href="#同步IO" class="headerlink" title="同步IO"></a>同步IO</h1><ul>
@@ -1899,10 +1971,16 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/2022/03/11/Server/%E9%AB%98%E7%BA%A7%20I%20_%20O%20%E5%87%BD%E6%95%B0/</url>
+    <title>1. 高级 IO 函数</title>
+    <url>/2022/04/30/Server/%E9%AB%98%E7%BA%A7%20I%20_%20O%20%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<ul>
 <li><h1 id="1-pipe"><a href="#1-pipe" class="headerlink" title="1.pipe"></a>1.pipe</h1><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pipe</span><span class="params">( <span class="type">int</span> fd[<span class="number">2</span>] )</span></span>;</span><br></pre></td></tr></table></figure></li>
 <li><strong>pipe</strong>函数会创建一个管道，我们规定数据只能从 fd[1] 中写入，只能从 fd[0] 中读出。<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">socketpair</span><span class="params">(<span class="type">int</span> domain,<span class="type">int</span> type,<span class="type">int</span> protocol,<span class="type">int</span> fd[<span class="number">2</span>])</span></span>;</span><br><span class="line"><span class="comment">//成功时返回0，失败时返回1。</span></span><br></pre></td></tr></table></figure></li>
@@ -1929,5 +2007,1102 @@ int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 <li>好无聊这个函数</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>Server</category>
+      </categories>
+      <tags>
+        <tag>Server</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Google FileSystem</title>
+    <url>/2022/04/30/DistributedSystem/GFS/</url>
+    <content><![CDATA[<h2 id="Google-FileSystem-总结"><a href="#Google-FileSystem-总结" class="headerlink" title="Google FileSystem 总结"></a>Google FileSystem 总结</h2><ul>
+<li><p>谷歌文件系统是谷歌为了支持自身大流量的服务所定制的文件系统。</p>
+</li>
+<li><p>引言 :</p>
+<ul>
+<li><ol>
+<li>GFS 由成千上百台廉价设备组成的存储节点组成。以及各种bug</li>
+<li>文件比传统标准更大，数GB大小的文件是十分常见的。</li>
+<li>大部分文件会以”append”的方式来进行变更，而非 “overwrite”. <ul>
+<li>在实际场景中，几乎不存在对文件的随机写入。文件一旦被写入，即为只读的。且通常仅被顺序读取。</li>
+</ul>
+</li>
+<li>同时设计应用程序和文件系统API便于提高整个系统的灵活性。<ul>
+<li>google 放宽了GFS 的一致性协议，从而大幅度简化了系统。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>设计概述</p>
+<ul>
+<li>…</li>
+</ul>
+</li>
+<li><p>接口</p>
+<ul>
+<li>…</li>
+</ul>
+</li>
+<li><p>架构</p>
+<p><img src="/home/fan/Screenshots/2022-03-29_15-03-1648540661.jpg" alt="2022-03-29_15-03-1648540661"></p>
+<ul>
+<li>文件被划分为了多个固定大小的chunk,  每个chunk 被一个不可变的全局唯一的 64 位 chunk handle 唯一标识。chunk handle 在chunk被创建时由主节点分配。chunkserver 将 chunk 作为 linux 文件存储到本地磁盘中。通过 chunk handle 和 byte range 字节范围 来确定需要被读写的chunk 和 chunk 中的数据。为了可靠性考虑，每个chunk 会在多个chunkserver 中有副本。我们默认存储三份副本，用户也可以为不同的命名空间的域制定不同的副本等级。</li>
+<li>master 维护系统的所有的元数据。元数据包括命名空间(namespace), 访问控制，(access control) 信息，文件到chunk 的映射和chunk 当前的位置。master  还控制系统级活动如 chunk 租约(chunk lease) 管理，孤儿chunk 垃圾回收，和chunkserver  间的chunk 迁移，master 周期性的通过心跳 heartbeat 消息与每个chunkserver 之间通信，向其下达指令并采集其状态信息。</li>
+</ul>
+</li>
+<li><p>单 master</p>
+<ul>
+<li>单 master节点简化设计。<ul>
+<li>让master可以通过全局的信息做复杂的chunk分配和副本相关的决策。</li>
+<li>然而我们必须最小化master节点在读写中的参与，以避免让其成为系统瓶颈。</li>
+<li>client不会从master读取文件数据，而是询问master他需要与哪个chunkserver通信。<ul>
+<li>client会在一定时间内缓存信息，并且直接与对应的chunkserver通信以完成后续操作。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>元数据</p>
+<ul>
+<li><p>master主要存储三种元数据</p>
+<ul>
+<li><ol>
+<li>文件和chunk 的命名空间</li>
+<li>文件到chunk 的映射</li>
+<li>chunk的每个副本的位置</li>
+</ol>
+</li>
+<li>所有元数据被存储在master的内存中<ul>
+<li>前 2 中类型1 和 2 还通过变更记录到一个操作日志的方式持久化存储到master的磁盘上。并在远程机器上备份。</li>
+<li>通过日志，我们可以简单，可靠地更新master节点的状态，即使master故障也没有数据不一致的风险。</li>
+<li>master不会持久化存储 chunk 的位置信息，而是在启动时和当chunkserver 加入集群时向 chunkserver 询问其存储的chunk  信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>内部数据结构</p>
+<ul>
+<li>master不会持久化保存哪太 chunkserver 含有给定的chunk 的副本的记录，而是简单的启动时从 chunkserver  获取信息。随后，master 就可以保证自己的记录是最新的。因为 master 控制着所有的chunk 的分配并通过周期性的心跳消息监控 chunkserver 状态。</li>
+</ul>
+</li>
+<li><p>操作日志</p>
+<ul>
+<li>master 通过重放replay 操作日志来恢复其文件系统的状态。操作日志要尽可能小以减少启动时间。</li>
+<li>当日志超过一定大小时，master会对其状态创建一个检查点。这样 master 就可以从磁盘加载最后一个检查点并重放该检查点后的日志来恢复状态。</li>
+<li>因为创建一个检查点需要一段时间，所以master可以被设计为在不推迟新到来的变更的情况下创建检查点。</li>
+</ul>
+</li>
+<li><p>GFS 提供的保障</p>
+<ul>
+<li><p>由于一切的请求都会先给向master, 他们仅由master处理，命名空间锁保证了原子性和正确性。</p>
+</li>
+<li><ol>
+<li><p>一致的 “Consistent” , 这个是说，多个客户端无论是从主副本读取数据，还是从次副本读取数据，独到的数据都是一样的。</p>
+</li>
+<li><p>确定的 “Defined”, 这个会高一些，值的是对于客户端写入到 GFS 的数据，能够完整地被读到。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>写入</th>
+<th>记录追加</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>顺序写入成功</td>
+<td>确定</td>
+<td>确定，但夹杂着不确定的数据</td>
+</tr>
+<tr>
+<td>并发写入成功</td>
+<td>一致的但并非确定</td>
+<td>确定，但夹杂着不确定的数据</td>
+</tr>
+<tr>
+<td>写入失败</td>
+<td>不一致</td>
+<td>不一致</td>
+</tr>
+</tbody></table>
+<ul>
+<li>如果写入失败，由于一个chunk 会有另外两个 chunk 副本，主副本的写入会将写入指令发到两个次副本，如果次副本写入失败了，那么此时其他的客户端所读到的数据就是不一致的。</li>
+<li>如果客户端的数据写入是顺序的，并且写入成功了，那么文件里面的内容就是确定的。</li>
+<li>如果多个客户端同时写入，那么文件里面的内容就是不确定的。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>系统交互</p>
+<ul>
+<li>当我们改变chunk里面的内容时，每个chunk的副本都应该发生改变。</li>
+<li>我们使用 租约 (lease) 来维护副本间变更顺序的一致性。</li>
+<li>master向其中一份副本授权一个变更的租约。我们称之为 primary.</li>
+<li>primary 为应用于该 chunk 的所有变更选取顺序。所有副本都会按照这个顺序来应用变更。<ul>
+<li>因此，全局的变更顺序首先由 master 选取的租约授权顺序定义，接着在租约内由 primary 选取的顺序编号定义。</li>
+<li>这种租约机制是为了最小化master管理负载而设计的。租约的初始超时时间为 60s, 然而，一旦chunk被变更，primary 就可以向 master 请求延长租约时间，或者(通常为)接受来自 master 的租约时间延长操作。这些租约延长请求依赖于 master 与 chunkserver 间周期性地心跳消息来实现。有时master可能会在租约过期前试图撤销租约(). 即使 master 与一个 primary 的通信丢失，master 仍可以在旧租约过期后安全地向另一个副本授权新的租约。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Google MapReduce</title>
+    <url>/2022/04/30/DistributedSystem/MapReduce/</url>
+    <content><![CDATA[<h3 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h3><ul>
+<li><p>MapReduce 是 Google 于 2004 年提出的一种分布式任务框架。</p>
+<ul>
+<li>论文链接 chrome-extension:&#x2F;&#x2F;bocbaocobfecmglnmeaeppambideimao&#x2F;pdf&#x2F;viewer.html?file&#x3D;http%3A%2F%2Fnil.csail.mit.edu%2F6.824%2F2020%2Fpapers%2Fmapreduce.pdf</li>
+</ul>
+</li>
+<li><p>其主要思想则是 : </p>
+<ul>
+<li>map(k1 , v1)   —-&gt; list(k2, v2)</li>
+<li>reduce(k2, list(v2)) —-&gt; list(v2)</li>
+</ul>
+</li>
+<li><p>我们将多个任务不在单机执行，将其分配到多个worker中。</p>
+<ul>
+<li>在这些分配的过程，我们发现他们满足某种&lt;key, value&gt; 键值对的关系。</li>
+<li>但是由于在多机运行，我们必须要考虑一些同步的问题。</li>
+</ul>
+</li>
+<li><p>我在 6.824 中的实现</p>
+<ul>
+<li>6.824 已经帮助我实现了大致框架，并且已经给了我 RPC 调用的方法。</li>
+<li>所以我只需要实现 leader 和 多个 worker 之间的通信和同步问题即可。</li>
+</ul>
+</li>
+<li><p>Coordinator </p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">//* master 节点</span></span><br><span class="line"><span class="keyword">type</span> Coordinator <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">//* worker 的个数</span></span><br><span class="line">	WorkerNum       <span class="type">int</span></span><br><span class="line">	<span class="comment">//* 保存每个worker的个数</span></span><br><span class="line">	WorkerState     []<span class="type">int</span> <span class="comment">// -1 - dead, 0 - idle, 1 - working</span></span><br><span class="line">	<span class="comment">//* 记录每个worker 心跳</span></span><br><span class="line">	WorkerCallTime  []<span class="type">int</span></span><br><span class="line">	<span class="comment">//* 执行map函数时的状态</span></span><br><span class="line">	MapTaskState    []<span class="type">int</span> <span class="comment">// 0 - no allocate, 1 - dealing, 2 - completed</span></span><br><span class="line">	<span class="comment">//* 执行reduce函数的状态</span></span><br><span class="line">	ReduceTaskState []<span class="type">int</span> <span class="comment">// 0 - no allocate, 1 - dealing, 2 - completed</span></span><br><span class="line">	<span class="comment">//* 保存传入的文件名称</span></span><br><span class="line">	Filename        []<span class="type">string</span></span><br><span class="line">	<span class="comment">//* 记录 map 任务分配给了哪个worker</span></span><br><span class="line">	Map2Worker      []<span class="type">int</span></span><br><span class="line">	<span class="comment">//* reduce 桶的个数</span></span><br><span class="line">	nReduce         <span class="type">int</span></span><br><span class="line">	<span class="comment">//* 记录 reduce 任务分配给了哪个worker</span></span><br><span class="line">	Reduce2Worker   []<span class="type">int</span></span><br><span class="line">	<span class="comment">//* 互斥锁</span></span><br><span class="line">	mux             sync.Mutex</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>worker </p>
+<ul>
+<li><ol>
+<li><p>先 GetId</p>
+</li>
+<li><p>处于一个循环之中，不断获取任务</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> GetTaskArgs <span class="keyword">struct</span> &#123;</span><br><span class="line">	ID <span class="type">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> GetTaskReply <span class="keyword">struct</span> &#123;</span><br><span class="line">	TaskType     <span class="type">int</span> <span class="comment">// -1 - exit, 0 - idle, 1 - map task, 2 - reduce task</span></span><br><span class="line">	MapTaskID    <span class="type">int</span></span><br><span class="line">	MapFilename  <span class="type">string</span></span><br><span class="line">	ReduceTaskID <span class="type">int</span></span><br><span class="line">	ReduceNum    <span class="type">int</span></span><br><span class="line">	MapNum       <span class="type">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取任务之后分别判断，再进行处理即可。但在处理过程中如果失败，则要告诉master, 使得master可以重新发布任务，这里我们看下 GetTask的实现</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Coordinator)</span></span> ReduceSuccess(args *ReduceSuccessArgs, reply *ReduceSuccessReply) <span class="type">error</span> &#123;</span><br><span class="line">	c.mux.Lock()</span><br><span class="line">	<span class="keyword">defer</span> c.mux.Unlock()</span><br><span class="line">	c.WorkerState[args.ID] = <span class="number">0</span></span><br><span class="line">	c.WorkerCallTime[args.ID] = <span class="number">0</span></span><br><span class="line">	c.ReduceTaskState[args.ReduceTaskID] = <span class="number">2</span></span><br><span class="line">	c.Reduce2Worker[args.ReduceTaskID] = <span class="number">-2</span></span><br><span class="line">	c.PrintState()</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Coordinator)</span></span> GetTask(args *GetTaskArgs, reply *GetTaskReply) <span class="type">error</span> &#123;</span><br><span class="line">	<span class="comment">// map task</span></span><br><span class="line">	c.mux.Lock()</span><br><span class="line">	<span class="keyword">defer</span> c.mux.Unlock()</span><br><span class="line">    <span class="comment">// 假设所有的map任务都完成</span></span><br><span class="line">	allMapCompleted := <span class="literal">true</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> c.MapTaskState &#123;</span><br><span class="line">        <span class="comment">// 未分配</span></span><br><span class="line">		<span class="keyword">if</span> c.MapTaskState[i] == <span class="number">0</span> &#123;</span><br><span class="line">			reply.TaskType = <span class="number">1</span></span><br><span class="line">			reply.MapTaskID = i</span><br><span class="line">			reply.MapFilename = c.Filename[i]</span><br><span class="line">			reply.ReduceNum = c.nReduce</span><br><span class="line">			</span><br><span class="line">			c.WorkerState[args.ID] = <span class="number">1</span></span><br><span class="line">			c.WorkerCallTime[args.ID] = <span class="number">0</span></span><br><span class="line">			c.MapTaskState[i] = <span class="number">1</span></span><br><span class="line">			c.Map2Worker[i] = args.ID</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">            <span class="comment">// mapfinish 函数会将c.maptaskstate[i] = 2</span></span><br><span class="line">            <span class="comment">// 这里判断是为了下面reduce 函数判断</span></span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> c.MapTaskState[i] != <span class="number">2</span> &#123;</span><br><span class="line">			allMapCompleted = <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// reduce task</span></span><br><span class="line">	<span class="keyword">if</span> allMapCompleted == <span class="literal">true</span> &#123;</span><br><span class="line">		<span class="keyword">for</span> i := <span class="keyword">range</span> c.ReduceTaskState &#123;</span><br><span class="line">			<span class="keyword">if</span> c.ReduceTaskState[i] == <span class="number">0</span> &#123;</span><br><span class="line">				reply.TaskType = <span class="number">2</span></span><br><span class="line">				reply.ReduceTaskID = i</span><br><span class="line">				reply.MapNum = <span class="built_in">len</span>(c.MapTaskState)</span><br><span class="line">				c.WorkerState[args.ID] = <span class="number">1</span></span><br><span class="line">				c.WorkerCallTime[args.ID] = <span class="number">0</span></span><br><span class="line">				c.ReduceTaskState[i] = <span class="number">1</span></span><br><span class="line">				c.Reduce2Worker[i] = args.ID</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	reply.TaskType = <span class="number">0</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li></li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>5.进程</title>
+    <url>/2022/04/30/os/%E6%80%9D%E8%80%83%E9%A2%98--%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%EF%BC%8C%E7%BA%A4%E7%A8%8B/</url>
+    <content><![CDATA[<h3 id="1-为什么不用类似-fork-的方法创建线程呢"><a href="#1-为什么不用类似-fork-的方法创建线程呢" class="headerlink" title="1.为什么不用类似 fork 的方法创建线程呢?"></a>1.为什么不用类似 fork 的方法创建线程呢?</h3><ul>
+<li>答 : fork创建进程会复制很多父进程的资源，其实在我们实际编程之中，很多数据其实是没必要复制的，比如你的一个线程仅仅需要exec一个程序，很多东西复制就是浪费。<h4 id="2-一个多线程的进程使用fork生成了一个新进程，新进程中会存在几个线程-？"><a href="#2-一个多线程的进程使用fork生成了一个新进程，新进程中会存在几个线程-？" class="headerlink" title="2.一个多线程的进程使用fork生成了一个新进程，新进程中会存在几个线程 ？"></a>2.一个多线程的进程使用fork生成了一个新进程，新进程中会存在几个线程 ？</h4></li>
+<li>答 : 新进程只会存在一个线程，而新进程里的线程会复制调用它的线程。并且子进程会自动继承父进程中互斥锁( 条件变量 之类的 )。也就是说，父进程中已经被加锁的互斥锁在子进程中其实也是被锁住的。<h4 id="3-fork失败的原因"><a href="#3-fork失败的原因" class="headerlink" title="3.fork失败的原因"></a>3.fork失败的原因</h4></li>
+<li>答 : 1. 当前操作系统进程资源达到上限，无法创建更多的进程。例如文件描述符，网络套接字，进程数量过多，内存资源不够充分。<br>  2. 你的程序或者操作系统出现了一些不可描述的错误。<h4 id="4-参考以上的一些进程创建方式，请设计出一种比较好的优化策略"><a href="#4-参考以上的一些进程创建方式，请设计出一种比较好的优化策略" class="headerlink" title="4.参考以上的一些进程创建方式，请设计出一种比较好的优化策略"></a>4.参考以上的一些进程创建方式，请设计出一种比较好的优化策略</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int fan_fork(int flags, const char* path);</span><br><span class="line">/*</span><br><span class="line">fan_fork的flags参数用于指定需要创建进程的一些选项</span><br><span class="line">	F_UN_CLONE  不复制父进程的虚拟地址内存</span><br><span class="line">	F_CH_FIRST  子进程优先执行</span><br><span class="line">	F_NULL     以默认按照fork执行</span><br><span class="line">const char* path则用于如果需要运行某个程序，则直接填入地址即</span><br><span class="line">可。若参数为NULL，则默认复刻父进程内容，非NULL时则执行路径文件</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+<h4 id="5-进程上下文切换和线程上下文切换有什么不同"><a href="#5-进程上下文切换和线程上下文切换有什么不同" class="headerlink" title="5.进程上下文切换和线程上下文切换有什么不同"></a>5.进程上下文切换和线程上下文切换有什么不同</h4></li>
+<li>上下文切换就是从当前执行任务切换到另外另外一个任务的过程。但是，为了确保下一次能从正确的位置正确执行。在切换之前，需要保存上一个任务的状态。</li>
+<li>进程的上下文切换与线程的上下文切换最主要的区别还是因为线程的切换的虚拟地址空间是相同的(毕竟他们都属于自己的进程)，但是，进程切换的虚拟地址空间则是不同的。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>1.操作系统</title>
+    <url>/2022/04/30/os/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%20(1)/</url>
+    <content><![CDATA[<ul>
+<li>一 操作系统的抽象需求<ul>
+<li>1.服务应用</li>
+<li>2.管理应用</li>
+</ul>
+</li>
+<li>二  具体服务<ul>
+<li>1.为应用提供计算资源的抽象<ul>
+<li>CPU 进程&#x2F;线程</li>
+<li>内存 虚拟内存</li>
+<li>I &#x2F; O 设备</li>
+</ul>
+</li>
+<li>2.为应用提供线程间的同步<ul>
+<li>操作系统可以实现自己的同步原语 spinlock</li>
+<li>操作系统提供了更高效的同步原语 与线程切换配合 pthread_mutex</li>
+</ul>
+</li>
+<li>3.为应用提供进程间的通信<ul>
+<li>应用可以利用网络进行进程的通信 </li>
+<li>操作系统提供了更高效的本地通信机制 pipe <ul>
+<li>shell pipe 的例子</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>6.内存分配</title>
+    <url>/2022/04/30/os/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E7%AE%A1%E7%90%86%20(1)/</url>
+    <content><![CDATA[<h2 id="物理内存"><a href="#物理内存" class="headerlink" title="物理内存"></a>物理内存</h2><ul>
+<li>物理内存分配设计有两个重要的评价维度，一方面，物理内存分配器需要追求更高的内存资源利用率，即尽可能减少资源浪费。这里先介绍<strong>内存碎片</strong>的概念，</li>
+<li>内存脆片 : 内存碎片指的是无法被利用的内存，其直接导致内存资源利用率的下降。</li>
+<li>如何减少内存碎片是内存分配器设计者最关心的一个问题。内存碎片又被分为<strong>内部碎片</strong> ( external fragmentation ) 和<strong>外部碎片</strong> ( internal fragmentation )</li>
+<li>一种解决方式是，将物理内存以固定大小( 能够满足最大分配请求 ）划分为若干块，然后每次用一个块服务一个分配请求。如此一来，外部碎片的问题看似迎刃而解，但又会导致严重内部碎片问题。例如，我分配的内存大于一个应用程序所需要的内存。</li>
+<li>同时，物理内存分配器要追求更好的性能，主要是尽可能降低分配延迟和节约CPU资源，通过精密的算法细致地解决碎片问题。<ul>
+<li>如果通过精密的算法细致的解决碎片问题固然能够有效的提高内存资源利用率，但却可能带来高昂的性能开销。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="伙伴系统"><a href="#伙伴系统" class="headerlink" title="伙伴系统"></a>伙伴系统</h3><p>伙伴系统( buddy system ) 在现代操作系统中被广泛地用于分配连续的物理内存页。其基本思想就是将物理内存划分成连续的块，以块作为基本单位进行分配。不同块的大小可以不同，但每个块都由一个或者多个连续的物理页组成。物理页的数量必须是 2 的 n 次幂。</p>
+<ul>
+<li>当一个请求需要分配 m 个物理页时，伙伴系统将寻找一个大小合适的块，该块包含 2 ^ n 个物理页，且满足 2^(n-1) &lt; m &lt;&#x3D; 2^n,在处理请求的过程中，大的块可以分裂成两半，即两个小一号的块，这两个块互为伙伴，分裂得到块可以继续分裂，直到得到一个大小合适的块去服务相应的分配请求。在一个块被释放之后，分配器会找到其伙伴块，若伙伴块也处于空闲的状态，那么就将这两个伙伴块合并，形成一个大一号的空闲块，然后继续尝试向上合并。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20214507.png"></li>
+<li>关于伙伴系统的具体实现，我们了一般采用空闲链表数组来实现伙伴系统。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> memory_size 10</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="type">int</span> number;		<span class="comment">//数组编号</span></span><br><span class="line">    <span class="type">void</span>* ptr;		<span class="comment">// 所指向的块的首地址</span></span><br><span class="line">&#125;memory_ptr;</span><br><span class="line">memory_ptr nums[ memory_size ];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后通过一系列的操作来玩成。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20215834.png"></li>
+</ul>
+<hr>
+<h3 id="SLAB-分配器"><a href="#SLAB-分配器" class="headerlink" title="SLAB 分配器"></a>SLAB 分配器</h3><p>伙伴系统最小的分配单位是一个物理页( 4 KB),但是在大多数情况下，内核需要分配的内存大小通常是 几十个字节 或者几百个字节。远远小于一个 物理页的大小。如果使用伙伴系统进行内存分配，那么会出现严重的内部碎片问题。从而导致内存资源利用率降低。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">于是操作系统开发人员设计了另外一套内存分配机制用于分配小内存。</span><br><span class="line">在历史的演变中，现在主流的是 SLUB 分配器和 SLOB 分配器(SLUB分配</span><br><span class="line">器已经成为 Liunx内核默认使用的分配器，SLOB分配器主要应用于内存稀</span><br><span class="line">缺场景，例如嵌入式。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>简单来说，SLUB 分配器做的事情就是把伙伴系统分配的大块内存进一步细分成小块内存进行管理。一方面由于操作系统频繁分配的对象大小相对比较固定，另一方面就是为了避免外部碎片问题。所以 SLUB 分配器只分配固定大小的内存块。</li>
+</ul>
+<hr>
+<h3 id="常用的空闲链表"><a href="#常用的空闲链表" class="headerlink" title="常用的空闲链表"></a>常用的空闲链表</h3><ul>
+<li><strong>隐式空闲链表</strong><ul>
+<li>该链表的每个元素代表了一块内存区域，内存块头部存储了该块是否空闲，块大小的问题。再分配空闲块的时候，分配器在这条链表中依次查询，找到第一块大小足够的空闲内存块即可返回。如果找到的空闲块不仅仅能够满足分配请求，那么就会分裂。</li>
+</ul>
+</li>
+<li><strong>显式空闲链表</strong><ul>
+<li>显式空闲链表仅仅把空闲的内存块放在链表中，分配器仅仅需要维护两个指针，一个prev和next即可。</li>
+</ul>
+</li>
+<li><strong>分离空闲链表</strong><ul>
+<li>分离空闲链表主要是维护多条显式链表， 但每条链表服务固定范围大小的分配请求。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="物理内存和-CPU-缓存"><a href="#物理内存和-CPU-缓存" class="headerlink" title="物理内存和 CPU 缓存"></a>物理内存和 CPU 缓存</h3><ul>
+<li>在前面我们学习了，计算机为了加速我们程序的运行，所以在存储结构上分了很多层。</li>
+<li>但是一台普通的服务器的物理内存就有几百 GB ,但是 CPU 的缓存 却只有 几十 MB，物理内存中的数据会根据物理地址以缓存行 ( cache line ) 为 粒度 放入 CPU 缓存中，若缓存已满或存在冲突，则会根据预设的替换策略换掉某个缓存行。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>7. 纤程</title>
+    <url>/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/</url>
+    <content><![CDATA[<h2 id="纤程"><a href="#纤程" class="headerlink" title="纤程"></a><font color = Teal>纤程<font color = black></h2><p>由于主流的操作系统都采取一对一的线程模型。用户态线程和内核态线程具有一对一的关系。可以认为用户态线程的执行几乎完全收到操作系统调度器的管理。但是随着计算机的发展，应用程序也变得越来越复杂，在这些复杂的应用程序中，每个线程<font color = red>各司其职<font color = black>,有的负责计算，有的负责网络通信，有的大量读写内存。与操作系统调度器相比，应用程序对线程的语义和执行状态更加了解，因此可能做出更好的调度决策。此外用户态线程更利于提高整个程序的可扩展性。在这样的背景下，操作系统开始提供更多对用户态线程，即纤程的支持。</p>
+<h3 id="对纤程的需求"><a href="#对纤程的需求" class="headerlink" title="对纤程的需求"></a>对纤程的需求</h3><h4 id="经典例子-生产者消费者模型"><a href="#经典例子-生产者消费者模型" class="headerlink" title="经典例子 生产者消费者模型"></a>经典例子<font color = blue> 生产者消费者模型<font color = black></h4><ul>
+<li>生产者负责”<font color = red>生产<font color = black>“数据，即生成一些用于处理的数据；消费者则负责”<font color = red>消费<font color = black>“数据，就是处理生产者生成的数据。</li>
+<li><font color = DeepSkyBlue>Example<font color = black><ul>
+<li>现在假设一个进程中拥有两个线程，一个生产者，一个消费者，生产者在共享内存中写入数据，消费者从内存中使用。在线程的一次切换需要一次上下文切换( 即生产者到消费者 ),才能完成数据处理。但是在真正的服务器上时，一台计算机跑的程序上千个，调度器并不知道你这两个线程拥有生产者消费者这种关系。有时候并不总是优先生产者开始调度。而且消费者可能需要经历很长的一部分时间才能拿到数据。为了消除这部分延迟，计算机科学家引入了纤程。<h4 id="POSIX的纤程支持"><a href="#POSIX的纤程支持" class="headerlink" title="POSIX的纤程支持"></a>POSIX的纤程支持</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ucontext.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">getcontext</span><span class="params">(<span class="type">ucontext_t</span>*  ucp)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">setcontext</span><span class="params">(<span class="type">const</span> <span class="type">ucontext_t</span>* ucp)</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">makecontext</span><span class="params">(<span class="type">ucontext_t</span>* ucp, <span class="type">void</span> (*func)(), </span></span><br><span class="line"><span class="params">							<span class="type">int</span> argc,....)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	getcontext 可以用来保存当前的上下文，而setcontext则可以用来</span></span><br><span class="line"><span class="comment">切换到另一个上下文。</span></span><br><span class="line"><span class="comment">	setcontext 则用来切换到另一个上下文。</span></span><br><span class="line"><span class="comment">	makecontext 可以创建一个全新的上下文，并将其保存在第一个参数</span></span><br><span class="line"><span class="comment">ucp中。</span></span><br><span class="line"><span class="comment">由于这些上下文属于纤程，因此并不会保存到内核中TCB，而是完全保存在</span></span><br><span class="line"><span class="comment">第一个参数ucp中。由于这些上下文属于纤程，因此并不会保存到内核中</span></span><br><span class="line"><span class="comment">的TCB，而是完全保存在用户态。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<h4 id="纤程的上下文切换"><a href="#纤程的上下文切换" class="headerlink" title="纤程的上下文切换"></a>纤程的上下文切换</h4></li>
+</ul>
+</li>
+<li>纤程的上下文切换的触发机制与内核态存在较大不同。由于操作系统可以通过中断的方式抢占当前的 CPU 并进行上下文切换。这种切换是强制的，所以我们一般称之为<font color = red>抢占式多任务处理<font color = black>( preemptive multitasking )模式，但是纤程并不具备使用中断抢占其他纤程的权限，因此无法使用这种模式。所以纤程一般会提供&#x3D;&#x3D;yield&#x3D;&#x3D;接口，该接口与一对一模型的yield接口相似，都会暂时放弃 CPU，允许其他纤程的调度。这种调度方式被称为<font color = red>合作式多任务处理<font color = black> ( cooperative multitasking ),需要多个纤程进行协作以完成调度。</li>
+<li>除了 POSIX 定义的 ucontext 以外，Windows操作系统也提供了对纤程的支持，模型与context类似。(此处不做过多赘述)。</li>
+<li>除了操作系统以外，很多程序语言也提供对纤程的支持。从操作系统的支持来看，我们一般称之为纤程，一般将程序语言提供的纤程支持称之为<font color = red>协程<font color = black>,现在很多语言都提供了对携程的支持，而这一特性常常被用在上下文频繁切换的应用场景中( Web服务 )。随着应用种类变得复杂，支持协程已经成为程序语言的一大发展趋势。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>8. 线程</title>
+    <url>/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/</url>
+    <content><![CDATA[<p>引言 : 在早期操作系统中，进程就是操作系统用来管理运行程序的最小单位。随着电子技术的发展，计算机拥有了更多的 CPU 核心，程序的可并行度提高，但是进程这层抽象又显得过于笨重。</p>
+<ul>
+<li>创建进程的开销太大了，<ul>
+<li>1.创建独立的地址空间.</li>
+<li><ol start="2">
+<li>载入数据和代码段，初始化堆栈等等</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>即使调用 fork之类的接口创建进程，那么也需要大量的复制操作。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>由于单个进程彼此独立，各自拥有自己的虚拟地址空间，在进程间进行数据共享比较麻烦。<font color = blue>传统的共享虚拟页( 粒度较粗 ) <font color = black> 和 <font color = red > 进程间通信 (管道，本地套接字，信号，内存映射文件(mmap) )这些开销都太高<font color = black>，</li>
+<li>所以研究人员就在进程内部添加可独立执行的单元，他们共享进程间的地址空间，但又各自保存运行时所需要的状态(<font color = Fuchsia >上下文切换<font color = black> )，这就是线程。然后线程便取代进程成为操作系统调度和管理程序的最小单位。线程也继承了操作系统为进程定义的部分概念。</li>
+</ul>
+<hr>
+<h3 id="多线程的地址空间布局"><a href="#多线程的地址空间布局" class="headerlink" title="多线程的地址空间布局"></a>多线程的地址空间布局</h3><p><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-NYQ1C1.png"></p>
+<ul>
+<li>** <font color = red > 分离的内核栈与用户栈<font color = black>**<ul>
+<li>由于每个线程执行相对独立，进程为每个线程都准备了不同的栈，供他们存放临时数据。在内核中，每个线程也有对应的内核栈。当现成饭切换到内核中执行时，他的栈指针也会切换到对应的内核栈</li>
+</ul>
+</li>
+<li>** <font color = red > 共享的其他区域<font color = black>**<ul>
+<li>进程除栈以外的其他区域，由该进程的所有线程共享，包括堆，数据段，代码段等。当同一个进程的多个线程需要动态分配更多内存时( 在 C 语言 中可通过调用malloc函数实现)，他们的内存分配操作都是在同一个堆上完成的，因此malloc的实现需要使用<strong>同步原语</strong>,使每个线程能正确地获取到可用的内存空间。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="用户态线程和内核态线程"><a href="#用户态线程和内核态线程" class="headerlink" title="用户态线程和内核态线程"></a>用户态线程和内核态线程</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">根据线程是由用户态应用还是由内核创建与管理，可将线程分为两类:</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>用户态线程( user-level thread )</strong></li>
+<li><strong>内核态线程( kernel-level thread )</strong><br>内核态线程由内核创建，受操作系统调度器直接管理。而用户态线程则是由应用自己创建，内核不可见，因此不直接受系统调度器管理。<ul>
+<li>与内核态线程相比，用户态线程更加轻量级，创建开销更小，但功能也较为受限。与内核态相关的操作( 系统调用 ) 需要内核态线程协助才能完成。为了实现用户态线程与内核态线程的协作，操作系统会建立两类线程之间的关系，这种关系我们称之为&#x3D;&#x3D;&#x3D;&#x3D;多线程模型&#x3D;&#x3D;&#x3D;&#x3D;( multithreading model )。一般来说，多线程模型主要有三种:<ul>
+<li>1.多对一模型</li>
+<li>2.一对一模型</li>
+<li>3.多对多模型<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-ND1DD1.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>多对一模型</strong> : 将多个用户态线程映射给单一的内核态线程。这种模型比较简单，但是由于只有一个内核态线程，每次只能有一个用户态线程进入内核。其他用户态线程只能阻塞，随着多核机器的逐步普及，用户态线程的数量也在不断增加，这种模型很难适应这种变化了。<font color = blue> 随着最进几年的应用变得越发复杂，应用内部的调度也开始变得重要，多对一模型又开始得到了应用。<font color = black></li>
+<li><strong>一对一模型</strong> : 一对一模型为每个用户态线程映射单独的内核态线程。每个用户态线程只需要注意自己的内核态线程，不用去阻塞其他的用户态线程。<font color = DeepSkyBlue>但是<font color = black>,这其实只不过又是<font color = red>Trade off<font color = black>罢了，一对一的模型的缺点是 : 由于每个用户态线程都对应一个内核态线程，创建内核态线程的开销会随着用户态线程数量的增加而增加。但是呢一般的操作系统都会对用户态线程做出一些限制。</li>
+<li><strong>多对多模型</strong> : <font color = Fuchsia>多对多模型可以将 N 个用户态线程 映射到 M 个内核态线程中，并且 N &gt; M<font color = black>,我们一般把内核态线程的数量 M 设置为 CPU 的核心数，但是对用户态线程不做限制。多对多模型大概是前两者的模型一个结合体，既减轻了多对一模型中因为内核态线程过少而导致的阻塞问题，也解决了一对一模型中因为内核态线程过多而导致的性能开销过大的问题。&#x3D;&#x3D;&#x3D;&#x3D;Trade off&#x3D;&#x3D;&#x3D;&#x3D;,此时，又增加了内核态线程的管理的复杂性。<h3 id="线程控制块与线程本地存储"><a href="#线程控制块与线程本地存储" class="headerlink" title="线程控制块与线程本地存储"></a>线程控制块与线程本地存储</h3></li>
+<li>与进程类似，线程也有自己的<strong>线程控制块</strong>( Thread Control Block, TCB), 用于保存自身的信息。<font color = blue>在目前主流的一对一线程模型中，内核态线程和用户态线程会各自保存自己的 TCB<font color = black>，其中，内核态的 TCB 结构与前面介绍的 PCB 相似，会存储线程的运行状态，内存映射，标识符等信息。而用户态 TCB 的结构主要是由线程库所决定。<ul>
+<li>例如，在linux &#x2F; c中，我们如果要用到线程之类的知识，那么就必须使用pthread库，而pthread的结构体就是用户态的 TCB，用户态的 TCB 可认为是内核态的扩展，可以用来存储更多与用户态相关的信息。女士们先生们，让我们了解一些一个很重要的功能吧 <font color = red>线程本地存储<font color = black> ( Thread Local Storage, TLS )。</li>
+<li>在多线程编程中，可以通过 TLS 实现一个 “一个名字，多份拷贝” ( 与线程数量相同 ) 的全局变量。这样，即使不同的线程在使用该变量时，虽然从代码层次看访问的都是同一个变量。实际上访问的都是该变量的不同拷贝，于是可以很方便的实现<font color = red>线程内部的全局变量<font color = black >。<ul>
+<li>例如，一个多线程的应用程序可以通过<font color = blue>__thread int count; <font color = black>为每个线程定义变量 count，当某个线程对count赋值时，只会修改自己的拷贝，并不会对其他线程产生影响。在运行过程中，线程库会为每个线程创建结构完全相同的 TLS，保存在内存的不同地址上。在每个线程的 TLS 中，count都处于相同的位置。即每份count的拷贝相对于 TLS 起始位置的偏移量都相等。</li>
+<li>由于 TLS 结构的相似性，对 TLS 变量的寻址的实现方式也较为特殊。×86 - 64 使用了 FS 段寄存器来实现 TLS 中变量的寻址。具体来说，当一个线程被调度时，pthread线程库会找到该线程 TLS 的起始地址，并且存入段寄存器 FS中，当线程访问 TLS 的变量时，会用 FS 中的值加上偏移量的方式获取变量。不同线程的 FS 寄存器中保存的 TLS 起始地址不同，所以不同的线程访问同名的 TLS 变量时，最终其实都访问了不同的地址。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="线程的基本接口-以-POSIX-线程库为例"><a href="#线程的基本接口-以-POSIX-线程库为例" class="headerlink" title="线程的基本接口 : 以 POSIX 线程库为例"></a>线程的基本接口 : 以 POSIX 线程库为例</h3><ul>
+<li>在一对一线程模型中( Linux )中，线程库为应用提供了创建，退出，合并等操作线程的接口。</li>
+<li>线程创建<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_create</span><span class="params">(<span class="type">pthread_t</span>* thread, <span class="type">const</span> <span class="type">pthread_attr_t</span>* attr,</span></span><br><span class="line"><span class="params">							<span class="type">void</span> * (*start_routine) (<span class="type">void</span>* ),</span></span><br><span class="line"><span class="params">							<span class="type">void</span>* arg )</span>;</span><br></pre></td></tr></table></figure>
+<font color = Fuchsia >一个有趣的现象是pthread_create是通过实现的。<font color = black></li>
+<li>在进程(1)中我们知道 clone函数是可以到达精密控制的，今天我就来慢慢揭晓他。<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int clone_flags = &#123; CLONE_VM | CLONE_FS </span><br><span class="line">                         | CLONE_FILES | CLONE_SYSVSEM</span><br><span class="line">                         | CLONE_SIGHAND | CLONE_THREAD </span><br><span class="line">					  | CLONE_SETTLS | ... &#125;;</span><br><span class="line">ARCH_CLONE(&amp;start_thread, STACK_VARIABLES_ARGS, clone_flags,...);</span><br></pre></td></tr></table></figure></li>
+<li>在 clone 之前，pthread_create 会传入大量的参数以控制 “ 进程 “的创建过程。其中一部分参数会使得新创建出的”<strong>进程</strong>“与父进程共享数据，比如 CLONE_VM 就会共享地址空间。通过参数从而共享一系列的代码库，堆，数据，代码等内存部分的共享。但是 CLONE_THREAD 较为特殊，它允许新创建的”<strong>进程</strong> “与clone的调用者从属于同一进程。另外，参数 STACK_VARIABLES_ARGS 则对应新的用户栈的起始地址，由 pthread_create 预先创建。总之，通过这些参数，clone实际上创建了一个属于原进程,与原进程共享大量的数据结构，拥有私有栈的实例，而这个实例就对应一个线程。</li>
+<li><font color = blue> 下面我们来看看linux线程的演化历史<font color = black><ul>
+<li>在早期的Linux中，进程还是调度的基本单位，操作系统并没有对线程提供支持。为了提供 POSIX 线程支持。开始时使用 clone 来创建线程，但是clone原本是用来创建进程的。这就显得 “不伦不类” (适配性较差).后来 Red Hat 公司开发的 Native POSIX Thread Libray ( NPTL )修改了 Linux 内核,在linux 2.6 版本进入了内核主线后，并一直沿用至今。</li>
+</ul>
+</li>
+<li><font color = red>线程退出<font color = black><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">pthread_exit</span><span class="params">(<span class="type">void</span>* retval )</span>;</span><br></pre></td></tr></table></figure></li>
+<li>其实pthread_exit的调用并不是必须的。当一个线程的主函数( 如上面提到的 start_routine )执行结束时，pthread_exit 将会隐式地调用。不过，pthread_eixt提供了参数retval来表示线程的返回值，用户可以通过对pthread_exit调用来设置返回值。如果 pthread_exit 未被显式地调用，那么线程的主函数的返回值会被设置为线程的返回值。</li>
+<li><font color = red>让出资源<font color = black><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">pthread_yield</span><span class="params">(<span class="type">void</span> )</span>;</span><br></pre></td></tr></table></figure></li>
+<li>除了pthread_exit线程退出之外，不接受参数，返回值为该操作执行的结果。实现也很简单。放弃 CPU 资源。该函数一定程度上能优化我们的程序，例如 当一个线程需要等待外部事件时，此时对他的调度没有实际意义，只会浪费 CPU 资源。</li>
+<li><font color = red>合并操作<font color = black></li>
+<li>在多线程协作的场景时，可能会出现线程之间的执行存在相互依赖的情况。因此，线程库会提供合并( join )操作，允许一个县城等待另一个线程的执行，并获取他的执行结果。举例来说，当主线程创建了很多工作线程之后，就可以通过调用合并操作获取各工作线程的返回值。判断其执行是否出错。并进行相应的处理<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int pthread_join(pthread_t thread, void** retval);</span><br><span class="line">/*</span><br><span class="line">	pthread_t thread 参数用于传入需要等待的进程。</span><br><span class="line">	void** retval 则是一块内存，用于接受被等待线程的返回值。该返回值就</span><br><span class="line">是调用 pthread_exit 时设定的返回值。</span><br><span class="line">	pthread_join 将会从被等待线程的内存拷贝到当前线程指定的地址。</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+<h4 id="挂起与唤醒"><a href="#挂起与唤醒" class="headerlink" title="挂起与唤醒"></a>挂起与唤醒</h4></li>
+<li>当线程发现自己的执行需要等待某个外部事件时，他便可以加入阻塞状态，让出计算资源给其他线程执行。使线程进入阻塞状态的机制我们称之为<strong>挂起</strong>。线程的挂起一般有两种方式<ul>
+<li><ol>
+<li><font color = red>等待固定的时间<font color = black></li>
+</ol>
+<ul>
+<li>sleep 函数会让线程挂起数秒。如果需要更加细粒度的控制，则可以使用nanosleep函数(纳秒),当sleep被调用时，内核会将对应的线程状态设置为阻塞。当 sleep 指定的时间走完后，内核会将该线程重新唤醒，重新将其状态改为预备状态，允许它继续执行。由于内核不能保证线程被唤醒后可以立即被调度，因此一般来说，线程从挂起到再次被执行的时间会长于其指定的需要挂起的时间。</li>
+</ul>
+</li>
+<li><ol start="2">
+<li><font color = Teal>等待具体的事件<font color = black></li>
+</ol>
+<ul>
+<li>第二种就是等待具体的事件,在linux中线程也可以在进入挂起状态之前指明等待的具体事件。在pthreads中，对应的接口是 pthread_cond_wait。</li>
+<li>pthread_cond_wait 使用<strong>条件变量</strong>作为同步的方式，pthread_cond_wait 会让线程等待一个参数 cond 之上。内核会将该线程挂起。当其他线程使用 pthread_cond_signal操作同一个条件变量cond时，内核会协助将挂起的线程唤醒，使他重新变为预备状态。<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// sleep 函数</span></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> <span class="title function_">sleep</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> seconds )</span>;</span><br><span class="line"><span class="comment">// pthread_cond_wait 函数</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_cond_wait</span><span class="params">( <span class="type">pthread_cond_t</span>* <span class="keyword">restrict</span> cond, </span></span><br><span class="line"><span class="params">						<span class="type">pthread_mutex_t</span>* <span class="keyword">restrict</span> mutex )</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="sleep-vs-pthread-yield"><a href="#sleep-vs-pthread-yield" class="headerlink" title=" sleep vs pthread_yield"></a><font color = DarkOrchid> sleep vs pthread_yield<font color = black></h4><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">sleep 操作与前面提到的yield有相似之处，他们都会让当前线程放弃CPU资</span><br><span class="line">源，然后交给其他线程执行。他们最重要的区别就是调用后线程的区别:</span><br><span class="line">yield : 当线程调用yield之后，该线程仍然会处于预备状态，并且可能很快就会被调度。在某些极端情况下，如果没有其他可以调度的线程，该线程甚至</span><br><span class="line">会继续执行。</span><br><span class="line">sleep : 当线程调用了sleep之后，他会进入阻塞状态，只有条件满足后才会</span><br><span class="line">重新恢复到预备状态，我们可以把yield看做类似于sleep(0);,就是挂起</span><br><span class="line">时间无限趋于0的调用。</span><br><span class="line"></span><br><span class="line">yield由于很快就会被再次调用，因此适合于等待条件很快就会被满足的</span><br><span class="line">情况。</span><br><span class="line">sleep由于会涉及到线程状态的变化，因此适合于等待条件被满足的时间</span><br><span class="line">不确定或者较长的情况。</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>10. 虚拟内存(2)</title>
+    <url>/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[<h3 id="页替换策略"><a href="#页替换策略" class="headerlink" title="页替换策略"></a>页替换策略</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当我们需要分配物理页时，若空闲的物理页已经用完或者小于一个阈值。</span><br><span class="line">那么此时操作系统会选择 页替换策略 选择一个或者一些物理页换出到磁盘以便</span><br><span class="line">让出空间。当已经被换出的内存页再次被访问时，必须重新从磁盘加载到物理</span><br><span class="line">内存，十分耗时！！！</span><br></pre></td></tr></table></figure>
+<ul>
+<li>页替换策略是根据硬件所提供的页访问信息，来猜测页应该被换出 ( 比如短时间内再次被换入的小概率的页 )，从而最小化缺页异常的发生次数以提升性能。与此同时，操作系统也需要考量 页替换策略本身执行所带来的开销。不同的页替换策略 有其各自适合的应用场景。</li>
+</ul>
+<hr>
+<h4 id="MIN-策略-x2F-OPT-策略"><a href="#MIN-策略-x2F-OPT-策略" class="headerlink" title="MIN 策略 &#x2F; OPT 策略"></a>MIN 策略 &#x2F; OPT 策略</h4><ul>
+<li>MIN 策略又称 OPT 策略。</li>
+<li>这一策略在<strong>选择被换出的页时，优先选择未来不会再访问的页，或者在很长时间内不会再访问的页。</strong><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">这一策略理论上来说，是最优秀的页替换策略，但在实际场景中通常很难实现。</span><br><span class="line">页访问顺序取决于应用程序，而操作系统通常无法预先得知应用程序未来访问页的顺序。</span><br><span class="line">该策略主要作为一个标准，来衡量其他页替换策略的优劣。</span><br></pre></td></tr></table></figure></li>
+<li>我们来模拟一下，假设物理内存中可以存放三个物理页，初始为空，一个应用程序需要访问物理页 1 – 5，顺序为 “3  2  3  1  4  3  5  4  2  3  4  3 “;<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20164604.png"></li>
+</ul>
+<hr>
+<h4 id="FIFO-策略"><a href="#FIFO-策略" class="headerlink" title="FIFO 策略"></a>FIFO 策略</h4><ul>
+<li>FIFO 策略是最简单的页替换策略之一，同时也正因为简单所以带来的时间开销很小。</li>
+<li>该策略优先<strong>选择最先换入的页进行换出。</strong></li>
+<li>操作系统维护一个队列用于记录换入内存的物理页号。每换入一个物理页就会把它的页号加入到队尾，因此最先换入的物理页号总是处于对头位置。</li>
+<li>当需要选择一个物理页换出时，该策略总是选择位于队列头部的物理页号所对应的物理页。<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">但其实这种策略所带来的性能很低，因此他几乎不会被现代操作系统直接</span><br><span class="line">使用。</span><br><span class="line">此处不予图片展示。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h4 id="Second-Chance-策略"><a href="#Second-Chance-策略" class="headerlink" title="Second Chance 策略"></a>Second Chance 策略</h4><ul>
+<li>Second Chance 策略是FIFO  的优化版本。</li>
+<li>操作系统同样需要维护一个队列，该队列用于记录换入物理内存的物理页号。但同时还要为<strong>每一个物理页号维护一个访问标志位</strong>。</li>
+<li>如果所访问的页号已经在队列中，则置上其访问标志位。</li>
+<li>在寻找将要换出的内存页时，该策略优先查看位于队头的页号。此时有两种情况<ul>
+<li>1.如果他的访问标志位没有被置上，则换出该页号所对应的内存页。</li>
+<li>2.如果他的访问标志位已经被置上，则将该标志位清0，并将该内存页号挪到对尾 ( 将其当成一个最近访问的内存页的页号 ),并从新的对头开始重新寻找要换出的内存页。</li>
+</ul>
+</li>
+<li>如果所有的内存页号的访问标志位都被 置上，那么原本处于队头的内存页号将再次回到对头时被换出 ( 此时，所有的标志位都被清 0 )。<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">我们来看看 Second Chance 策略的执行流程</span><br></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20171044.png"><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">我们一般认为为一个应用程序分配更多的物理页，则发生换页的次数越少。</span><br><span class="line">但是更多的物理页，就会导致更多的换页( 更低的性能 )。</span><br><span class="line">这种现象 我们称之为 Belady( Belady&#x27;s anomaly )，该现象可能在操作系统使用 FIFO 和 Second Chance 等页替换策略时发生。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h4 id="LRU-策略"><a href="#LRU-策略" class="headerlink" title="LRU 策略"></a>LRU 策略</h4><ul>
+<li>LRU ( Least Recently Used ) 策略在选择被换出的页时，优先选择最久未被访问的页。</li>
+<li>过去数条指令频繁访问的页很可能在后续的数条指令中也被频繁访问。</li>
+<li>实现方法 : 操作系统维护一个链表，按照内存页的访问顺序将内存页号插入链表中 ( 最久被访问的内存页号在链表的首端，而最近访问的内存页号在链表的尾端。)在每次访问内存之后，操作系统把刚刚访问的内存页号调整到链表的尾端；每次都选择换出位于链表首端的页。<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20180830.png"></li>
+</ul>
+<hr>
+<h4 id="MRU-策略"><a href="#MRU-策略" class="headerlink" title="MRU 策略"></a>MRU 策略</h4><ul>
+<li>MRU 策略 与 LRU 策略 相反， MRU ( Most Recently Used ) 策略在替换内存页时，优先换出最久被访问的内存页。</li>
+<li>该策略认为 : 应用程序不会反复地访问相同的地址。<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">例如，在一个视频播放器中，每一帧只会被读取一次，不会重复读取。</span><br></pre></td></tr></table></figure>
+<h4 id="时钟算法策略"><a href="#时钟算法策略" class="headerlink" title="时钟算法策略"></a>时钟算法策略</h4></li>
+<li>该算法和Second Chance策略类似，但是这里将换入的物理内存的页号排成了一个时钟的形状。</li>
+</ul>
+<hr>
+<h3 id="工作集模型"><a href="#工作集模型" class="headerlink" title="工作集模型"></a>工作集模型</h3><ul>
+<li>在选择和实现页替换策略时候，操作系统的原则是以最小的算法开销达到尽可能接近 MIN 策略的效果。</li>
+<li>然后如果选择的替换策略与实际的工作负载不匹配，则有可能导致 颠簸现象( thrashing ),造成严重的性能损失。</li>
+</ul>
+<p><strong>工作集模型</strong> 能够有效的避免颠簸现象发生，工作集的定义是 : “ 一个应用程序在时刻 t 的工作集 W 为他在时间区间[ t - x, t ]使用的内存页集合，也被认为他在未来( 下一段x时间内 ) 会访问的内存页集合 “。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">那么如何高效地追踪工作集呢?</span><br></pre></td></tr></table></figure>
+<p>一种常见的实现方法就是 <strong>工作集时钟算法</strong></p>
+<ul>
+<li>操作系统设置一个定时器，每经过固定的时间间隔，一个设置好的工作集追踪函数就会被调用。</li>
+<li>该追踪函数 为 每个内存页维护两个状态。上次使用时间和访问位，均被初始化位 0 ，每次被调用，该函数都会检查每个内存页的状态。<ul>
+<li>如果访问位 是 1，则说明在此次 时间间隔 内核页被访问过，于是该函数会把当前系统时间赋值给该内存页的上次使用时间。</li>
+<li>该方法前提是 CPU 硬件会在程序访问某一个页的时候自动地将对应的访问位设置为1，如果访问位是0，那么就说明在此次时间间隔内该页没有被访问，于是该函数就会计算该页的年龄， 若该页的年龄超过预设的时间间隔 X，那么就不再属于工作集。</li>
+<li>检查完一个页的状态之后，工作集追踪函数将其访问位设置为0，通过工作集时钟算法或者具有相似设计的算法，操作系统能够有效地预测工作集，从而灵活地进行页替换。<h3 id="虚拟内存总结"><a href="#虚拟内存总结" class="headerlink" title="虚拟内存总结"></a>虚拟内存总结</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">虚拟内存抽象使应用程序能够拥有一个独立而连续的虚拟地址空间，其通过</span><br><span class="line">页表与硬件的配合能够在应用程序透明的前提下自动地进行虚拟地址到物理</span><br><span class="line">地址的翻译。</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>11. 共享内存</title>
+    <url>/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(3)%20---%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h3><p>  共享内存( shared memory )允许同一个物理页在不同的应用程序间共享。</p>
+<ul>
+<li>例如，应用程序 A 的虚拟页 V1 呗映射到物理页 P，若应用程序 B 的虚拟页 V2也被映射到物理页 P，则物理页 P 是应用程序 A 和 应用程序 B 的共享内存。</li>
+<li>应用程序 A 能读取虚拟页 V1 和 应用程序B 读取 虚拟页 V2将得到相同的内容，互相也能看到对方修改的内容。</li>
+<li>共享内存可以让不同的程序之间互相通信，传递数据。</li>
+<li>基于这种共享内存的思想，操作系统又从中衍生出诸如<strong>写实拷贝</strong>和<strong>内存去重</strong>等功能<h4 id="这里引入-Linux-x2F-c下的一个函数"><a href="#这里引入-Linux-x2F-c下的一个函数" class="headerlink" title="这里引入 Linux &#x2F; c下的一个函数"></a>这里引入 Linux &#x2F; c下的一个函数</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/mman.h&gt;</span></span></span><br><span class="line"><span class="type">void</span>* <span class="title function_">mmap</span><span class="params">(<span class="type">void</span>* addr, <span class="type">size_t</span> length, <span class="type">int</span> prot, \</span></span><br><span class="line"><span class="params">				<span class="type">int</span> flags, <span class="type">int</span> fd, <span class="type">off_t</span> offset )</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">munmap</span><span class="params">(<span class="type">void</span>* addr, <span class="type">size_t</span> length)</span>;</span><br><span class="line"><span class="comment">/* mmap 用于创建内存映射文件的函数，用于实现文件磁盘地址和进程虚拟</span></span><br><span class="line"><span class="comment">地址空间中一段虚拟地址的一一对映关系。</span></span><br><span class="line"><span class="comment">进程可以采用指针的方式来读写这一段内存，而系统会自动会写到脏页面对</span></span><br><span class="line"><span class="comment">应的文件磁盘上。既完成了对文件的操作而不必再调用 Read Write等系统</span></span><br><span class="line"><span class="comment">调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可</span></span><br><span class="line"><span class="comment">以实现不同进程的文件共享。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="写时拷贝"><a href="#写时拷贝" class="headerlink" title="写时拷贝"></a>写时拷贝</h3><p>请思考一下2个场景</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1 ：两个应用程序拥有很多的相同的内存数据( 比如加载了相同的动态链接</span><br><span class="line">库 ),如果把这些数据相同的内存页在物理内存中仅存出一份，然后以只读的</span><br><span class="line">方式映射给两个应用程序，那么就能够显著的节约物理资源。</span><br><span class="line">2 ：Linux中，一个应用程序可以用 fork 系统调用创建子程序，初始时，</span><br><span class="line">父子程序的全部内存数据和地址空间完全一样。如何高效地实现这种应用程</span><br><span class="line">序创建机制呢？</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20194543.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">让我们回忆一下，我们一般的一个指针的前 12 位是不用的，那么剩下的位用来干嘛呢( 此处引入位图的概念 ),剩下的属性位用于标识虚拟页的权限( 该页是否可写，可执行 )的权限位等等。</span><br></pre></td></tr></table></figure>
+<p>那么问题也就来了，写时拷贝技术允许应用程序 A 和 应用程序 B 以 只读的方式 共享同一段物理内存。一旦某个应用程序对该内存区域进行修改，就会触发缺页异常。<br>！但这里的缺页异常不是由于违反权限所导致的。<br>操作系统发现有一个应用程序 write 了 一片 只读内存，那么操作系统就会把物理内存中缺页异常对应的物理页重新拷贝一份，并且将新拷贝的物理页以<br>可读可写的形式重新映射给触发异常的应用程序，再回复应用程序的执行。</p>
+<h3 id="内存去重"><a href="#内存去重" class="headerlink" title="内存去重"></a>内存去重</h3><p>基于写时拷贝机制，操作系统进一步地设计了内存去重功能。操作系统可以定期地在内存中扫描具有相同的内容的物理页。并且找到映射到这些物理页的虚拟页；然后只保存其中一个物理页，并且将具有相同内容的其他虚拟页都用写时拷贝的方式来映射到这个物理页。</p>
+<ul>
+<li>该功能通常由操作系统来实现</li>
+<li>但其实又不过是 Trade off 罢了，内存去重功能会对应用程序访问内存延迟造成影响，当应用程序写一个被去重的内存页时，就会触发缺页异常，又会导致内存拷贝，从而可能导致性能下降。<h3 id="内存压缩"><a href="#内存压缩" class="headerlink" title="内存压缩"></a>内存压缩</h3>为了节约内存资源，现代操作系统还引入了压缩算法来对内存数据进行压缩。</li>
+<li>基本原理 : 当内存资源不充足的时候，操作系统选择一些 “最近不太会使用”的内存页，压缩其中的数据，从而释放更多的空闲内存<h3 id="大页"><a href="#大页" class="headerlink" title="大页"></a>大页</h3></li>
+<li>在多级页表那篇博客中，我们知道，较高的 TLB 的命中率可以降低地址翻译的性能开销。由于翻译每个内存页都需要占用 一个 TLB 缓存项，CPU 中有限的 TLB 缓存项显得弥足珍贵。</li>
+<li>大页机制能够有效的缓解 TLB 缓存项不够用的问题，大页的大小可以是 2MB 或者 1 GB。</li>
+<li>这里不多赘述。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>9. 虚拟内存</title>
+    <url>/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98--%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8/</url>
+    <content><![CDATA[<h2 id="虚拟内存-MMU-和-TLB-多级页表"><a href="#虚拟内存-MMU-和-TLB-多级页表" class="headerlink" title="虚拟内存- MMU 和 TLB - 多级页表"></a>虚拟内存- MMU 和 TLB - 多级页表</h2><ul>
+<li>在计算机中，我们直接操作物理地址，是一种效率底下的的方式，而虚拟的出现，则大大加速了程序员的开发能力。(虽然这降低了性能，不过是 Trade off 罢了)。</li>
+<li>在 CPU 中**内存管理单元( Memory Management Unit , MMU )**，负责虚拟地址到物理地址的转换。</li>
+<li>随着计算机的发展，人们发现对于这种方式，不是很高效，于是便引入了 **转址旁路缓存 ( Translation Lookaside Buffer , TLB )**。</li>
+</ul>
+<h3 id="分段与分页机制"><a href="#分段与分页机制" class="headerlink" title="分段与分页机制"></a>分段与分页机制</h3><ul>
+<li>MMU将虚拟地址翻译为物理地址的主要机制有两种。<ul>
+<li><strong>分段机制</strong></li>
+<li><strong>分页机制</strong></li>
+</ul>
+</li>
+</ul>
+<h4 id="分段机制"><a href="#分段机制" class="headerlink" title="分段机制"></a>分段机制</h4><ul>
+<li>分段机制下，操作系统以 “段” ( 一段连续的物理内存) 的形式来管理&#x2F;分配内存。</li>
+<li>一个应用程序的虚拟地址空间由若干个大小不同的段组成，有代码段，数据段。</li>
+<li>当 CPU 访问虚拟地址空间中的某一个段时，MMU 会通过查询段表得到该段的物理内存区域。</li>
+<li>一个虚拟地址由两部分组成<ul>
+<li>第一个段表示段号，标识该虚拟地址属于整个虚拟地址空间的哪一段</li>
+<li>第二个表示段内地址，相当于段内偏移。</li>
+<li>这个过程有点像 CS : IP 寄存器找到指令的过程。CS 负责存储段地址，IP负责存储偏移地址。</li>
+</ul>
+</li>
+<li>MMU 翻译步骤<ul>
+<li><ol>
+<li>MMU 通过<strong>段表基址寄存器</strong>找到段表的位置。结合待翻译虚拟地址中的段号，可以在段表中定位到对应段的信息。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>然后取出该段的起始地址( 物理地址 )，加上待翻译虚拟地址中的段内地址( 偏移量 )，就能够得到最终的物理地址。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>分段机制的好处 与 坏处<ul>
+<li><strong>好处</strong>： 在这种的机制下，物理地址和虚拟地址都被划分成了多个离散的区域。操作系统可以实现物理内存资源的离线分配。</li>
+<li><strong>坏处</strong>： 试想一下，我一个 4GB 的物理内存，被分成了4段，0 - 1 GB， 1 - 3 GB， 3 - 3.5 GB， 3.5 - 4GB，当我的 1 - 3 GB 的内存 和 3.5 - 4GB 空闲时，我想分配 1.5 GB 给应用程序，由于他们是不连续的，会分配失败！！！。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">那么如何解决分段机制所带来的内存使用不够充分的坏处呢？</span><br><span class="line">分页机制便引入。</span><br></pre></td></tr></table></figure>
+
+<h4 id="分页机制"><a href="#分页机制" class="headerlink" title="分页机制"></a>分页机制</h4><ul>
+<li>分页机制的思想是将应用程序的虚拟地址空间划分为连续的.等长的物理页。同时物理内存也被划分为连续的，等长的物理页。</li>
+<li>虚拟页和物理页的页长固定且相等，从而使得操作系统能够很方便的为每个应用程序构造页表。——-虚拟页到物理页的映射关系表。</li>
+<li>逻辑上，该机制下的虚拟地址也由两个部分组成，<ul>
+<li>第一部分标识虚拟地址的<strong>虚拟页号</strong>。</li>
+<li>第二部分标识虚拟地址的<strong>页内偏移量</strong>。</li>
+</ul>
+</li>
+<li>在具体的地址翻译过程中，MMU 首先解析得到虚拟地址中的虚拟页号，再通过该虚拟页号去该应用程序的页表( 页表起始地址存放在<strong>页表基地址寄存器</strong>中 ) 找到对应条目，然后取出条目中存储的物理页号，最后用该物理页号对应的物理页起始地址加上虚拟地址中的页内偏移量得到最终的物理地址。</li>
+<li>在分页机制下，有效解决了分段机制下的内存碎片问题。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">我亲爱的同学啊，试想一下，对于 64 位的虚拟地址空间，</span><br><span class="line">这个页表有多大呢，假设页的大小是 4KB,页表每一项大小是</span><br><span class="line">8字节，那么一张页表的大小就是 2的 64 次方 * 8 / 4KB ，大概是 33554432 GB !!</span><br><span class="line"></span><br><span class="line">那么怎么优化呢？多级页表也就顺势而为了！</span><br><span class="line">( Trade off )</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>为了压缩 页表大小，操作系统引入了多级页表。用来满足虚拟内存在空间 高效性的要求。</li>
+<li>在使用多级页表时，一个虚拟地址中依然包括虚拟页号和业内偏移量，其中虚拟页号将被进一步地划分为 K 个部分，</li>
+<li>虚拟页号对应于该虚拟地址在 第 i 级的索引。当任意一级页表中的某个条目为空时，该条目对应的下一级页表不需要存在，依次类推。接下来的页表也不需要存在。</li>
+<li>此刻读者可以把他理解为一种多叉树的结构( B+ 树 )。</li>
+</ul>
+<h4 id="AArch-64-环境下的-4-级页表"><a href="#AArch-64-环境下的-4-级页表" class="headerlink" title="AArch 64 环境下的 4 级页表"></a>AArch 64 环境下的 4 级页表</h4><ul>
+<li>虚拟地址低48位参与地址翻译，页表级数为4级，虚拟页大小为 4 KB。</li>
+<li>在此设置下，物理内存被划分为连续的 4KB大小的物理页，一个虚拟页可以映射对应一个物理页。因为页的大小是 4KB，所以虚拟地址的 低12位对应的是业内偏移量。整个页表的起始地址 ( 物理地址 ) 存储在一个特殊的寄存器中。</li>
+<li>第0级( 顶级 )页表有且仅有一个页表页，页表基地址寄存器存储的就是该页的物理地址。其余每一级页表拥有若干个离散的页表页，每一个页表页也占用物理内存中的一个物理页。</li>
+<li>一个 64 环境下的虚拟地址在逻辑上被划分为如下几个部分</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>位段</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>63 – 48 位</td>
+<td>全为 0 &#x2F; 1,硬件要求，</td>
+</tr>
+<tr>
+<td>47 – 39 位</td>
+<td>这 9 位作为虚拟地址在第 0 级页表的索引</td>
+</tr>
+<tr>
+<td>38 – 30 位</td>
+<td>这 9 位作为该虚拟地址在第 1 级页表的索引</td>
+</tr>
+<tr>
+<td>29 – 21 位</td>
+<td>———————-2 级——–</td>
+</tr>
+<tr>
+<td>20 – 12 位</td>
+<td>———————–3 级——–</td>
+</tr>
+<tr>
+<td>11 – 0 位</td>
+<td>最后 12 位就是页内偏移量。</td>
+</tr>
+</tbody></table>
+<p><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20141450.png"></p>
+<ul>
+<li>当 MMU 翻译一个虚拟地址的时候，首先根据<strong>页表基地址寄存器</strong>的物理地址找到第 0 级页表页，然后将虚拟地址的虚拟页号( 第 47 – 39 位 ) 作为页表项索引，读取第 0 级页表页中的相应页表项。该页表项中存储着下一级页表页的物理地址， MMU 按照类似的方式将虚拟地址的虚拟页号作为页表项索引。继续读取第一级页表页中的相应的页表项。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">那么上图中所说的 TLB 又是什么呢？</span><br><span class="line">多级页表可以显著地压缩页表大小，但是会让地址翻译时长的增加，多级页表结</span><br><span class="line">构使得 MMU 在翻译虚拟地址的过程，需要依次查找多个页表页中的页表项。</span><br><span class="line">而为了减少地址翻译的速度</span><br><span class="line"></span><br><span class="line"> MMU 引入了 转址旁路缓存( Translation Lookaside Buffer, TLB)</span><br></pre></td></tr></table></figure>
+
+<h4 id="加速地址翻译的重要硬件-：-TLB"><a href="#加速地址翻译的重要硬件-：-TLB" class="headerlink" title="加速地址翻译的重要硬件 ： TLB"></a>加速地址翻译的重要硬件 ： TLB</h4><ul>
+<li>TLB 缓存了虚拟页号到物理页号的映射关系；我们可以把 TLB 简化成存储着键对值的哈希表。</li>
+<li>从上图我们可以看到，MMU 会先把虚拟页号作为 键 去查询 TLB 中的缓存项，如果未命中则再去多级页表中查询，反之则直接返回。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">那么一个很有趣的问题就是，难道我们引入了 TLB 这种数据结构就可以获得大</span><br><span class="line">幅的 TLB 命中吗？</span><br><span class="line"> 是的！！！，其实一个应用程序大多都只会访问类似的内存位置，就是说前一</span><br><span class="line"> 次被访问的内存地址，那么他周围的内存通常也会被多次的访问，由于内存访</span><br><span class="line"> 问的时空局部性，TLB 缓存项在将来可能会被多次查询，即发生 TLB 命中的</span><br><span class="line"> 可能性较大。</span><br></pre></td></tr></table></figure>
+
+<h4 id="问题又来了"><a href="#问题又来了" class="headerlink" title="问题又来了"></a>问题又来了</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">我们如何保证 TLB 中的数据 和 当前页表中的数据所对应呢 ？(一致性)</span><br></pre></td></tr></table></figure>
+
+<h4 id="TLB-刷新"><a href="#TLB-刷新" class="headerlink" title="TLB 刷新"></a>TLB 刷新</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">如果两个应用程序 A 和 B 使用了 相同的 虚拟地址 VA，但是对应不同的 物理地址，</span><br><span class="line">1. 应用程序 A 访问 VA 时，TLB会缓存 VA 到 PA1的翻译，</span><br><span class="line">2. 切换到应用程序 B 后，操作系统会更新 CPU 所使用的 页表基地址，当时当 B 访问 VA 时，CPU 如果依然从 TLB 中寻找 VA 的翻译，那么就会导致应用程序 B 的 VA 也被翻译成 PA1，那么就产生了错误的内存访问错误！</span><br><span class="line">3. 这个问题的原因：</span><br><span class="line">        - 页表其实已经发生了变化，但 TLB 却没有做出刷新操作。</span><br><span class="line">        - 所以操作系统在更换页表( 切换应用程序 ) 需要主动刷新 TLB。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>但如果操作系统频繁地刷新 TLB ，那么应用程序执行后，总会发生 TLB 未命中的情况。</li>
+<li>我们是否可以避免 &#x2F; 降低页表切换所带来的开销呢？<ul>
+<li>这里举例 AArch64，它提供了 ASID ( Address Space IDentifier )功能，具体来说，操作系统可以为不同的应用程序分配不同的 ASID 作为应用程序的身份标签。再把该标签写入写入应用程序的页表基地址寄存器中的空闲位。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">这里不多赘叙。</span><br></pre></td></tr></table></figure>
+
+<h4 id="换页与缺页异常"><a href="#换页与缺页异常" class="headerlink" title="换页与缺页异常"></a>换页与缺页异常</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">如果虚拟页尚未被分配使用，那么页表中自然没有相应的物理页映射吗 ?</span><br><span class="line">被分配的虚拟页在页表中一定有相应的物理页映射吗 ？</span><br><span class="line">答案 是 否定的。</span><br><span class="line">哈哈， 你一定大受震撼吧！</span><br><span class="line">虚拟页被分配使用之后，在页表中依然可能没有映射到物理页。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>小凡是个喜欢玩 LOL 的同学，他的电脑只有 2 GB运行内存，可是它先打开了 QQ ，该软件占用了 0.5 GB内存，然后双击了 LOL，LOL 需要占用 3 GB 内存,<br>  在一阵卡顿之后，LOL 还是打开了。</li>
+<li>那么为什么这两个应用程序能够成功打开呢？</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">虚拟内存的换页机制就是为了满足这种场景所设计的。</span><br></pre></td></tr></table></figure>
+
+<p><strong>换页机制</strong>的基本思想就是当我们的物理内存不够使用时，<strong>操作系统应该把若干物理页的内容分写到类似于磁盘这种容量更大且更加便宜的存储设备</strong>。</p>
+<ul>
+<li>然后操作系统就可以回收这些物理页并继续使用。<ul>
+<li>当操作系统需要将物理页P的内容写到磁盘上的一个位置时，并且在应用程序A的页表中去除虚拟页 V 的映射，同时记录该物理页被换到磁盘的对应位置。该过程称为把物理页 P 换出，物理页 P 就可以被操作系统回收，并且分配给别的应用程序使用。</li>
+<li>此时，虚拟页 V 就处于已经分配但是没有映射到物理内存的状态。</li>
+</ul>
+</li>
+</ul>
+<h4 id="缺页异常"><a href="#缺页异常" class="headerlink" title="缺页异常"></a>缺页异常</h4><ul>
+<li>当应用程序访问已经分配但未映射到物理内存的虚拟页时，就会触发缺页异常。<ul>
+<li>此时 CPU 会运行操作系统预先设置的缺页异常处理函数( page fault handler ), 该函数会找到( 也可能是通过换页的方式 ) 一个空闲的物理页，将之前写道磁盘上的数据内容全部加载到该物理页中，并且在页表中填写虚拟地址到这一物理页的映射，该过程就是 换入 ( swap in )。之后，CPU 就可以回到 发生缺页异常的地方继续执行。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20153117.png"></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">     利用换页机制，操作系统可以把物理内存放不下的数据临时放到磁盘上，等</span><br><span class="line">到需要的时候再放回到物理内存中，从而能够为应用程序提供超过物理内存容量</span><br><span class="line">的内存空间。( 小凡可生气了，他的内存只有 2 GB，玩LOL 一卡一卡的)。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于换页机制过程中所带来的耗时的裁判操作，因此操作系统会引入<strong>预取</strong>机制来进行优化，</li>
+<li><strong>预取机制</strong>：当发生换入操作时，预测哪些页即将被访问，提前将他们换入物理内存，从而减少缺页异常的次数。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2.调度</title>
+    <url>/2022/04/30/os/%E8%B0%83%E5%BA%A6%20(1)%20---%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<p>引言:小凡是个喜欢打LOL的同学，一天他又在摆弄他的2GB运行内存的笔记本了，他先双击了 LOL，再双击了 网易云音乐，这个 电脑太卡了，足足等待了 30 min 才打开了 LOL，然后再打开了网易云音乐。然后他十分生气，决定再也不玩了，然后就去换了个 <span style="color: red;">调度器<span style="color: black;">,让这两个程序能够可以达到并发执行。因而播放器可以每隔一段时间将音频输出到音频设备上。造成小明听不到音乐的情况。所以系统的调度不仅需要调度任务，还需要满足应用程序的要求。</span></span></p>
+<h4 id="什么是调度呢"><a href="#什么是调度呢" class="headerlink" title="什么是调度呢 ?"></a><span style="color: blue;">什么是调度呢 ?</span></h4><ul>
+<li>一般来说，一个系统会同时处理多个请求，但是他的资源是有限的，调度就是用来协调每个请求对资源的使用方法。调度不仅仅是计算机中的概念，她同时也能在我们的实际生活中找到很多例子，比如银行的服务排队。有时候我们还能看到 <span style="color: fuchsia;">VIP优先 <span style="color: black;">,这就体现了调度中<strong>优先级</strong>的概念。 又比如小明和小红约定一个人玩 10 min的游戏机后，就换另外一个人玩，这就体现了调度中<span style="color: red;">时间片<span style="color: black;">( time slice)的概念，表示每个请求一次占用后多长时间的资源。再举个例子，人们每天都有很多不同的时间需要完成。那么应该先做哪件，再做哪件?这也需要运用调度的思想,在生活中，这样的例子数不胜数。</span></span></span></span></li>
+<li><strong>任务调度</strong> ( task scheduling ),也称之为负责调度可执行的任务对 CPU 的使用；</li>
+<li><strong>IO 调度</strong> 对应该以何种顺序向存储设备发起 IO 请求进行调度；操作系统中的内存管理同样也是一种调度。内存管理将虚拟内存映射到物理内存，这里的物理内存就是有限的资源。当需要使用的虚拟内存容量超过物理内存的实际容量时，<strong>换页机制</strong>就是在对哪部分物理页的内容可以留在内存中进行调度，并将剩余物理页的内容写回磁盘。</li>
+<li>调度被应用在计算机系统的方方面面，也体现在我们工作，生活，学习的点点滴滴。</li>
+</ul>
+<h4 id="操作系统调度"><a href="#操作系统调度" class="headerlink" title="操作系统调度"></a><span style="color: red;">操作系统调度</span></h4><ul>
+<li>进程是资源隔离的单位，并不是执行的单位。一个进程可以有多个线程，这些线程可以在不同的 CPU 核心上并行地执行。因此线程才是调度器的调度对象。在 Linux 操作系统中通常用 任务 ( task )来描述线程。</li>
+</ul>
+<hr>
+<p>一般的调度器都通过维护<strong>运行队列</strong>( run queue )的方式来管理对象，运行队列并非一定要由先进先出的队列实现，例如 Linux使用的调度器中会使用红黑树来实现运行队列。任务在执行时若触发一定条件，则会停止执行。<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-7ML8C1.png"></p>
+<ul>
+<li>该任务执行了指定的时间片后，应让其他任务在当前任务CPU核心上执行。</li>
+<li>该任务发起了 IO 请求，在 IO 返回前，他不会继续执行。</li>
+<li>该任务主动停止执行或进入睡眠。</li>
+<li>该任务被系统中断打断，系统优先处理中断而暂缓该任务的执行。</li>
+</ul>
+<p>结束执行后，如果任务还需要执行，就会重新加入运行队列，并且等待再次被调度执行。调度器的主要作用是做出调度决策，整个系统通过该决策进而决定该如何调度。这些调度决策包括：</p>
+<ul>
+<li>从运行队列中选择下一个运行的任务。</li>
+<li>决定执行该任务的 CPU 核心。</li>
+<li>决定该任务被允许运行的时间，即时间片。</li>
+</ul>
+<p>在调度器做出决策后，系统中的相应机制便会将任务执行在对应的 CPU 核心上。以上便是操作系统中任务调度的概要，其中隐藏了调度器的一些设计问题，这些设计问题主要可以归结为两类：</p>
+<ul>
+<li><span style="color: red;">调度器该做出什么样的调度决策( What ) ？ <span style="color: black;">计算机通过调度器的目的就是通过调度任务对 CPU 的使用，进而让任务在某一方面达到用户的预期，或者说满足用户的需求，那么这些指标有哪些?在不同种类的系统中应该考虑何种指标 ? 这些都是开发者在设计实现调度器需要考虑的一些因素。</span></span></li>
+<li><span style="color: blue;">调度器应该如何做出符合预期的调度决策 ( How ) ? <span style="color: black;">在确定当前系统需要考虑的调度指标后，我们需要进一步通过适当的调度策略做出和你的决策。一个合理的调度策略该如何选择?</span></span></li>
+</ul>
+<hr>
+<h3 id="调度指标"><a href="#调度指标" class="headerlink" title="调度指标"></a><span style="color: teal;">调度指标</span></h3><ul>
+<li>计算机的应用场景复杂多变，用户对于不同的场景会有不同的预期。因此会有不同的调度指标来指导调度策略的选择。<ul>
+<li>常用的调度指标 : 与性能相关的<strong>吞吐量，周转时间，响应时间</strong>;</li>
+<li>一些非性能指标 : 例如<strong>公平性</strong>，<strong>资源利用率</strong>；</li>
+<li>某些任务，场景特有的需求。 例如<strong>实时任务的实时性</strong>，<strong>终端设备的能耗</strong>。</li>
+</ul>
+</li>
+<li>计算机处理的任务中，有一类任务被称为<strong>批处理任务</strong>,比如机器学习的训练，复杂的科学计算，这类任务在计算机上执行时无须与用户交互，其目标就是尽可能快地完成，主要调度指标是任务处理的<strong>吞吐量</strong>( 单位事件内处理的任务数量 )，需要让吞吐量尽可能高。同时，调度需要让任务的周转时间( 任务从被发起直至执行结束后所需要的时间 )尽量短。<ul>
+<li>比如我们有些时候需要计算机执行一些<strong>交互式任务</strong>，对于这类任务来说，用户更关心的是自己的请求( 例如自己敲击键盘的输入 )能否及时被处理。调度应该确保交互式任务的<strong>响应时间</strong>( 任务从被发起直至第一次向用户返回输出以响应用户所需要的时间 )。</li>
+<li>车载系统中的距离探测仪就会定时检查距离，再比如视频的画面渲染就需要<strong>实时性</strong>。</li>
+<li>当下智能手机走入千家万户，待机时间就对应系统的能耗指标了。因此，移动设备上的操作系统调度还需要尽可能<strong>降低能耗</strong>。</li>
+</ul>
+</li>
+<li>以上罗列了一些特定场景下的主要调度指标和所有场景共有的调度指标。不同场景下所需的调度指标很可能是有交集的。例如手机既需要与用户交叉又要考虑能耗。很多时候，操作系统的调度都需要观察具体情况。<ul>
+<li><span style="color: red;">调度指标的多样性</span></li>
+<li><span style="color: blue;">调度可参考的信息有限</span></li>
+<li><span style="color: red;">任务间的复杂交互</span></li>
+<li><span style="color: blue;">许多方面存在权衡</span></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="调度机制"><a href="#调度机制" class="headerlink" title="调度机制"></a><span style="color: fushsia;">调度机制</span></h3><p>一台操作系统上运行着大量的进程，数量可能远远超过 CPU 核心数量，他们使用的内存也可能会超过可用的内存总量。为了协调多个进程对 CPU 和 内存的使用，操作系统使用了 进程调度机制。进程调度可以分为 长期，中期，短期调试。</p>
+<h4 id="长期，中期与短期调度"><a href="#长期，中期与短期调度" class="headerlink" title="长期，中期与短期调度"></a>长期，中期与短期调度</h4><ul>
+<li>在前面我们的学习可以知道，一个进程从出生到死掉有五中状态<ul>
+<li>新生状态</li>
+<li>预备状态</li>
+<li>运行状态</li>
+<li>阻塞状态</li>
+<li>终止状态</li>
+</ul>
+</li>
+</ul>
+<p>思考一个问题 : 当一个程序尝试运行时，操作系统是否应该为他立即创建对应的进程，并将该进程设置为预备状态呢?</p>
+<ul>
+<li>答案是否定的，如果大量的进程在短时间内被创建出来，会造成调度决策 ( ) 需要考虑的进程数量剧增，调度开销变大的问题。因此，即使每个用户已经向操作系统提交了执行某个程序的请求，系统可能也不会立即处理该请求。这一决策是由操作系统中的<strong>长期调取</strong>(long - term scheduling&#x2F;job scheduling ) 负责的。</li>
+<li>长期调度就像是一个阀门，用于限制系统中真正短期内调度管理的进程数量，避免短期调度的开销过大。当长期调度为了某个程序创建了进程并且将其状态设置为预备状态后，会由短期调度进一步管理该进程 ( 例如做出调度决策 ),因此，长期调度决定了当前真正可被调度的进程的数量。</li>
+</ul>
+<p>另外根据进程主要使用的资源类型，进程可以简单分为两类 : <strong>计算密集型( CPU - bound )进程</strong>，主要用于 CPU 进行长时间计算，因此其性能受处理器计算性能的限制；IO 密集型( I &#x2F; O - bound)进程，等待 IO 请求完成会占用该类进程的大部分时间。</p>
+<p>实际做出调度决策的是<strong>短期调度( short - term scheduling&#x2F;CPU scheduling )</strong>,短期调度主要负责进程在预备状态，运行状态，阻塞状态间的转换。</p>
+<ul>
+<li><p>举个例子，在短期内调度决定执行一个进程时，会将该进程从预备状态设置为运行状态。短期调度使用适当的调度策略，尽可能满足系统的调度指标，处于预备状态的进程需要被短期调度才能运行。而处于运行状态的进程可能会被短期调度打断，避免占用 CPU 时间过长，影响调度的公平性。</p>
+<ul>
+<li>长期调度与短期调度一般会从 CPU IO 的角度做出调度决策。然和，操作系统中的内存资源还没有被考虑。那么便引入了<strong>中期调度( medium - term scheduling )</strong> 来负责的。</li>
+<li>中期调度实际上是换页机制的一部分。如果当前系统中的进程已经占用了大量内存，中期调度会挂起系统中被短期调度管理的进程，进而降低进程中占用的内存总量。</li>
+</ul>
+</li>
+<li><p>下面我们来看一下进程转换示意图 : <strong>挂起预备状态</strong> ( suspended ready ) 和 <strong>挂起阻塞状态</strong> ( suspended blocking ),处于这两种状态进程无法被短期调度执行。当中期调度将预备状态或阻塞状态的进程挂起后，会对应地将进程设置为挂起预备状态或挂起阻塞状态。一般处于阻塞状态的进程是等待 IO 请求，用户输入或者睡眠，需要等到一定事件被触发后才能重新被设置为预备状态。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-UYX1C1.png"></p>
+</li>
+<li><p>在进程调度中，长期. 中期和短期三种调度相互协作，分别以不同的目标对进程进行调度。<span style="color: red;">长期调度<span style="color: black;">的触发间隔较长，他粗粒度的决定是够讲一个新的进程纳入调度管理，负责增加系统中可被调度的进程的数量；<span style="color: red;">中期调度<span style="color: black;">的触发相对频繁，他辅助换页机制，负责限制系统中可被调度的进程的数量；而在三种机制中<span style="color: red;">短期调度<span style="color: black;">的触发最为频繁，他负责细粒度地调度进程的执行，做出相应的调度策略。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-L518C1.png"></span></span></span></span></span></span></p>
+</li>
+<li><ol>
+<li>在传统操作系统中，批处理任务被发起后，其信息会被存入磁盘中的<span style="color: red;">批处理队列<span style="color: black;">( batch queue ),等待被长期调度允许进入系统。</span></span></li>
+</ol>
+</li>
+<li><ol start="2">
+<li>长期调度负责从批处理队列中选取下一个可被调度的批处理任务，为其创建对应的进程，将进程设为预备状态并且放入<strong>运行队列</strong>。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>由于交互式任务和实时任务一般都有比较高的时延要求，需要在一定的时间内返回结果。所以这两类任务一般不会被长期调度管理。</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>通过短期调度的决策，运行队列中的进程会被调度到 CPU 上执行。此时进程为运行状态。</li>
+</ol>
+</li>
+<li><ol start="5">
+<li>当进程运行完一个时间片之后，短期内会将其重新置为 预备状态。并放回队列。</li>
+</ol>
+</li>
+<li><ol start="6">
+<li>当运行中的进程发起 IO 请求，等待用户输入或者进入睡眠，因而需要被阻塞时，会被放入<strong>阻塞队列</strong>( blocking queue )中，短期调取会选择将其他进程进行调度。</li>
+</ol>
+</li>
+<li><ol start="7">
+<li>当进程等待的事件被触发后，操作系统直接将对应的进程移出阻塞队列，并将其置为预备状态，重新放入运行队列中。</li>
+</ol>
+</li>
+<li><ol start="8">
+<li>如果系统中的内存使用量过大，就会触发换页机制，中期调度会挂起处于预备状态 &#x2F; 阻塞状态的进程，强其置为挂起 预备状态 &#x2F; 挂起阻塞状态 并且放入 挂起运行队列 &#x2F; 挂起阻塞队列中。</li>
+</ol>
+</li>
+<li><ol start="9">
+<li>处于挂起阻塞状态的进程，如果他等待的事件被触发，将会被置为挂起预备状态并且被放入挂起运行队列中。</li>
+</ol>
+</li>
+<li><ol start="10">
+<li>当系统中的内存使用情况不再紧张时，中期调度会激活挂起运行队列 &#x2F; 挂起阻塞队列中。</li>
+</ol>
+</li>
+<li><ol start="11">
+<li> 当进程结束后，会进入终止状态并且最终被回收。</li>
+</ol>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>3.调度(2)</title>
+    <url>/2022/04/30/os/%E8%B0%83%E5%BA%A6(2)%20---%20%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[<p><span style="color: blue;">单核调度策略</span></p>
+<ul>
+<li>下面我们为大家介绍一些常见的，经典的调度策略。这些调度策略都假设当前 CPU 只有一个可用的 CPU 核心，每个任务都有自己的 <span style="color: red;"><span style="color: red;">到达事件 ( arrival time ) <span style="color: black;">和 <span style="color: red;">运行时间 ( run time )<span style="color: black;">, 到达时间用于表示该任务何时被发起并处于预备状态，运行时间用于表示该任务从何时执行到结束总共花费的时间。</span></span></span></span></span><ul>
+<li>在单核上进行调度时：调度器应该要回到以下两个问题:<ul>
+<li><ol>
+<li>当前应该调度哪个任务 ?</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>被调度的任务应该持久多少 ?</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="经典调度策略"><a href="#经典调度策略" class="headerlink" title="经典调度策略"></a>经典调度策略</h3><ul>
+<li><p><span style="color: red;">先到先得</span></p>
+<ul>
+<li><p>在调度策略中，一种比较直观的策略就是<strong>先到先得</strong> ( First Come First Served, FCFS )策略，这一类策略也被称之为<strong>先进先出</strong>( First In First Out, FIFO ) 策略。</p>
+</li>
+<li><p>在该策略中，我们会在操作系统中维护一个运行队列，这个队列中的元素是处于预备状态，等待执行的任务。在决定需要执行的任务时，FCFS 策略会选取运行队列中的队尾，运行队列能够起到多个任务确定顺序的作用，保证任务的执行顺序与其进入运行队列的顺序一致。</p>
+</li>
+<li><p>FCFS 策略仅仅需要开发者维护一个队列，就可以实现 FCFS 策略，同时，FCFS策略不需要预知任务信息，也没有需要开发者手动调试的参数。但随着本章内容的不断深入，我们会意识到 FCFS 策略没有将许多重要因素纳入考量，从而导致他很难被直接在复杂系统中。不过，FCFS 的思想仍然在后面介绍的调度策略中得到了应用。</p>
+</li>
+<li><p>弊端1 : 在长短任务混合的场景下对短任务支持不友好。在 短任务(短时话费任务) 与 长任务 ( 长时运行任务 )混合的应用场景下，FCFS策略可能会导致短任务的周转时间和运行时间之比过大，对短任务不友好。</p>
+</li>
+<li><p>弊端2 : 对 IO 密集型任务不友好。 IO 密集型任务通常会花费大部分时间等待 IO，仅仅有少量的时间被用在 CPU 中处理请求。</p>
+</li>
+</ul>
+</li>
+<li><p><span style="color: red;">最短任务优先</span></p>
+<ul>
+<li>FCFS 策略所面临的短任务等待时间过长的问题促使我们寻找另外一种调度策略。我们应该尽量让短任务立即执行。根据这一思想，得出的策略是<span style="color: blue;">最短任务优先<span style="color: black;">,该策略会选择运行时间最短的任务执行。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-Q2BUC1.png"></span></span></li>
+<li>弊端 1: <strong>必须预知任务的运行时间</strong>。SJF 策略能选取最短运行时间或者固定的应用场景，这个前提是合理的。但是在更多的场景下，系统很难预知将要处理的任务确切的运行时间。因为这取决于当前系统的状态和其他影响程序性能的因素。</li>
+<li>弊端 2: <strong>其表现严重依赖于任务到达时间点</strong>,现在我们假设一个场景，一个任务时间比较长的任务A到达了，所以 A 会先运行，只有 任务B到达了，但是 任务 B只需要话费少量的时间，此时 调度器已经没有办法了。</li>
+</ul>
+</li>
+<li><p><span style="color: red;">最短完成时间任务优先</span></p>
+<ul>
+<li>SJF策略面临的问题是，”迟到”的短任务是无法受益于 SJF 策略的。为了解决这个问题，一个直接的思路是，是否可以让调度器在任务 B 和 C 之间对其进行调度，按照这个思路产生了 SJF 策略的抢占式版本 : <strong>最短完成时间任务优先</strong>( Shortest Time-to- Completion First, STCF ) 策略，在 FCFS 策略 和 SJF 策略中，调度器必须等一个任务执行完成或者主动退出执行才能开始下一个调度。因此被称为<strong>非抢占式调度</strong>( non-preemptive scheduling ) 。而 STCF 策略在任务到达系统时也会进行调度，有可能会中断当前正在执行的任务，转而执行其他的任务，因此被称为<strong>抢占式调度</strong>( preemptive scheduling )。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-UK26C1.png"></li>
+<li>任务 A 在第 0 秒到达了，B 和 C 稍后达到，由于 任务 A 在第 0 秒到达系统，所以A执行了 1S，在第一秒时，任务 B 到达系统，由于其所需要的时间少于 任务 A，所以 B 就可以立即抢占任务 A并执行。而当任务 C 在第2s到达时，任务 B 已经运行了 1s，<strong>任务 B所需要的剩余时间</strong>小于任务C的时间，所以 C就不会抢占 任务B的执行，而是会等到任务 B 结束后再开始执行。</li>
+<li>弊端 : 长任务饥饿 : STCF 策略极端倾向于完成时间较短的任务，因此当一个系统中有大量的短任务和少量的长任务时，这个系统的长任务很可能会无法占用 CPU 资源，一直处于<strong>饥饿</strong>状态 ( starvation ),即永远无法被调度。在某些系统中，通常会有后台服务( 例如 网络服务，数据库服务 ) 随开机启动，并一直执行，他们的运行时间相比于其他任务长很多。SJF策略和 STCF 策略几乎不会让他们获得执行机会，而这对整个系统调度的公平性是不利的。</li>
+</ul>
+</li>
+<li><p><span style="color: red;">时间片轮换</span></p>
+<ul>
+<li>我们以上讨论的调度策略主要是针对批处理任务的策略，他们主要关注的调度指标是<strong>周转时间</strong>，随着操作系统的发展，交互式程序(终端)逐渐普及，与用户的交互为调度带来了新的调度指标 — <strong>响应时间</strong>。响应时间指的是从用户发起请求到任务响应用户所需要的时间。</li>
+<li>上文我们所讨论的策略只有在任务到达和结束时才会进行调度，如果一段时间内没有新的任务到达或者当前任务没有执行完，那么调度器就无法进行调度，因此非运行状态的任务也无法定时地响应用户。为了定时响应用户，需要为任务设置时间片，限定任务每次执行的时间。当前任务执行完时间片之后，就切换到运行队列中的下一个任务。这一思想的体现就是<strong>时间片轮转( Round Robin, RR )策略</strong>。由于时间片一般会设置的足够小，所以所有任务都可以在一定时间内执行并且响应用户，从而将响应时间限定在一个可接受的范围内。相比于<strong>SJF</strong>策略和<strong>STCF</strong>策略，RR策略使用无须直到任务的运行时间，而且也不会出现长任务饥饿的情况。</li>
+<li>对于 RR 策略，一个关键点就是他的时间片大小该如何选取。理想情况下，时间片的选取越小，任务响应的时间就越快。但是，之前的讨论分析是基于抽象的模型进行的，没有考虑一下因素: 调度器的调度开销；任务切换所导致的上下文切换开销。在实际场景中，过小的时间片反而会引入大量开销，让任务的调度成为严重的性能瓶颈。而如果任务的调度时间过长，则会产生很多不良的负面效果</li>
+<li><span style="color: red;">如何将调度的时间片降低到一个合理的值是对于开发者一个大挑战</span></li>
+<li><span style="color: blue;">弊端 : 在任务允许时间相似的场景下平均周转时间高 <span style="color: black;">RR策略一定程度上保证了每个人物之间的公平性( 每个任务都能在一定时间内被调度到 ),同时也可以获得良好的响应时间。</span></span></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="优先级调度"><a href="#优先级调度" class="headerlink" title="优先级调度"></a>优先级调度</h3><ul>
+<li><strong>调度器应该尽量避免与交互式任务被批处理任务阻塞</strong>。<ul>
+<li>例 ： 小凡在他的linux操作系统上输入了 一个 ls -R 命令，但此时他的后台挂载着一个大型的服务器，而这个服务器和这个 ls 命令 采取了 RR 的策略，那么小凡就会看到了他的 命令要运行很长时间，暴躁的小凡同学对此很生气，他恨不得立马 kill 了这个进程。</li>
+</ul>
+</li>
+<li>如果操作系统可以区分交互式任务和批处理任务，那么他就可以设置一个让交互式任务先执行的一个调度策略。为此，调度器引入了<span style="color: red;"><span style="color: red;">优先级<span style="color: black;">的概念。优先级是一个很直接有效的概念。操作系统通过对优先级的判断来去先执行哪个应用程序，再去执行哪个应用程序，从而达到对用户更好的体验。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-MON5C1.png"></span></span></span><ul>
+<li>对于拥有明确的截止时间的完成任务，我们应该为其分配最高的优先级，尽量保证实时任务可以在截止时间之前就可以完成，而交互式的任务响应时间直接影响用户体验，为了避免用户体验较差，我们需要为其分配较高的优先级，最后，批处理任务一般不像实时任务那样需要对时延，响应时间有很大的要求，所以这类任务的优先级很低。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="多级队列"><a href="#多级队列" class="headerlink" title="多级队列"></a><span style="color: red;">多级队列</span></h4><ul>
+<li>在一架飞机准备起飞时，人员分为三类，{ 飞行员，空乘，维护人员 }，{ VIP乘客}，{ 普通乘客 } 。在飞机允许登机之前，第一类的工作人员会在专用机场等待。VIP乘客一般会在VIP候机室等待。而工作人员需要立即登机检查人机，做好飞机的临时起飞工作。这三类人在不同的场景下调度。就好像操作系统将不同优先级的任务放在不同的任务队列中。对于优先级仙童的人员，他们的登机顺序没有要求。乘客直接排队( 先到先得 )的方式决定相互之间的登机顺序。</li>
+<li><strong>多级队列</strong>( Multi-Level Queue, MLQ )策略就是以类似的思想进行设计的，<ul>
+<li>如图 6-11 所示。每个任务会被分配预先设置好的优先级，每个优先级对应一个队列，任务会被存储在对应的优先级队列中。如果优先级不同的任务的任务同时处于预备状态。那么调度器应该倾向于调度优先级高的任务。</li>
+<li>并且一个任务必须等到所有优先级比他高的任务调度完成之后才能被调度。处于相同优先级队列的任务，他们内部的调度方式没有统一标准，可以针对性地为不同队列采用不同调度策略。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-EELBD1.png"></li>
+<li>MLQ 策略适合静态的引用场景，这类场景下任务信息( 例如任务的大致运行时间，资源使用情况等 )可以在执行前获知。</li>
+<li>在设置 MLQ 策略的任务优先级时，需要注意将 IO 密集型任务混合运行的场景，假设计算密集型任务优先级比 IO 密集型任务优先级高。那么就很可能遇到一下这种情况。<ul>
+<li>大量的高优先级的的计算密集型任务优于 IO 密集型任务执行，而IO密集型任务一直没有机会发起IO请求，必须等到所有计算密集型任务完成之后才可以执行，最终造成 IO 资源利用率低下。由于 IO 密集型任务一般不会消耗大量的 CPU 资源，完全可以提高他的优先级，率先发起 IO 请求，充分利用空闲的 IO 资源。</li>
+</ul>
+</li>
+<li>MLQ策略是一种搞笑的优先级调度策略。由于队列的数量一般是预先确定的，调度器可以在 O (1)时间内( 相对于任务总量 N )找到所有非空队列中优先级最高的那一个。并且选取他的队列头的任务进行调度。同时，MLQ调度可以如实地反映任务的优先级。然而，这也可能带来一些问题。<ul>
+<li>然而这也会带来一些问题:<ul>
+<li>低优先级任务饥饿。任务优先级较低的任务可能需要等待很长的时间才能够被执行。</li>
+<li>所以为了避免 MLQ 策略所带来的低优先级饥饿，需要额外的机制监控任务等待时间，为等待时间过长( 如超过一定阈值 )的任务提高优先级。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>优先级反转</strong> ( priority inversion )<ul>
+<li>在程序执行时，多个任务可能会对同一份数据产生竞争，因此任务会使用锁来保护共享数据。假设现在有 3 个任务 A，B，C，他们的优先级 A &gt; B &gt; C,任务 C 在运行时持有一把锁，然后他被高优先级的任务 A 抢占了( 任务C的锁没有被释放)，此时，任务 B，C都处于可以运行的状态。由于任务 B 的优先级高于 C，因此 B 先运行。<ul>
+<li>综合来看，我们会发现，任务 B 好像优先级是高于 任务级 A。</li>
+<li>优先级继承 ( <strong>priority inheritance</strong> )，在上面的例子中，任务 A 可以把自己的优先级转移给占有锁的任务 C，让任务 C 优先执行并放锁。之后，任务 A 可在任务 C放锁后以抢占的方式立即执行，从而避免了优先级反转的问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="多级反馈队列"><a href="#多级反馈队列" class="headerlink" title="多级反馈队列"></a>多级反馈队列</h3><p>随着计算机的发展，操作系统中的任务需求变得越来越复杂。任务同时希望拥有较低的周转时间和响应时间。并且任务的运行时间无法预知。</p>
+<ul>
+<li>此时一个人站出来了 &#x3D;&#x3D;图灵奖&#x3D;&#x3D;获得者 Corbatoo 领导了 相容分时系统 ( Compatible Time-Sharing System, CTSS )的研发。并于1962年提出了多级反馈队列。<br>  -多级反馈队列的目标是 ：在无法预知任务信息且任务类型动态变化( 任务行为模式会在计算密集型与 IO 密集型之间转换 )的场景下，既能到达类似 STCF 的策略的周转时间，又能像 RR 策略一样尽可能降低任务的响应时间。MLFQ 策略在 MLQ 策略之上增加了动态设置任务优先级的策略。<ul>
+<li>与 MLQ 策略类似，MLFQ 策略也会维护多个优先级队列，任务根据优先级存在于不同的队列中，高优先级任务先于低优先级任务执行，处于相同优先级的任务采用 RR 策略执行。MLFO 策略的一大创新是实现了优先级的动态设置，具体策略如下:<ul>
+<li>段任务拥有更高的优先级。MIFO策略倾向于给更短任务更高的优先级。主要有以下三点好处 :<ul>
+<li><ol>
+<li>优先调度短任务可以有更好的平均周转时间。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>IO 密集型任务一般在 CPU 中执行的时间更短，给短任务提高优先级也相当于提高 IO 密集型任务的优先级，有利于提高系统的 IO 资源利用率。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>交互式任务一般是短任务，提高其优先级有助于降低这些任务的响应时间。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>MLFQ 策略会首先对任务的运行时间进行评估，预计运行时间较短的任务会放入优先级较高的队列中。但是，在真实系统中，可能无法准确追踪任务的完成时间和剩余完成时间。这也是 SJF 策略 和 STCF 策略的一大限制。为此，MLFQ会统计每个任务已经执行了多长时间，并据此判断该任务是短任务还是长任务。首先，当任务进入系统时，MLFQ会假设该任务是短任务，为其设置最高优先级。这有利于交互式任务达成较短的响应时间以及 IO 密集型任务充分利用 IO 资源。然后，MLFQ会为每个任务队列设置任务的最大运行时间( 任务多次运行的总时间，而非时间片 )。如果任务在当前队列运行的总时间最终超过了队列允许的最大时间。MLFQ策略会认为该任务是运行时间较长的任务，进而将该任务的优先级减一。凭借该方法，MLFQ 就可以大致适配任务的优先级，即动态评估任务的运行时间。由于短任务一般都可以在预设的时间片内完成，因此可以一直保留在优先级较高的队列中；相对地，长任务的优先级则会随着执行次数的增多而逐渐降低。<ul>
+<li>1.低优先级的任务采用更长的时间片</li>
+<li>2.定时地将所有任务的优先级提升到最高</li>
+</ul>
+</li>
+<li>在 MLFQ 策略的具体实现中，就有许多调度参数需要调整，例如优先级队列的数量，每个优先级队列采用的时间片，任务在每个优先级队列的最大运行时间，调度器定时地提升优先级的时间间隔。如果参数使用不当，就可能达不到预期的调度效果。比如，如果提升优先级的时间间隔过段，那么所有任务都会保持在最高的优先级的队列中， MLFQ 策略退化为 RR策略；而如果间隔时间过长，很可能会导致长任务保持在最低优先级队列中，很长时间内无法执行。因此，虽然MLFQ调度策略的设计非常巧妙，但开发者仍然需要话费很大的努力，对系统整体有细致的了解，才可以实现出有效的基于 MLFQ 策略的调度器。</li>
+<li><span style="color: red;">MLFQ 策略<strong>通过记录任务运行时间的方式，动态地调配任务的优先级</strong><span style="color: black;">。他能达到与 SJF 策略 和 SCTF 策略类似的低平均周转时间，同时还能保证任务的响应时间，且能避免任务饥饿。以 MLFQ 为基础的调度策略在很多操作系统中都得到了应用。</span></span></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="公平共享策略"><a href="#公平共享策略" class="headerlink" title="公平共享策略"></a><span style="color: blue;">公平共享策略</span></h3><ul>
+<li>这类调度器会量化人物对系统资源的占有比例，从而实现对资源的公平调度。我们将以<strong>份额</strong>来量化每个任务对 CPU 的时间的使用。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>4.进程</title>
+    <url>/2022/04/30/os/%E8%BF%9B%E7%A8%8B%20--%20(1)/</url>
+    <content><![CDATA[<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><h3 id="1-进程的状态"><a href="#1-进程的状态" class="headerlink" title="1.进程的状态"></a>1.进程的状态</h3><ul>
+<li><p>一般来说进程有一下几种状态</p>
+<ul>
+<li><strong>新生状态</strong> ：刚刚被创建出来，还没有完成初始化，不能被调度执行。在被初始化之后，会进入预备状态。</li>
+<li><strong>预备状态</strong> ：该状态表示进程可以被调度执行，但是还没有被调度器选择，由于 CPU 数量可能少于进程数量，在某一个时刻只有部分进程能被调度到 CPU 上运行，此时，系统中其他的可被调度的进程都处于预备状态。在被调度器选择执行厚，进程迁移到运行状态。</li>
+<li><strong>运行状态</strong> ：该进程正在 CPU 上运行，当一个进程执行一段时间后，调度器可以选择中断它的执行并且重新将它放回调度队列，他就迁移到 预备状态，当该进程运行结束后，他就会迁移至终止状态。如果一个进程需要等待某些外部事件，他就可以放弃 CPU 并迁移到阻塞状态。</li>
+<li><strong>阻塞状态</strong> ：该状态表示进程需要等待外部事件 ( 比如某个 IO 的请求完成),暂时无法被调度。当进程等待的外部事件完成之后，他就会迁移到预备状态。</li>
+<li><strong>终止状态</strong> ：该状态表示该进程已经完成了执行，而且不会再被调度。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-19%2017-38-42%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png"><h3 id="进程的内存空间布局"><a href="#进程的内存空间布局" class="headerlink" title="进程的内存空间布局"></a>进程的内存空间布局</h3></li>
+<li>进程具有独立的虚拟内存空间。</li>
+</ul>
+<p>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-15B7C1.png"></p>
+<ul>
+<li><strong>用户栈</strong> : 栈保存了进程需要使用的各种临时数据，如临时变量的值。栈是一种可以伸缩的数据结构。其扩展方向是自顶向下，栈底在高地址，栈顶在低地址上。当临时数据被压入栈内时，栈顶会向低地址扩展。</li>
+<li><strong>代码库</strong> : 进程的执行有时候需要依赖共享的代码库 ( 比如 Libc ) ，这些代码库会映射到用户栈下方的虚拟地址处，并且被标记为只读。</li>
+<li><strong>用户堆</strong> : 堆管理的是进程动态分配的内存。与栈相反,堆的扩展方向是自顶向上，堆顶在高地址上，当进程需要更多内存时，堆顶会向高地址扩展。</li>
+<li><strong>数据与代码段</strong> : 处于较低地址的是数据段与代码段，他们原本都保存在进程需要执行的二进制文件中。在进程执行前，操作系统会将它们载入虚拟地址空间中。其中，数据段主要保存的是全局变量的值，而代码段保存的是进程执行所需要的代码。</li>
+<li><strong>内核部分</strong> : 处于进程地址空间最顶端的是内核内存。每个进程的虚拟地址空间里映射了相同的内核内存。当进程在用户态运行时，内核内存对其不可见；只有当进程进入内核态时，才能访问内核内存。与用户态相似，内核部分也有内核遇到的代码和数据段，当进程由于中断或者系统调用进入内核后，会使用内核的栈。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="进程控制块和上下文切换"><a href="#进程控制块和上下文切换" class="headerlink" title="进程控制块和上下文切换"></a>进程控制块和上下文切换</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">在内核中，每个进程都通过一个结构体来保存他的相关状态,</span><br><span class="line">例如他的 进程标识符，进程状态，虚拟内存状态，打开的文件描述符</span><br><span class="line">我们一般称之为 进程控制块 ，( Process Control Block, PCB ),</span><br><span class="line">不同操作系统对应的进程控制块不相同哦</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> &#123;</span></span><br><span class="line">	<span class="comment">//进程状态</span></span><br><span class="line">	<span class="keyword">volatile</span> <span class="type">long</span> state;</span><br><span class="line">	<span class="comment">//虚拟内存状态</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">mm_struct</span>* <span class="title">mm</span>;</span></span><br><span class="line">	<span class="comment">//进程标识符</span></span><br><span class="line">	<span class="type">pid_t</span> pid;</span><br><span class="line">	<span class="comment">//进程组标识符</span></span><br><span class="line">	<span class="type">pid_t</span> tgid;</span><br><span class="line">	<span class="comment">//进程之间关系</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">task_struct___rcu</span>* <span class="title">parent</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">children</span>;</span></span><br><span class="line">	<span class="comment">//打开的文件</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">files_struct</span>* <span class="title">files</span>;</span></span><br><span class="line">	<span class="comment">// 等等</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进程的上下文 ( context )包括进程运行时的寄存器状态。它能够用于保存和恢复一个进程在处理器上运行的状态。当操作系统需要切换当前的进程时，就会使用上下文进程切换 ( context switch ) 机制，该机制会将当前一个进程的寄存器状态保存到 <strong>PCB</strong> 中，然后把下一个进程先前保存的状态写入寄存器，从而切换该进程执行。</li>
+<li>在早期的操作系统中，进程是操作系统调度的基本单位。但随着更加轻量的运行时抽象—–<strong>线程</strong>的提出，调度和上下文切换的基本单位也从进程变为了线程。</li>
+</ul>
+<hr>
+<h3 id="进程的创建-fork-linux-x2F-c"><a href="#进程的创建-fork-linux-x2F-c" class="headerlink" title="进程的创建 fork linux&#x2F;c"></a>进程的创建 fork linux&#x2F;c</h3><ul>
+<li>在linux操作系统中，fork是最基本的创建一个线程的函数调用.( fork 的中文翻译是 叉子，是不是很形象呢?)<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">pid_t fork( void );</span><br></pre></td></tr></table></figure></li>
+<li><strong>fork</strong> 不接受任何参数，我们一般认为调用他的进程为父进程，而fork出的进程称为子进程，父进程与子进程在创建时，拥有相同的内存，寄存器，程序计数器等等。<ul>
+<li>但拥有不同的 PID 和虚拟地址空间，然后各自执行且互不干扰。</li>
+<li>同时 fork 在父进程的返回值 是 子进程的 process id，在子进程的返回值是 0,所以我们在编程的时候，通常用fork的返回值用于父进程或者子进程需要执行的部分。</li>
+</ul>
+</li>
+<li>但其实我们有时候不需要调用 fork 这么底层的接口，可能大家用的更多的还是 <strong>exec</strong> 函数族，这里对于exec函数族不做赘述。有兴趣可以自行了解。<ul>
+<li>在 <strong>exec</strong> 函数执行后，会有以下几个步骤：<ul>
+<li>1.函数会将参数中指明的路径的可执行文件的数据段和代码段加载到当前进程的地址空间。</li>
+<li>2.重新初始化堆和栈，操作系统会进行<strong>地址空间随机化</strong>( Address Space Layout Randomization, ASIR )操作，改变堆和栈的起始地址，增强进程的安全性。</li>
+<li>3.将 <strong>PC</strong> 寄存器设置到可执行文件代码段定义的入口点，该入口点会最终调用 main 函数。<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">写时拷贝技术在进程中的应用</span><br><span class="line">早期的 fork 实现很简单粗暴，直接将父进程中的 物理内存完整拷贝一份,并</span><br><span class="line">映射到子进程的内存空间中。这种方式在很多情况下是不必要的。其实一部分虚拟</span><br><span class="line">内存其实是只读的(动态库,代码段),这些虚拟页，父进程和子进程共享即可，</span><br><span class="line">对于一些容易发生改变的虚拟页( 如堆和栈这些虚拟页),容易发生写操作，就会</span><br><span class="line">触发写时拷贝，由操作系统负责处理。写时拷贝技术既能提升 fork 的性能，</span><br><span class="line">又能降低进程占用的资源。</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h3><h4 id="进程间的关系和进程树"><a href="#进程间的关系和进程树" class="headerlink" title="进程间的关系和进程树"></a>进程间的关系和进程树</h4><ul>
+<li>在 Linux 中，进程都是通过fork创建的 ( 其他函数在上面封装了而已 ),由于我们在上文中提到过，进程中的 Task_struct 都会记录自己的父进程和子进程，进程间便构造了进程树这种结构。<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-GVTED1.png"></li>
+<li>我们可以看到，根节点是 init进程，他是操作系统创建的第一个进程，之后所有的进程都由它来创建( fork )。<h4 id="进程间监控-wait"><a href="#进程间监控-wait" class="headerlink" title="进程间监控 : wait"></a>进程间监控 : wait</h4></li>
+<li>Linux 给我们提供了很多监视子进程的函数，这里主要介绍 waitpid<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">waitpid</span><span class="params">(<span class="type">pid_t</span> pid, <span class="type">int</span>* wstatus, <span class="type">int</span> options)</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	pid_t pid        需要等待的子进程 ID</span></span><br><span class="line"><span class="comment">	int*  wstatus    保存子进程的状态</span></span><br><span class="line"><span class="comment">	int   options    ....一些参数和选项</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>wait</strong> 函数族不仅可以监控，还可以回收子进程和释放资源。<ul>
+<li>1.如果父进程没有调用 wait 操作，或者还没来得及调用 wait 函数，就算子进程已经终止了，他所占用的资源 也不会完全释放。 &#x3D;&#x3D;&#x3D;&#x3D;僵尸进程&#x3D;&#x3D;&#x3D;&#x3D;，我们一般都叫这种进程为僵尸进程，内核会为僵尸进程保留其进程描述符( PID )和终止时的信息( waitpid status )，以便父进程在调用 wait 时可以监控子进程的状态。<h4 id="进程组和会话"><a href="#进程组和会话" class="headerlink" title="进程组和会话"></a>进程组和会话</h4></li>
+</ul>
+</li>
+<li>为了方便应用程序进行进程管理，内核还定义了可以由多个进程组合而成的<br>  “小集体”，就是<strong>进程组</strong>和<strong>会话</strong>.<ul>
+<li>进程组 ( process group )是进程的集合，可以由一个或者多个进程组成。在默认情况下，父进程和子进程属于同一个进程组。在Linux中，如果子进程想要摆脱当前的检查组，可以通过调用<font color = red>setpgid<font color = black>创建一个新的进程组或者移入已有的进程组。</li>
+<li>进程组的一大作用体现在对信号的处理上。信号和中断比较类似。</li>
+<li>应用程序可以调用<font color = red>killpg<font color = black>来向一个进程组发送信号，这个信号会被发送<font color = red>这个进程组的每个进程<font color = black>。</li>
+</ul>
+</li>
+<li>会话是进程组的集合，可以由一个或者多个进程组构成。会话将进程组根据执行状态分为<strong>前台进程组</strong> ( foreground thread group ) 和 <strong>后台进程组</strong> ( backgroud thread group ),控制终端( controlling terminal )进程是会话与外界进行交互的 “窗口”。<font color = red>fork调用后，子进程和父进程同属于一个会话.<font color = black></li>
+<li>会话和进程组主要用于 Shell环境中的进程管理。<h4 id="fork过时了吗"><a href="#fork过时了吗" class="headerlink" title=" fork过时了吗?"></a><font color = green> fork过时了吗?<font color = black></h4><h6 id="fork的优点"><a href="#fork的优点" class="headerlink" title="fork的优点"></a><font color = blue>fork的优点<font color = black></h6></li>
+<li>fork的设计很简单，Windows中常用的创建线程的函数 CreateProcess 需要十个参数！！！，fork完全不需要任何参数。</li>
+<li>fork同时还强调了 进程与进程之间的关系，由于 fork具有创建原有进程的拷贝的语义。所以父进程和子进程的关系比较强烈。这为管理进程带来了很大的便利。<h6 id="fork的局限性"><a href="#fork的局限性" class="headerlink" title="fork的局限性"></a><font color = Fuchsia>fork的局限性<font color = black></h6></li>
+<li>fork距今大约已经有了&#x3D;&#x3D;&#x3D;&#x3D;70年&#x3D;&#x3D;&#x3D;&#x3D;的历史，很多属性在计算机的发展中，fork已经变化了很多<ul>
+<li>fork已经变得过于复杂了，这种复杂并不是fork的接口变得复杂。我们已经知道，fork会将子进程和父进程一起拷贝。这会让子进程和父进程共享大量的状态。可能会让进程表现出看似违反直觉的行为。每当操作系统需要为进程的结构添加功能时，就必须要考虑到对fork的实现和修改。</li>
+<li>fork的性能很差。fork会拥有<font color = red>写时拷贝，读时共享<font color = black>的特点，当父进程的资源特别大时，这种复制是十分消耗资源的。尤其是现在的大型服务器，几百GB运行内存，上面跑的程序几十万的并发，一次复制十分消耗资源。</li>
+<li>fork存在潜在的安全漏洞。fork会让父进程和子进程拥有一定的联系，但这其实是一把双刃剑。我们可以通过这个联系来攻击。</li>
+<li>除此以外，fork还有其他的一些缺点，例如 <font color = blue >扩展性差，与异质硬件兼容差，线程不安全<font color = black >等等的缺点。</li>
+<li>所以 Linux操作系统也提供了一些其他接口给我们，例如 <font color = Coral> spawn，vfork ，clone<font color = black> 等函数调用。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="天人合一-posix-spawn"><a href="#天人合一-posix-spawn" class="headerlink" title="天人合一 : posix_spawn"></a>天人合一 : posix_spawn</h4><ul>
+<li>posix_spawn 是 POSIX 提供的另外一种创建进程的方式。<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;spawn.h&gt;</span></span></span><br><span class="line"><span class="type">int</span>  <span class="title function_">posix_spawn</span><span class="params">(<span class="type">pid_t</span>* pid, <span class="type">const</span> <span class="type">char</span>* path,</span></span><br><span class="line"><span class="params">					<span class="type">const</span> <span class="type">posix_spawn_file_actions_t</span>* file_actions,</span></span><br><span class="line"><span class="params">					<span class="type">const</span> <span class="type">posix_spawnattr_t</span>* attrp,</span></span><br><span class="line"><span class="params">					<span class="type">char</span>* <span class="type">const</span> argv[],<span class="type">char</span>* <span class="type">const</span> envp[])</span>;</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		path , argv, envp 你懂的</span></span><br><span class="line"><span class="comment">		pid_t* pid 该参数会在posix_spawn 返回时被写入新进程的 PID</span></span><br><span class="line"><span class="comment">		const posix_spawn_file_actions_t* file_actions,</span></span><br><span class="line"><span class="comment">		const posix_spawnattr_t* attrp,这两个参数会在 pre_exec 状态之前应用程序</span></span><br><span class="line"><span class="comment">会对这两个参数的配置完成一系列操作。</span></span><br><span class="line"><span class="comment">		*/</span></span><br></pre></td></tr></table></figure></li>
+<li>posix_spawn 一般我们认为他是 fork 和 exec 两者功能的结合，他会使用类似于fork的方法( 或者直接调用 fork )获得一份进程的拷贝，然后调用 exec 执行。</li>
+</ul>
+<hr>
+<h4 id="限定场景-vfork"><a href="#限定场景-vfork" class="headerlink" title="限定场景 : vfork"></a>限定场景 : vfork</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">pid_t</span> <span class="title function_">vfork</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>从接口上看，vfork与fork的接口一致。vfork 的作用 会在 fork之上做一些<font color = red>剪裁<font color = black >。</li>
+<li>vfork 会从父进程中创建子进程，但是不会为子进程单独创建地址空间，而是<font color = blue > 让子进程和父进程共享同一地址空间<font color = black>。所以父进程和子进程对内存的修改都会对另一个进程产生影响。</li>
+<li>为了确保正确性，vfork 会在结束前<font color = red>阻塞父进程( 就是优先保证vfork出的进程先运行 ) <font color = black>,vfork可以大幅度减少fork所带来到的性能损耗。但是他不是安全的。<h4 id="精密控制-：rfork-x2F-clone"><a href="#精密控制-：rfork-x2F-clone" class="headerlink" title="精密控制 ：rfork &#x2F; clone"></a><font color = CornflowerBlue>精密控制 ：rfork &#x2F; clone<font color = black></h4></li>
+<li>由于 fork 接口简单，所以他的可控制能力有限。当应用程序希望能选择性的共享父进程和子进程的部分资源时，fork就 &#x3D;&#x3D;&#x3D;&#x3D;” 爱莫能助”&#x3D;&#x3D;&#x3D;&#x3D;了，在上世纪 80 年代，贝尔实验室推出了 rfork 函数，后来 Linux也借鉴了 rfork函数，提出了类似的接口 clone。<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;shed.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">clone</span><span class="params">(<span class="type">int</span> (*fn)(<span class="type">void</span>* ), <span class="type">void</span>* <span class="built_in">stack</span>, <span class="type">int</span> flags, <span class="type">void</span>* arg, ...</span></span><br><span class="line"><span class="params">				/ <span class="type">pid_t</span>* parent_tid, <span class="type">void</span>* tls, <span class="type">pid_t</span>* child_tid )</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	flags 允许应用程序指定不需要复制的部分。</span></span><br><span class="line"><span class="comment">	stack 用于指定子进程栈的位置，解决了父进程与子进程共享地址空间的问题</span></span><br><span class="line"><span class="comment">	fn 和 arg 则是进程创建完成后将执行的函数和输入参数。</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>OS</category>
+      </categories>
+      <tags>
+        <tag>OS</tag>
+      </tags>
   </entry>
 </search>

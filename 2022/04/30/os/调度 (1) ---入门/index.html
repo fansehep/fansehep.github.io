@@ -1,0 +1,271 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>2.调度 | fan 的 Blog</title><meta name="keywords" content="OS"><meta name="author" content="fan"><meta name="copyright" content="fan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引言:小凡是个喜欢打LOL的同学，一天他又在摆弄他的2GB运行内存的笔记本了，他先双击了 LOL，再双击了 网易云音乐，这个 电脑太卡了，足足等待了 30 min 才打开了 LOL，然后再打开了网易云音乐。然后他十分生气，决定再也不玩了，然后就去换了个 调度器,让这两个程序能够可以达到并发执行。因而播放器可以每隔一段时间将音频输出到音频设备上。造成小明听不到音乐的情况。所以系统的调度不仅需要调度任">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2.调度">
+<meta property="og:url" content="http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6%20(1)%20---%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="fan 的 Blog">
+<meta property="og:description" content="引言:小凡是个喜欢打LOL的同学，一天他又在摆弄他的2GB运行内存的笔记本了，他先双击了 LOL，再双击了 网易云音乐，这个 电脑太卡了，足足等待了 30 min 才打开了 LOL，然后再打开了网易云音乐。然后他十分生气，决定再也不玩了，然后就去换了个 调度器,让这两个程序能够可以达到并发执行。因而播放器可以每隔一段时间将音频输出到音频设备上。造成小明听不到音乐的情况。所以系统的调度不仅需要调度任">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-04-30T03:41:40.000Z">
+<meta property="article:modified_time" content="2022-05-01T04:49:48.656Z">
+<meta property="article:author" content="fan">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6%20(1)%20---%E5%85%A5%E9%97%A8/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: fan","link":"链接: ","source":"来源: fan 的 Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '2.调度',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-01 12:49:48'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">2.调度</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-01T04:49:48.656Z" title="更新于 2022-05-01 12:49:48">2022-05-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OS/">OS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="2.调度"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div><article class="post-content" id="article-container"><p>引言:小凡是个喜欢打LOL的同学，一天他又在摆弄他的2GB运行内存的笔记本了，他先双击了 LOL，再双击了 网易云音乐，这个 电脑太卡了，足足等待了 30 min 才打开了 LOL，然后再打开了网易云音乐。然后他十分生气，决定再也不玩了，然后就去换了个 <span style="color: red;">调度器<span style="color: black;">,让这两个程序能够可以达到并发执行。因而播放器可以每隔一段时间将音频输出到音频设备上。造成小明听不到音乐的情况。所以系统的调度不仅需要调度任务，还需要满足应用程序的要求。</span></span></p>
+<h4 id="什么是调度呢"><a href="#什么是调度呢" class="headerlink" title="什么是调度呢 ?"></a><span style="color: blue;">什么是调度呢 ?</span></h4><ul>
+<li>一般来说，一个系统会同时处理多个请求，但是他的资源是有限的，调度就是用来协调每个请求对资源的使用方法。调度不仅仅是计算机中的概念，她同时也能在我们的实际生活中找到很多例子，比如银行的服务排队。有时候我们还能看到 <span style="color: fuchsia;">VIP优先 <span style="color: black;">,这就体现了调度中<strong>优先级</strong>的概念。 又比如小明和小红约定一个人玩 10 min的游戏机后，就换另外一个人玩，这就体现了调度中<span style="color: red;">时间片<span style="color: black;">( time slice)的概念，表示每个请求一次占用后多长时间的资源。再举个例子，人们每天都有很多不同的时间需要完成。那么应该先做哪件，再做哪件?这也需要运用调度的思想,在生活中，这样的例子数不胜数。</span></span></span></span></li>
+<li><strong>任务调度</strong> ( task scheduling ),也称之为负责调度可执行的任务对 CPU 的使用；</li>
+<li><strong>IO 调度</strong> 对应该以何种顺序向存储设备发起 IO 请求进行调度；操作系统中的内存管理同样也是一种调度。内存管理将虚拟内存映射到物理内存，这里的物理内存就是有限的资源。当需要使用的虚拟内存容量超过物理内存的实际容量时，<strong>换页机制</strong>就是在对哪部分物理页的内容可以留在内存中进行调度，并将剩余物理页的内容写回磁盘。</li>
+<li>调度被应用在计算机系统的方方面面，也体现在我们工作，生活，学习的点点滴滴。</li>
+</ul>
+<h4 id="操作系统调度"><a href="#操作系统调度" class="headerlink" title="操作系统调度"></a><span style="color: red;">操作系统调度</span></h4><ul>
+<li>进程是资源隔离的单位，并不是执行的单位。一个进程可以有多个线程，这些线程可以在不同的 CPU 核心上并行地执行。因此线程才是调度器的调度对象。在 Linux 操作系统中通常用 任务 ( task )来描述线程。</li>
+</ul>
+<hr>
+<p>一般的调度器都通过维护<strong>运行队列</strong>( run queue )的方式来管理对象，运行队列并非一定要由先进先出的队列实现，例如 Linux使用的调度器中会使用红黑树来实现运行队列。任务在执行时若触发一定条件，则会停止执行。<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-7ML8C1.png"></p>
+<ul>
+<li>该任务执行了指定的时间片后，应让其他任务在当前任务CPU核心上执行。</li>
+<li>该任务发起了 IO 请求，在 IO 返回前，他不会继续执行。</li>
+<li>该任务主动停止执行或进入睡眠。</li>
+<li>该任务被系统中断打断，系统优先处理中断而暂缓该任务的执行。</li>
+</ul>
+<p>结束执行后，如果任务还需要执行，就会重新加入运行队列，并且等待再次被调度执行。调度器的主要作用是做出调度决策，整个系统通过该决策进而决定该如何调度。这些调度决策包括：</p>
+<ul>
+<li>从运行队列中选择下一个运行的任务。</li>
+<li>决定执行该任务的 CPU 核心。</li>
+<li>决定该任务被允许运行的时间，即时间片。</li>
+</ul>
+<p>在调度器做出决策后，系统中的相应机制便会将任务执行在对应的 CPU 核心上。以上便是操作系统中任务调度的概要，其中隐藏了调度器的一些设计问题，这些设计问题主要可以归结为两类：</p>
+<ul>
+<li><span style="color: red;">调度器该做出什么样的调度决策( What ) ？ <span style="color: black;">计算机通过调度器的目的就是通过调度任务对 CPU 的使用，进而让任务在某一方面达到用户的预期，或者说满足用户的需求，那么这些指标有哪些?在不同种类的系统中应该考虑何种指标 ? 这些都是开发者在设计实现调度器需要考虑的一些因素。</span></span></li>
+<li><span style="color: blue;">调度器应该如何做出符合预期的调度决策 ( How ) ? <span style="color: black;">在确定当前系统需要考虑的调度指标后，我们需要进一步通过适当的调度策略做出和你的决策。一个合理的调度策略该如何选择?</span></span></li>
+</ul>
+<hr>
+<h3 id="调度指标"><a href="#调度指标" class="headerlink" title="调度指标"></a><span style="color: teal;">调度指标</span></h3><ul>
+<li>计算机的应用场景复杂多变，用户对于不同的场景会有不同的预期。因此会有不同的调度指标来指导调度策略的选择。<ul>
+<li>常用的调度指标 : 与性能相关的<strong>吞吐量，周转时间，响应时间</strong>;</li>
+<li>一些非性能指标 : 例如<strong>公平性</strong>，<strong>资源利用率</strong>；</li>
+<li>某些任务，场景特有的需求。 例如<strong>实时任务的实时性</strong>，<strong>终端设备的能耗</strong>。</li>
+</ul>
+</li>
+<li>计算机处理的任务中，有一类任务被称为<strong>批处理任务</strong>,比如机器学习的训练，复杂的科学计算，这类任务在计算机上执行时无须与用户交互，其目标就是尽可能快地完成，主要调度指标是任务处理的<strong>吞吐量</strong>( 单位事件内处理的任务数量 )，需要让吞吐量尽可能高。同时，调度需要让任务的周转时间( 任务从被发起直至执行结束后所需要的时间 )尽量短。<ul>
+<li>比如我们有些时候需要计算机执行一些<strong>交互式任务</strong>，对于这类任务来说，用户更关心的是自己的请求( 例如自己敲击键盘的输入 )能否及时被处理。调度应该确保交互式任务的<strong>响应时间</strong>( 任务从被发起直至第一次向用户返回输出以响应用户所需要的时间 )。</li>
+<li>车载系统中的距离探测仪就会定时检查距离，再比如视频的画面渲染就需要<strong>实时性</strong>。</li>
+<li>当下智能手机走入千家万户，待机时间就对应系统的能耗指标了。因此，移动设备上的操作系统调度还需要尽可能<strong>降低能耗</strong>。</li>
+</ul>
+</li>
+<li>以上罗列了一些特定场景下的主要调度指标和所有场景共有的调度指标。不同场景下所需的调度指标很可能是有交集的。例如手机既需要与用户交叉又要考虑能耗。很多时候，操作系统的调度都需要观察具体情况。<ul>
+<li><span style="color: red;">调度指标的多样性</span></li>
+<li><span style="color: blue;">调度可参考的信息有限</span></li>
+<li><span style="color: red;">任务间的复杂交互</span></li>
+<li><span style="color: blue;">许多方面存在权衡</span></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="调度机制"><a href="#调度机制" class="headerlink" title="调度机制"></a><span style="color: fushsia;">调度机制</span></h3><p>一台操作系统上运行着大量的进程，数量可能远远超过 CPU 核心数量，他们使用的内存也可能会超过可用的内存总量。为了协调多个进程对 CPU 和 内存的使用，操作系统使用了 进程调度机制。进程调度可以分为 长期，中期，短期调试。</p>
+<h4 id="长期，中期与短期调度"><a href="#长期，中期与短期调度" class="headerlink" title="长期，中期与短期调度"></a>长期，中期与短期调度</h4><ul>
+<li>在前面我们的学习可以知道，一个进程从出生到死掉有五中状态<ul>
+<li>新生状态</li>
+<li>预备状态</li>
+<li>运行状态</li>
+<li>阻塞状态</li>
+<li>终止状态</li>
+</ul>
+</li>
+</ul>
+<p>思考一个问题 : 当一个程序尝试运行时，操作系统是否应该为他立即创建对应的进程，并将该进程设置为预备状态呢?</p>
+<ul>
+<li>答案是否定的，如果大量的进程在短时间内被创建出来，会造成调度决策 ( ) 需要考虑的进程数量剧增，调度开销变大的问题。因此，即使每个用户已经向操作系统提交了执行某个程序的请求，系统可能也不会立即处理该请求。这一决策是由操作系统中的<strong>长期调取</strong>(long - term scheduling&#x2F;job scheduling ) 负责的。</li>
+<li>长期调度就像是一个阀门，用于限制系统中真正短期内调度管理的进程数量，避免短期调度的开销过大。当长期调度为了某个程序创建了进程并且将其状态设置为预备状态后，会由短期调度进一步管理该进程 ( 例如做出调度决策 ),因此，长期调度决定了当前真正可被调度的进程的数量。</li>
+</ul>
+<p>另外根据进程主要使用的资源类型，进程可以简单分为两类 : <strong>计算密集型( CPU - bound )进程</strong>，主要用于 CPU 进行长时间计算，因此其性能受处理器计算性能的限制；IO 密集型( I &#x2F; O - bound)进程，等待 IO 请求完成会占用该类进程的大部分时间。</p>
+<p>实际做出调度决策的是<strong>短期调度( short - term scheduling&#x2F;CPU scheduling )</strong>,短期调度主要负责进程在预备状态，运行状态，阻塞状态间的转换。</p>
+<ul>
+<li><p>举个例子，在短期内调度决定执行一个进程时，会将该进程从预备状态设置为运行状态。短期调度使用适当的调度策略，尽可能满足系统的调度指标，处于预备状态的进程需要被短期调度才能运行。而处于运行状态的进程可能会被短期调度打断，避免占用 CPU 时间过长，影响调度的公平性。</p>
+<ul>
+<li>长期调度与短期调度一般会从 CPU IO 的角度做出调度决策。然和，操作系统中的内存资源还没有被考虑。那么便引入了<strong>中期调度( medium - term scheduling )</strong> 来负责的。</li>
+<li>中期调度实际上是换页机制的一部分。如果当前系统中的进程已经占用了大量内存，中期调度会挂起系统中被短期调度管理的进程，进而降低进程中占用的内存总量。</li>
+</ul>
+</li>
+<li><p>下面我们来看一下进程转换示意图 : <strong>挂起预备状态</strong> ( suspended ready ) 和 <strong>挂起阻塞状态</strong> ( suspended blocking ),处于这两种状态进程无法被短期调度执行。当中期调度将预备状态或阻塞状态的进程挂起后，会对应地将进程设置为挂起预备状态或挂起阻塞状态。一般处于阻塞状态的进程是等待 IO 请求，用户输入或者睡眠，需要等到一定事件被触发后才能重新被设置为预备状态。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-UYX1C1.png"></p>
+</li>
+<li><p>在进程调度中，长期. 中期和短期三种调度相互协作，分别以不同的目标对进程进行调度。<span style="color: red;">长期调度<span style="color: black;">的触发间隔较长，他粗粒度的决定是够讲一个新的进程纳入调度管理，负责增加系统中可被调度的进程的数量；<span style="color: red;">中期调度<span style="color: black;">的触发相对频繁，他辅助换页机制，负责限制系统中可被调度的进程的数量；而在三种机制中<span style="color: red;">短期调度<span style="color: black;">的触发最为频繁，他负责细粒度地调度进程的执行，做出相应的调度策略。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-L518C1.png"></span></span></span></span></span></span></p>
+</li>
+<li><ol>
+<li>在传统操作系统中，批处理任务被发起后，其信息会被存入磁盘中的<span style="color: red;">批处理队列<span style="color: black;">( batch queue ),等待被长期调度允许进入系统。</span></span></li>
+</ol>
+</li>
+<li><ol start="2">
+<li>长期调度负责从批处理队列中选取下一个可被调度的批处理任务，为其创建对应的进程，将进程设为预备状态并且放入<strong>运行队列</strong>。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>由于交互式任务和实时任务一般都有比较高的时延要求，需要在一定的时间内返回结果。所以这两类任务一般不会被长期调度管理。</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>通过短期调度的决策，运行队列中的进程会被调度到 CPU 上执行。此时进程为运行状态。</li>
+</ol>
+</li>
+<li><ol start="5">
+<li>当进程运行完一个时间片之后，短期内会将其重新置为 预备状态。并放回队列。</li>
+</ol>
+</li>
+<li><ol start="6">
+<li>当运行中的进程发起 IO 请求，等待用户输入或者进入睡眠，因而需要被阻塞时，会被放入<strong>阻塞队列</strong>( blocking queue )中，短期调取会选择将其他进程进行调度。</li>
+</ol>
+</li>
+<li><ol start="7">
+<li>当进程等待的事件被触发后，操作系统直接将对应的进程移出阻塞队列，并将其置为预备状态，重新放入运行队列中。</li>
+</ol>
+</li>
+<li><ol start="8">
+<li>如果系统中的内存使用量过大，就会触发换页机制，中期调度会挂起处于预备状态 &#x2F; 阻塞状态的进程，强其置为挂起 预备状态 &#x2F; 挂起阻塞状态 并且放入 挂起运行队列 &#x2F; 挂起阻塞队列中。</li>
+</ol>
+</li>
+<li><ol start="9">
+<li>处于挂起阻塞状态的进程，如果他等待的事件被触发，将会被置为挂起预备状态并且被放入挂起运行队列中。</li>
+</ol>
+</li>
+<li><ol start="10">
+<li>当系统中的内存使用情况不再紧张时，中期调度会激活挂起运行队列 &#x2F; 挂起阻塞队列中。</li>
+</ol>
+</li>
+<li><ol start="11">
+<li> 当进程结束后，会进入终止状态并且最终被回收。</li>
+</ol>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">fan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6%20(1)%20---%E5%85%A5%E9%97%A8/">http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6%20(1)%20---%E5%85%A5%E9%97%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">fan 的 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OS/">OS</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98--%E5%A4%9A%E7%BA%A7%E9%A1%B5%E8%A1%A8/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">9. 虚拟内存</div></div></a></div><div class="next-post pull-right"><a href="/2022/04/30/os/%E8%B0%83%E5%BA%A6(2)%20---%20%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">3.调度(2)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/04/30/os/%E6%80%9D%E8%80%83%E9%A2%98--%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%EF%BC%8C%E7%BA%A4%E7%A8%8B/" title="5.进程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">5.进程</div></div></a></div><div><a href="/2022/04/30/os/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%20(1)/" title="1.操作系统"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">1.操作系统</div></div></a></div><div><a href="/2022/04/30/os/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E7%AE%A1%E7%90%86%20(1)/" title="6.内存分配"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">6.内存分配</div></div></a></div><div><a href="/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/" title="7. 纤程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">7. 纤程</div></div></a></div><div><a href="/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/" title="8. 线程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">8. 线程</div></div></a></div><div><a href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/" title="10. 虚拟内存(2)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">10. 虚拟内存(2)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%B0%83%E5%BA%A6%E5%91%A2"><span class="toc-number">1.</span> <span class="toc-text">什么是调度呢 ?</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E8%B0%83%E5%BA%A6"><span class="toc-number">2.</span> <span class="toc-text">操作系统调度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E6%8C%87%E6%A0%87"><span class="toc-number"></span> <span class="toc-text">调度指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E6%9C%BA%E5%88%B6"><span class="toc-number"></span> <span class="toc-text">调度机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%95%BF%E6%9C%9F%EF%BC%8C%E4%B8%AD%E6%9C%9F%E4%B8%8E%E7%9F%AD%E6%9C%9F%E8%B0%83%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">长期，中期与短期调度</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

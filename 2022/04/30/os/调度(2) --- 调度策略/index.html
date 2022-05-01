@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>3.调度(2) | fan 的 Blog</title><meta name="keywords" content="OS"><meta name="author" content="fan"><meta name="copyright" content="fan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="单核调度策略  下面我们为大家介绍一些常见的，经典的调度策略。这些调度策略都假设当前 CPU 只有一个可用的 CPU 核心，每个任务都有自己的 到达事件 ( arrival time ) 和 运行时间 ( run time ), 到达时间用于表示该任务何时被发起并处于预备状态，运行时间用于表示该任务从何时执行到结束总共花费的时间。 在单核上进行调度时：调度器应该要回到以下两个问题:  当前应该调度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3.调度(2)">
+<meta property="og:url" content="http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6(2)%20---%20%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="fan 的 Blog">
+<meta property="og:description" content="单核调度策略  下面我们为大家介绍一些常见的，经典的调度策略。这些调度策略都假设当前 CPU 只有一个可用的 CPU 核心，每个任务都有自己的 到达事件 ( arrival time ) 和 运行时间 ( run time ), 到达时间用于表示该任务何时被发起并处于预备状态，运行时间用于表示该任务从何时执行到结束总共花费的时间。 在单核上进行调度时：调度器应该要回到以下两个问题:  当前应该调度">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-04-30T03:41:40.000Z">
+<meta property="article:modified_time" content="2022-05-01T04:50:06.572Z">
+<meta property="article:author" content="fan">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6(2)%20---%20%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: fan","link":"链接: ","source":"来源: fan 的 Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '3.调度(2)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-01 12:50:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">3.调度(2)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-01T04:50:06.572Z" title="更新于 2022-05-01 12:50:06">2022-05-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OS/">OS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="3.调度(2)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div><article class="post-content" id="article-container"><p><span style="color: blue;">单核调度策略</span></p>
+<ul>
+<li>下面我们为大家介绍一些常见的，经典的调度策略。这些调度策略都假设当前 CPU 只有一个可用的 CPU 核心，每个任务都有自己的 <span style="color: red;"><span style="color: red;">到达事件 ( arrival time ) <span style="color: black;">和 <span style="color: red;">运行时间 ( run time )<span style="color: black;">, 到达时间用于表示该任务何时被发起并处于预备状态，运行时间用于表示该任务从何时执行到结束总共花费的时间。</span></span></span></span></span><ul>
+<li>在单核上进行调度时：调度器应该要回到以下两个问题:<ul>
+<li><ol>
+<li>当前应该调度哪个任务 ?</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>被调度的任务应该持久多少 ?</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="经典调度策略"><a href="#经典调度策略" class="headerlink" title="经典调度策略"></a>经典调度策略</h3><ul>
+<li><p><span style="color: red;">先到先得</span></p>
+<ul>
+<li><p>在调度策略中，一种比较直观的策略就是<strong>先到先得</strong> ( First Come First Served, FCFS )策略，这一类策略也被称之为<strong>先进先出</strong>( First In First Out, FIFO ) 策略。</p>
+</li>
+<li><p>在该策略中，我们会在操作系统中维护一个运行队列，这个队列中的元素是处于预备状态，等待执行的任务。在决定需要执行的任务时，FCFS 策略会选取运行队列中的队尾，运行队列能够起到多个任务确定顺序的作用，保证任务的执行顺序与其进入运行队列的顺序一致。</p>
+</li>
+<li><p>FCFS 策略仅仅需要开发者维护一个队列，就可以实现 FCFS 策略，同时，FCFS策略不需要预知任务信息，也没有需要开发者手动调试的参数。但随着本章内容的不断深入，我们会意识到 FCFS 策略没有将许多重要因素纳入考量，从而导致他很难被直接在复杂系统中。不过，FCFS 的思想仍然在后面介绍的调度策略中得到了应用。</p>
+</li>
+<li><p>弊端1 : 在长短任务混合的场景下对短任务支持不友好。在 短任务(短时话费任务) 与 长任务 ( 长时运行任务 )混合的应用场景下，FCFS策略可能会导致短任务的周转时间和运行时间之比过大，对短任务不友好。</p>
+</li>
+<li><p>弊端2 : 对 IO 密集型任务不友好。 IO 密集型任务通常会花费大部分时间等待 IO，仅仅有少量的时间被用在 CPU 中处理请求。</p>
+</li>
+</ul>
+</li>
+<li><p><span style="color: red;">最短任务优先</span></p>
+<ul>
+<li>FCFS 策略所面临的短任务等待时间过长的问题促使我们寻找另外一种调度策略。我们应该尽量让短任务立即执行。根据这一思想，得出的策略是<span style="color: blue;">最短任务优先<span style="color: black;">,该策略会选择运行时间最短的任务执行。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-Q2BUC1.png"></span></span></li>
+<li>弊端 1: <strong>必须预知任务的运行时间</strong>。SJF 策略能选取最短运行时间或者固定的应用场景，这个前提是合理的。但是在更多的场景下，系统很难预知将要处理的任务确切的运行时间。因为这取决于当前系统的状态和其他影响程序性能的因素。</li>
+<li>弊端 2: <strong>其表现严重依赖于任务到达时间点</strong>,现在我们假设一个场景，一个任务时间比较长的任务A到达了，所以 A 会先运行，只有 任务B到达了，但是 任务 B只需要话费少量的时间，此时 调度器已经没有办法了。</li>
+</ul>
+</li>
+<li><p><span style="color: red;">最短完成时间任务优先</span></p>
+<ul>
+<li>SJF策略面临的问题是，”迟到”的短任务是无法受益于 SJF 策略的。为了解决这个问题，一个直接的思路是，是否可以让调度器在任务 B 和 C 之间对其进行调度，按照这个思路产生了 SJF 策略的抢占式版本 : <strong>最短完成时间任务优先</strong>( Shortest Time-to- Completion First, STCF ) 策略，在 FCFS 策略 和 SJF 策略中，调度器必须等一个任务执行完成或者主动退出执行才能开始下一个调度。因此被称为<strong>非抢占式调度</strong>( non-preemptive scheduling ) 。而 STCF 策略在任务到达系统时也会进行调度，有可能会中断当前正在执行的任务，转而执行其他的任务，因此被称为<strong>抢占式调度</strong>( preemptive scheduling )。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-UK26C1.png"></li>
+<li>任务 A 在第 0 秒到达了，B 和 C 稍后达到，由于 任务 A 在第 0 秒到达系统，所以A执行了 1S，在第一秒时，任务 B 到达系统，由于其所需要的时间少于 任务 A，所以 B 就可以立即抢占任务 A并执行。而当任务 C 在第2s到达时，任务 B 已经运行了 1s，<strong>任务 B所需要的剩余时间</strong>小于任务C的时间，所以 C就不会抢占 任务B的执行，而是会等到任务 B 结束后再开始执行。</li>
+<li>弊端 : 长任务饥饿 : STCF 策略极端倾向于完成时间较短的任务，因此当一个系统中有大量的短任务和少量的长任务时，这个系统的长任务很可能会无法占用 CPU 资源，一直处于<strong>饥饿</strong>状态 ( starvation ),即永远无法被调度。在某些系统中，通常会有后台服务( 例如 网络服务，数据库服务 ) 随开机启动，并一直执行，他们的运行时间相比于其他任务长很多。SJF策略和 STCF 策略几乎不会让他们获得执行机会，而这对整个系统调度的公平性是不利的。</li>
+</ul>
+</li>
+<li><p><span style="color: red;">时间片轮换</span></p>
+<ul>
+<li>我们以上讨论的调度策略主要是针对批处理任务的策略，他们主要关注的调度指标是<strong>周转时间</strong>，随着操作系统的发展，交互式程序(终端)逐渐普及，与用户的交互为调度带来了新的调度指标 — <strong>响应时间</strong>。响应时间指的是从用户发起请求到任务响应用户所需要的时间。</li>
+<li>上文我们所讨论的策略只有在任务到达和结束时才会进行调度，如果一段时间内没有新的任务到达或者当前任务没有执行完，那么调度器就无法进行调度，因此非运行状态的任务也无法定时地响应用户。为了定时响应用户，需要为任务设置时间片，限定任务每次执行的时间。当前任务执行完时间片之后，就切换到运行队列中的下一个任务。这一思想的体现就是<strong>时间片轮转( Round Robin, RR )策略</strong>。由于时间片一般会设置的足够小，所以所有任务都可以在一定时间内执行并且响应用户，从而将响应时间限定在一个可接受的范围内。相比于<strong>SJF</strong>策略和<strong>STCF</strong>策略，RR策略使用无须直到任务的运行时间，而且也不会出现长任务饥饿的情况。</li>
+<li>对于 RR 策略，一个关键点就是他的时间片大小该如何选取。理想情况下，时间片的选取越小，任务响应的时间就越快。但是，之前的讨论分析是基于抽象的模型进行的，没有考虑一下因素: 调度器的调度开销；任务切换所导致的上下文切换开销。在实际场景中，过小的时间片反而会引入大量开销，让任务的调度成为严重的性能瓶颈。而如果任务的调度时间过长，则会产生很多不良的负面效果</li>
+<li><span style="color: red;">如何将调度的时间片降低到一个合理的值是对于开发者一个大挑战</span></li>
+<li><span style="color: blue;">弊端 : 在任务允许时间相似的场景下平均周转时间高 <span style="color: black;">RR策略一定程度上保证了每个人物之间的公平性( 每个任务都能在一定时间内被调度到 ),同时也可以获得良好的响应时间。</span></span></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="优先级调度"><a href="#优先级调度" class="headerlink" title="优先级调度"></a>优先级调度</h3><ul>
+<li><strong>调度器应该尽量避免与交互式任务被批处理任务阻塞</strong>。<ul>
+<li>例 ： 小凡在他的linux操作系统上输入了 一个 ls -R 命令，但此时他的后台挂载着一个大型的服务器，而这个服务器和这个 ls 命令 采取了 RR 的策略，那么小凡就会看到了他的 命令要运行很长时间，暴躁的小凡同学对此很生气，他恨不得立马 kill 了这个进程。</li>
+</ul>
+</li>
+<li>如果操作系统可以区分交互式任务和批处理任务，那么他就可以设置一个让交互式任务先执行的一个调度策略。为此，调度器引入了<span style="color: red;"><span style="color: red;">优先级<span style="color: black;">的概念。优先级是一个很直接有效的概念。操作系统通过对优先级的判断来去先执行哪个应用程序，再去执行哪个应用程序，从而达到对用户更好的体验。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-MON5C1.png"></span></span></span><ul>
+<li>对于拥有明确的截止时间的完成任务，我们应该为其分配最高的优先级，尽量保证实时任务可以在截止时间之前就可以完成，而交互式的任务响应时间直接影响用户体验，为了避免用户体验较差，我们需要为其分配较高的优先级，最后，批处理任务一般不像实时任务那样需要对时延，响应时间有很大的要求，所以这类任务的优先级很低。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="多级队列"><a href="#多级队列" class="headerlink" title="多级队列"></a><span style="color: red;">多级队列</span></h4><ul>
+<li>在一架飞机准备起飞时，人员分为三类，{ 飞行员，空乘，维护人员 }，{ VIP乘客}，{ 普通乘客 } 。在飞机允许登机之前，第一类的工作人员会在专用机场等待。VIP乘客一般会在VIP候机室等待。而工作人员需要立即登机检查人机，做好飞机的临时起飞工作。这三类人在不同的场景下调度。就好像操作系统将不同优先级的任务放在不同的任务队列中。对于优先级仙童的人员，他们的登机顺序没有要求。乘客直接排队( 先到先得 )的方式决定相互之间的登机顺序。</li>
+<li><strong>多级队列</strong>( Multi-Level Queue, MLQ )策略就是以类似的思想进行设计的，<ul>
+<li>如图 6-11 所示。每个任务会被分配预先设置好的优先级，每个优先级对应一个队列，任务会被存储在对应的优先级队列中。如果优先级不同的任务的任务同时处于预备状态。那么调度器应该倾向于调度优先级高的任务。</li>
+<li>并且一个任务必须等到所有优先级比他高的任务调度完成之后才能被调度。处于相同优先级队列的任务，他们内部的调度方式没有统一标准，可以针对性地为不同队列采用不同调度策略。<br>  <img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/gnome-shell-screenshot-EELBD1.png"></li>
+<li>MLQ 策略适合静态的引用场景，这类场景下任务信息( 例如任务的大致运行时间，资源使用情况等 )可以在执行前获知。</li>
+<li>在设置 MLQ 策略的任务优先级时，需要注意将 IO 密集型任务混合运行的场景，假设计算密集型任务优先级比 IO 密集型任务优先级高。那么就很可能遇到一下这种情况。<ul>
+<li>大量的高优先级的的计算密集型任务优于 IO 密集型任务执行，而IO密集型任务一直没有机会发起IO请求，必须等到所有计算密集型任务完成之后才可以执行，最终造成 IO 资源利用率低下。由于 IO 密集型任务一般不会消耗大量的 CPU 资源，完全可以提高他的优先级，率先发起 IO 请求，充分利用空闲的 IO 资源。</li>
+</ul>
+</li>
+<li>MLQ策略是一种搞笑的优先级调度策略。由于队列的数量一般是预先确定的，调度器可以在 O (1)时间内( 相对于任务总量 N )找到所有非空队列中优先级最高的那一个。并且选取他的队列头的任务进行调度。同时，MLQ调度可以如实地反映任务的优先级。然而，这也可能带来一些问题。<ul>
+<li>然而这也会带来一些问题:<ul>
+<li>低优先级任务饥饿。任务优先级较低的任务可能需要等待很长的时间才能够被执行。</li>
+<li>所以为了避免 MLQ 策略所带来的低优先级饥饿，需要额外的机制监控任务等待时间，为等待时间过长( 如超过一定阈值 )的任务提高优先级。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>优先级反转</strong> ( priority inversion )<ul>
+<li>在程序执行时，多个任务可能会对同一份数据产生竞争，因此任务会使用锁来保护共享数据。假设现在有 3 个任务 A，B，C，他们的优先级 A &gt; B &gt; C,任务 C 在运行时持有一把锁，然后他被高优先级的任务 A 抢占了( 任务C的锁没有被释放)，此时，任务 B，C都处于可以运行的状态。由于任务 B 的优先级高于 C，因此 B 先运行。<ul>
+<li>综合来看，我们会发现，任务 B 好像优先级是高于 任务级 A。</li>
+<li>优先级继承 ( <strong>priority inheritance</strong> )，在上面的例子中，任务 A 可以把自己的优先级转移给占有锁的任务 C，让任务 C 优先执行并放锁。之后，任务 A 可在任务 C放锁后以抢占的方式立即执行，从而避免了优先级反转的问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="多级反馈队列"><a href="#多级反馈队列" class="headerlink" title="多级反馈队列"></a>多级反馈队列</h3><p>随着计算机的发展，操作系统中的任务需求变得越来越复杂。任务同时希望拥有较低的周转时间和响应时间。并且任务的运行时间无法预知。</p>
+<ul>
+<li>此时一个人站出来了 &#x3D;&#x3D;图灵奖&#x3D;&#x3D;获得者 Corbatoo 领导了 相容分时系统 ( Compatible Time-Sharing System, CTSS )的研发。并于1962年提出了多级反馈队列。<br>  -多级反馈队列的目标是 ：在无法预知任务信息且任务类型动态变化( 任务行为模式会在计算密集型与 IO 密集型之间转换 )的场景下，既能到达类似 STCF 的策略的周转时间，又能像 RR 策略一样尽可能降低任务的响应时间。MLFQ 策略在 MLQ 策略之上增加了动态设置任务优先级的策略。<ul>
+<li>与 MLQ 策略类似，MLFQ 策略也会维护多个优先级队列，任务根据优先级存在于不同的队列中，高优先级任务先于低优先级任务执行，处于相同优先级的任务采用 RR 策略执行。MLFO 策略的一大创新是实现了优先级的动态设置，具体策略如下:<ul>
+<li>段任务拥有更高的优先级。MIFO策略倾向于给更短任务更高的优先级。主要有以下三点好处 :<ul>
+<li><ol>
+<li>优先调度短任务可以有更好的平均周转时间。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>IO 密集型任务一般在 CPU 中执行的时间更短，给短任务提高优先级也相当于提高 IO 密集型任务的优先级，有利于提高系统的 IO 资源利用率。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>交互式任务一般是短任务，提高其优先级有助于降低这些任务的响应时间。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>MLFQ 策略会首先对任务的运行时间进行评估，预计运行时间较短的任务会放入优先级较高的队列中。但是，在真实系统中，可能无法准确追踪任务的完成时间和剩余完成时间。这也是 SJF 策略 和 STCF 策略的一大限制。为此，MLFQ会统计每个任务已经执行了多长时间，并据此判断该任务是短任务还是长任务。首先，当任务进入系统时，MLFQ会假设该任务是短任务，为其设置最高优先级。这有利于交互式任务达成较短的响应时间以及 IO 密集型任务充分利用 IO 资源。然后，MLFQ会为每个任务队列设置任务的最大运行时间( 任务多次运行的总时间，而非时间片 )。如果任务在当前队列运行的总时间最终超过了队列允许的最大时间。MLFQ策略会认为该任务是运行时间较长的任务，进而将该任务的优先级减一。凭借该方法，MLFQ 就可以大致适配任务的优先级，即动态评估任务的运行时间。由于短任务一般都可以在预设的时间片内完成，因此可以一直保留在优先级较高的队列中；相对地，长任务的优先级则会随着执行次数的增多而逐渐降低。<ul>
+<li>1.低优先级的任务采用更长的时间片</li>
+<li>2.定时地将所有任务的优先级提升到最高</li>
+</ul>
+</li>
+<li>在 MLFQ 策略的具体实现中，就有许多调度参数需要调整，例如优先级队列的数量，每个优先级队列采用的时间片，任务在每个优先级队列的最大运行时间，调度器定时地提升优先级的时间间隔。如果参数使用不当，就可能达不到预期的调度效果。比如，如果提升优先级的时间间隔过段，那么所有任务都会保持在最高的优先级的队列中， MLFQ 策略退化为 RR策略；而如果间隔时间过长，很可能会导致长任务保持在最低优先级队列中，很长时间内无法执行。因此，虽然MLFQ调度策略的设计非常巧妙，但开发者仍然需要话费很大的努力，对系统整体有细致的了解，才可以实现出有效的基于 MLFQ 策略的调度器。</li>
+<li><span style="color: red;">MLFQ 策略<strong>通过记录任务运行时间的方式，动态地调配任务的优先级</strong><span style="color: black;">。他能达到与 SJF 策略 和 SCTF 策略类似的低平均周转时间，同时还能保证任务的响应时间，且能避免任务饥饿。以 MLFQ 为基础的调度策略在很多操作系统中都得到了应用。</span></span></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="公平共享策略"><a href="#公平共享策略" class="headerlink" title="公平共享策略"></a><span style="color: blue;">公平共享策略</span></h3><ul>
+<li>这类调度器会量化人物对系统资源的占有比例，从而实现对资源的公平调度。我们将以<strong>份额</strong>来量化每个任务对 CPU 的时间的使用。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">fan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6(2)%20---%20%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/">http://example.com/2022/04/30/os/%E8%B0%83%E5%BA%A6(2)%20---%20%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">fan 的 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OS/">OS</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/04/30/os/%E8%B0%83%E5%BA%A6%20(1)%20---%E5%85%A5%E9%97%A8/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">2.调度</div></div></a></div><div class="next-post pull-right"><a href="/2022/04/30/os/%E8%BF%9B%E7%A8%8B%20--%20(1)/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">4.进程</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/04/30/os/%E6%80%9D%E8%80%83%E9%A2%98--%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%EF%BC%8C%E7%BA%A4%E7%A8%8B/" title="5.进程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">5.进程</div></div></a></div><div><a href="/2022/04/30/os/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%20(1)/" title="1.操作系统"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">1.操作系统</div></div></a></div><div><a href="/2022/04/30/os/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E7%AE%A1%E7%90%86%20(1)/" title="6.内存分配"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">6.内存分配</div></div></a></div><div><a href="/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/" title="7. 纤程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">7. 纤程</div></div></a></div><div><a href="/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/" title="8. 线程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">8. 线程</div></div></a></div><div><a href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/" title="10. 虚拟内存(2)"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">10. 虚拟内存(2)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5"><span class="toc-number">1.</span> <span class="toc-text">经典调度策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E8%B0%83%E5%BA%A6"><span class="toc-number">2.</span> <span class="toc-text">优先级调度</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E9%98%9F%E5%88%97"><span class="toc-number">2.1.</span> <span class="toc-text">多级队列</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E5%8F%8D%E9%A6%88%E9%98%9F%E5%88%97"><span class="toc-number">3.</span> <span class="toc-text">多级反馈队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AC%E5%B9%B3%E5%85%B1%E4%BA%AB%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">公平共享策略</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

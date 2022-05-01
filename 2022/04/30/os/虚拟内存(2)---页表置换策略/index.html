@@ -1,0 +1,205 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>10. 虚拟内存(2) | fan 的 Blog</title><meta name="keywords" content="OS"><meta name="author" content="fan"><meta name="copyright" content="fan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="页替换策略1234当我们需要分配物理页时，若空闲的物理页已经用完或者小于一个阈值。那么此时操作系统会选择 页替换策略 选择一个或者一些物理页换出到磁盘以便让出空间。当已经被换出的内存页再次被访问时，必须重新从磁盘加载到物理内存，十分耗时！！！  页替换策略是根据硬件所提供的页访问信息，来猜测页应该被换出 ( 比如短时间内再次被换入的小概率的页 )，从而最小化缺页异常的发生次数以提升性能。与此同时，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10. 虚拟内存(2)">
+<meta property="og:url" content="http://example.com/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="fan 的 Blog">
+<meta property="og:description" content="页替换策略1234当我们需要分配物理页时，若空闲的物理页已经用完或者小于一个阈值。那么此时操作系统会选择 页替换策略 选择一个或者一些物理页换出到磁盘以便让出空间。当已经被换出的内存页再次被访问时，必须重新从磁盘加载到物理内存，十分耗时！！！  页替换策略是根据硬件所提供的页访问信息，来猜测页应该被换出 ( 比如短时间内再次被换入的小概率的页 )，从而最小化缺页异常的发生次数以提升性能。与此同时，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-04-30T03:41:40.000Z">
+<meta property="article:modified_time" content="2022-05-01T04:52:00.622Z">
+<meta property="article:author" content="fan">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: fan","link":"链接: ","source":"来源: fan 的 Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '10. 虚拟内存(2)',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-01 12:52:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">10. 虚拟内存(2)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-01T04:52:00.622Z" title="更新于 2022-05-01 12:52:00">2022-05-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OS/">OS</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="10. 虚拟内存(2)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div><article class="post-content" id="article-container"><h3 id="页替换策略"><a href="#页替换策略" class="headerlink" title="页替换策略"></a>页替换策略</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">当我们需要分配物理页时，若空闲的物理页已经用完或者小于一个阈值。</span><br><span class="line">那么此时操作系统会选择 页替换策略 选择一个或者一些物理页换出到磁盘以便</span><br><span class="line">让出空间。当已经被换出的内存页再次被访问时，必须重新从磁盘加载到物理</span><br><span class="line">内存，十分耗时！！！</span><br></pre></td></tr></table></figure>
+<ul>
+<li>页替换策略是根据硬件所提供的页访问信息，来猜测页应该被换出 ( 比如短时间内再次被换入的小概率的页 )，从而最小化缺页异常的发生次数以提升性能。与此同时，操作系统也需要考量 页替换策略本身执行所带来的开销。不同的页替换策略 有其各自适合的应用场景。</li>
+</ul>
+<hr>
+<h4 id="MIN-策略-x2F-OPT-策略"><a href="#MIN-策略-x2F-OPT-策略" class="headerlink" title="MIN 策略 &#x2F; OPT 策略"></a>MIN 策略 &#x2F; OPT 策略</h4><ul>
+<li>MIN 策略又称 OPT 策略。</li>
+<li>这一策略在<strong>选择被换出的页时，优先选择未来不会再访问的页，或者在很长时间内不会再访问的页。</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这一策略理论上来说，是最优秀的页替换策略，但在实际场景中通常很难实现。</span><br><span class="line">页访问顺序取决于应用程序，而操作系统通常无法预先得知应用程序未来访问页的顺序。</span><br><span class="line">该策略主要作为一个标准，来衡量其他页替换策略的优劣。</span><br></pre></td></tr></table></figure></li>
+<li>我们来模拟一下，假设物理内存中可以存放三个物理页，初始为空，一个应用程序需要访问物理页 1 – 5，顺序为 “3  2  3  1  4  3  5  4  2  3  4  3 “;<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20164604.png"></li>
+</ul>
+<hr>
+<h4 id="FIFO-策略"><a href="#FIFO-策略" class="headerlink" title="FIFO 策略"></a>FIFO 策略</h4><ul>
+<li>FIFO 策略是最简单的页替换策略之一，同时也正因为简单所以带来的时间开销很小。</li>
+<li>该策略优先<strong>选择最先换入的页进行换出。</strong></li>
+<li>操作系统维护一个队列用于记录换入内存的物理页号。每换入一个物理页就会把它的页号加入到队尾，因此最先换入的物理页号总是处于对头位置。</li>
+<li>当需要选择一个物理页换出时，该策略总是选择位于队列头部的物理页号所对应的物理页。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">但其实这种策略所带来的性能很低，因此他几乎不会被现代操作系统直接</span><br><span class="line">使用。</span><br><span class="line">此处不予图片展示。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h4 id="Second-Chance-策略"><a href="#Second-Chance-策略" class="headerlink" title="Second Chance 策略"></a>Second Chance 策略</h4><ul>
+<li>Second Chance 策略是FIFO  的优化版本。</li>
+<li>操作系统同样需要维护一个队列，该队列用于记录换入物理内存的物理页号。但同时还要为<strong>每一个物理页号维护一个访问标志位</strong>。</li>
+<li>如果所访问的页号已经在队列中，则置上其访问标志位。</li>
+<li>在寻找将要换出的内存页时，该策略优先查看位于队头的页号。此时有两种情况<ul>
+<li>1.如果他的访问标志位没有被置上，则换出该页号所对应的内存页。</li>
+<li>2.如果他的访问标志位已经被置上，则将该标志位清0，并将该内存页号挪到对尾 ( 将其当成一个最近访问的内存页的页号 ),并从新的对头开始重新寻找要换出的内存页。</li>
+</ul>
+</li>
+<li>如果所有的内存页号的访问标志位都被 置上，那么原本处于队头的内存页号将再次回到对头时被换出 ( 此时，所有的标志位都被清 0 )。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我们来看看 Second Chance 策略的执行流程</span><br></pre></td></tr></table></figure>
+<img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20171044.png"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">我们一般认为为一个应用程序分配更多的物理页，则发生换页的次数越少。</span><br><span class="line">但是更多的物理页，就会导致更多的换页( 更低的性能 )。</span><br><span class="line">这种现象 我们称之为 Belady( Belady&#x27;s anomaly )，该现象可能在操作系统使用 FIFO 和 Second Chance 等页替换策略时发生。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h4 id="LRU-策略"><a href="#LRU-策略" class="headerlink" title="LRU 策略"></a>LRU 策略</h4><ul>
+<li>LRU ( Least Recently Used ) 策略在选择被换出的页时，优先选择最久未被访问的页。</li>
+<li>过去数条指令频繁访问的页很可能在后续的数条指令中也被频繁访问。</li>
+<li>实现方法 : 操作系统维护一个链表，按照内存页的访问顺序将内存页号插入链表中 ( 最久被访问的内存页号在链表的首端，而最近访问的内存页号在链表的尾端。)在每次访问内存之后，操作系统把刚刚访问的内存页号调整到链表的尾端；每次都选择换出位于链表首端的页。<br><img src="https://raw.githubusercontent.com/yangxiaofan369/img_HMStrange/master/2021-11-18%20180830.png"></li>
+</ul>
+<hr>
+<h4 id="MRU-策略"><a href="#MRU-策略" class="headerlink" title="MRU 策略"></a>MRU 策略</h4><ul>
+<li>MRU 策略 与 LRU 策略 相反， MRU ( Most Recently Used ) 策略在替换内存页时，优先换出最久被访问的内存页。</li>
+<li>该策略认为 : 应用程序不会反复地访问相同的地址。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例如，在一个视频播放器中，每一帧只会被读取一次，不会重复读取。</span><br></pre></td></tr></table></figure>
+<h4 id="时钟算法策略"><a href="#时钟算法策略" class="headerlink" title="时钟算法策略"></a>时钟算法策略</h4></li>
+<li>该算法和Second Chance策略类似，但是这里将换入的物理内存的页号排成了一个时钟的形状。</li>
+</ul>
+<hr>
+<h3 id="工作集模型"><a href="#工作集模型" class="headerlink" title="工作集模型"></a>工作集模型</h3><ul>
+<li>在选择和实现页替换策略时候，操作系统的原则是以最小的算法开销达到尽可能接近 MIN 策略的效果。</li>
+<li>然后如果选择的替换策略与实际的工作负载不匹配，则有可能导致 颠簸现象( thrashing ),造成严重的性能损失。</li>
+</ul>
+<p><strong>工作集模型</strong> 能够有效的避免颠簸现象发生，工作集的定义是 : “ 一个应用程序在时刻 t 的工作集 W 为他在时间区间[ t - x, t ]使用的内存页集合，也被认为他在未来( 下一段x时间内 ) 会访问的内存页集合 “。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">那么如何高效地追踪工作集呢?</span><br></pre></td></tr></table></figure>
+<p>一种常见的实现方法就是 <strong>工作集时钟算法</strong></p>
+<ul>
+<li>操作系统设置一个定时器，每经过固定的时间间隔，一个设置好的工作集追踪函数就会被调用。</li>
+<li>该追踪函数 为 每个内存页维护两个状态。上次使用时间和访问位，均被初始化位 0 ，每次被调用，该函数都会检查每个内存页的状态。<ul>
+<li>如果访问位 是 1，则说明在此次 时间间隔 内核页被访问过，于是该函数会把当前系统时间赋值给该内存页的上次使用时间。</li>
+<li>该方法前提是 CPU 硬件会在程序访问某一个页的时候自动地将对应的访问位设置为1，如果访问位是0，那么就说明在此次时间间隔内该页没有被访问，于是该函数就会计算该页的年龄， 若该页的年龄超过预设的时间间隔 X，那么就不再属于工作集。</li>
+<li>检查完一个页的状态之后，工作集追踪函数将其访问位设置为0，通过工作集时钟算法或者具有相似设计的算法，操作系统能够有效地预测工作集，从而灵活地进行页替换。<h3 id="虚拟内存总结"><a href="#虚拟内存总结" class="headerlink" title="虚拟内存总结"></a>虚拟内存总结</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">虚拟内存抽象使应用程序能够拥有一个独立而连续的虚拟地址空间，其通过</span><br><span class="line">页表与硬件的配合能够在应用程序透明的前提下自动地进行虚拟地址到物理</span><br><span class="line">地址的翻译。</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">fan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/">http://example.com/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(2)---%E9%A1%B5%E8%A1%A8%E7%BD%AE%E6%8D%A2%E7%AD%96%E7%95%A5/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">fan 的 Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OS/">OS</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">8. 线程</div></div></a></div><div class="next-post pull-right"><a href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(3)%20---%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">11. 共享内存</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/04/30/os/%E6%80%9D%E8%80%83%E9%A2%98--%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%EF%BC%8C%E7%BA%A4%E7%A8%8B/" title="5.进程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">5.进程</div></div></a></div><div><a href="/2022/04/30/os/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%20(1)/" title="1.操作系统"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">1.操作系统</div></div></a></div><div><a href="/2022/04/30/os/%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E4%B8%8E%E7%AE%A1%E7%90%86%20(1)/" title="6.内存分配"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">6.内存分配</div></div></a></div><div><a href="/2022/04/30/os/%E7%BA%A4%E7%A8%8B%20--%20(1)/" title="7. 纤程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">7. 纤程</div></div></a></div><div><a href="/2022/04/30/os/%E7%BA%BF%E7%A8%8B%20--%20(1)/" title="8. 线程"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">8. 线程</div></div></a></div><div><a href="/2022/04/30/os/%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98(3)%20---%E5%B8%B8%E8%A7%81%E5%BA%94%E7%94%A8/" title="11. 共享内存"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">11. 共享内存</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5"><span class="toc-number">1.</span> <span class="toc-text">页替换策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MIN-%E7%AD%96%E7%95%A5-x2F-OPT-%E7%AD%96%E7%95%A5"><span class="toc-number">1.1.</span> <span class="toc-text">MIN 策略 &#x2F; OPT 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FIFO-%E7%AD%96%E7%95%A5"><span class="toc-number">1.2.</span> <span class="toc-text">FIFO 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Second-Chance-%E7%AD%96%E7%95%A5"><span class="toc-number">1.3.</span> <span class="toc-text">Second Chance 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LRU-%E7%AD%96%E7%95%A5"><span class="toc-number">1.4.</span> <span class="toc-text">LRU 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MRU-%E7%AD%96%E7%95%A5"><span class="toc-number">1.5.</span> <span class="toc-text">MRU 策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%92%9F%E7%AE%97%E6%B3%95%E7%AD%96%E7%95%A5"><span class="toc-number">1.6.</span> <span class="toc-text">时钟算法策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E9%9B%86%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">工作集模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">虚拟内存总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

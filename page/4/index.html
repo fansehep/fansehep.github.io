@@ -50,7 +50,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2022-05-01 12:41:24'
+  postUpdate: '2022-05-01 12:56:48'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -139,74 +139,141 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><hr/></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/%E4%BF%A1%E5%8F%B7/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">Linux信号概述
-linux下，一个进程给其他进程发送信号的API是kill函数。123#include &lt;sys/types.h&gt;#include &lt;signal.h&gt;int kill(pid_t pid, int sig);
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><hr/></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">fan 的 Blog</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/string_2UTF8/" title="7. Lua String">7. Lua String</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">UTF8 字符库
+函数 utf8.char() 和 utf8.codepoint() 在 utf8 环境下等价于 string.char() 和 string.byte()
+这个具体我就不研究了
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/table/" title="9. Lua Table">9. Lua Table</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">Table
+Table 是 lua 语言 最主要 唯一的数据结构。
+
+使用 表 lua 可以用一种简单的统一且高效的方式表示数组集合，记录其他数据结构
+
+lua 语言也可以使用表来表示 包 ( package ) 和其他对象
+
+当调用 math.sin() 时，我们可能认为是调用了 math库的sin函数，但实际上对于 lua语言来说，其实际含义是 “ 以字符串 sin “ 为健值来检索表 math
+
+我们使用 构造器表达式来创建表 ( constructor expression ) 创建表
+
+a = &#123; &#125;
+12345678910111213141516171819202122232425262728  - 表永远是匿名的，表本身和保存表的变量之间没有固定的关系  - 对一个表而言，当程序中不再有指向他的引用时，垃圾收集器会最终删除这个表并重用其占用的内存。- 注意  a.x 和 a[x] 的区别  - 实际上， a.x 表示 a[ &quot;x&quot; ], 即由字符串 &quot;x&quot; 索引的表  - a[x] 则表示由变量 x 对应的值索引 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" title="1. Lua 入门_1">1. Lua 入门_1</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">入门学习
+Lua 是一种脚本语言，目的是解决繁琐的 c&#x2F;c++程序更新问题，并在此之上损失少量性能却换来更高效的开发。
+
+作为一门解释型语言，lua 的解释器代码短的可怜。其解释器为 #!&#x2F;bin&#x2F;lua
+
+lua 注释
+12-- 单行注释--[[  ]] 多行注释
+
+Lua 中，全局变量无须声明即可使用，使用未经初始化过的全局变量也不会导致错误。但结果是 nil
+
+同时，如果将nil赋值给某一个全局变量时，lua会回收该变量。
+
+
+nil
+
+nil 表示无效值 non-value
+
+
+Boolean
+
+将 Boolen 值 false 和 nil 外的所有其他值均视为真。
+
+
+and &amp;&amp;   
+
+or ||
+
+type 可以获取到一个值的类型，该返回值是 string类型，可以从 type( type( x) )  考证。
+
+
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0_2/" title="2. Lua 入门_2">2. Lua 入门_2</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">入门学习_2
+math library
+
+random number
+
+math.random 用来生成伪随机数，
+
+不带参数调用，返回 [0, 1) 范围内均匀分布的伪随机实数。
+
+整型时，返回一个在[1, n] 范围内的伪随机整数
+
+两个整型时，[left, right]
+
+randomseed 设置伪随机数种子，系统默认以 1 为种子初始化伪随机数发生器。通常调用
+1math.randomseed(os.time())
 
 
 
-pid参数
-含义
+
+去整函数
+
+floor 向负无穷取整
+ceil 向正无穷去整
+modf 向 0 去整
 
 
-
-pid &gt; 0
-发送给PID为pid1的进程
+strand lua 使用 64 bit 保存 int类型。64 bit 保存 双精度。
 
 
-pid &#x3D; 0
-信号发送给本进程组内的其他进程
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F(%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D)/" title="3. Lua regax">3. Lua regax</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">
+本章详见本书 lua 程序设计 P123 该章
 
 
-pid &#x3D; -1
-信号发送给除了init进程外的所有进程，但需要权限
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/04/30/Lua/%E9%97%AD%E5%8C%85/" title="10. Lua Function 闭包">10. Lua Function 闭包</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-04-30T03:12:13.000Z" title="发表于 2022-04-30 11:12:13">2022-04-30</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Lua-language/">Lua language</a></span></div><div class="content">闭包
+在lua中，所有的函数都是匿名的，例如 math.sin 只是 math.sin 这个变量指向sin该函数
+1234a = &#123;p = print&#125;a.p(&quot;hello, world!&quot;)math.sin = a.pmath.sin(10, 20) -- 10 20
+
+也就是说，函数也属于第一类值，
 
 
-pid &lt; -1
-信号发送给组ID为-pid的进程组中的所有成员
+</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/I%20%20_%20O%20%E5%A4%8D%E7%94%A8%E7%9A%84%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content"></div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/1998/12/12/Server/EPOLL/" title="5. epoll">5. epoll</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="1998-12-12T04:12:12.000Z" title="发表于 1998-12-12 12:12:12">1998-12-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Server/">Server</a></span></div><div class="content">epoll
+epoll是linux下特有的 IO 复用函数，epoll使用一组函数完成任务，而不是单个函数。
+epoll会将用户关心的文件描述符上的事件放在内核中的一个事件表中。
+但是epoll需要使用一个额外的文件描述符，来唯一标识内核中的这个事件表。该文件描述符由 epoll_create 创建
+epoll_create12#include &lt;sys/epoll.h&gt;int epoll_create ( int size );
+size 参数我们一般认为无效，大概告诉内核这个事件表需要多大。该函数的返回的文件描述符将用作其他所有epoll系统系统调用的第一个参数。
+epoll_ctl1int epoll_ctl(int epfd,int op,int fd,struct epoll_event* event);
+epfd 表示需要操作的文件描述符
+该函数成功返回 0 ，失败返回 -1 并且设置 errno
+op 的选项123EPOLL_CTL_ADD		//在事件表中注册fd上的事件EPOLL_CTL_MOD		//修改fd上的注册事件EPOLL_CTL_DEL		// ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/1998/12/12/Server/Poll/" title="8. poll">8. poll</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="1998-12-12T04:12:12.000Z" title="发表于 1998-12-12 12:12:12">1998-12-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Server/">Server</a></span></div><div class="content">Poll
+select 已经可以处理多个 socket了，但 Poll 也可以实现同样的功能, 且调用方法十分简单
+
+struct pollfd&#123;
+  int fd;	// 文件描述符
+  short events;	// 对文件描述符fd感兴趣的事件
+  short revents; // 文件描述符fd上当前实际发生的事件
+&#125;;
+int poll(struct pollfd* ufds, unsigned int nfds, int timeout);
 
 
+poll 函数使用pollfd 结构体来监控一组文件句柄，
 
-linux定义的信号都&gt;0，如果sig取值为0，则kill函数不发送任何信号。但将sig设置为0可以用来检测目标进程或者进程组是否存在。
-该函数成功时返回0，失败时返回-1并设置errno。信号处理方式12#include &lt;signal.h&gt;typedef void (* _sighandler_t) ( int );
-123#include &lt;bits/signum.h&gt;#define SIG_D ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/%E8%BF%9B%E7%A8%8B%E6%B1%A0/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">
-池的结构就是会预分配一些资源，以减少使用时再分配的时间的消耗。
-主进程使用某种算法来主动选择子进程。最简单，最常用的算法是随机算法和Round Robin(轮流选取算法)，还有很多算法哦
-主进程和所有子进程通过一个工作队列来同步。子进程都睡眠在该工作队列上。
+ufds 是要监控的文件句柄集合，nfds 是监控的文件句柄数量，即前面 pollfd 结构体的数量，timeout 则是等待的毫秒数。无论文件描述符是否准备好，都即可返回。
 
+timeout 为负数则无线等待。timeout 为 0 表示调用后立即返回。
+returnValue &#x3D; 0
 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">
-同步 IO 模型就是要求用户自己去把内核区的数据读出来，异步 IO 就是由内核帮助你完成 IO 操作。
-同步IO
-用户可以直接对 IO 执行读写操作，这些操作告诉内核用户读写缓冲区的位置，以及 IO 操作完成之后内核通知应用程序的方式。
-也就是说，同步 IO 模型要求用户代码自己执行 IO 操作，将数据从内核缓冲区读到用户缓冲区，或将数据从用户缓冲区写入到内核缓冲区。
+表示超时之前没有任何事件发生
 
 
-异步IO
-而异步IO机制则有内核来执行 IO 操作，数据在内核缓冲区和用户缓冲区的移动是由内核在后台完成的。
+returnValue &#x3D; -1
+
+表示失败
 
 
-总结
-同步 IO 是向用户程序通知的是 IO 就绪事件
-异步 IO 就是向用户程序通知的是 IO 完成事件Reactor 模式
+returnValue &gt;&#x3D; 0
 
+表示 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/1998/12/12/Server/TCP_IP%20API/" title="11. TCP / IP 接口">11. TCP / IP 接口</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="1998-12-12T04:12:12.000Z" title="发表于 1998-12-12 12:12:12">1998-12-12</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Server/">Server</a></span></div><div class="content">1.关闭连接1int close( int fd );
 
-Reactor ： 要求主线程( I&#x2F;O 处理单元，下同 ) 只负责监听文件描述符上是否有事件发生，有的话就立即将该事件通知工作线程，除此以外，主线程不做任何其他的工作。读写数据，接受新的连接，以及处理客户请求均在工作线程中完成。
-详情请见本书 P128Proactor
-
-
-Proactor : proactor 模式则要求所有的 IO 操作都将给主线程和内核完成 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/03/11/Server/%E9%AB%98%E7%BA%A7%20I%20_%20O%20%E5%87%BD%E6%95%B0/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-03-11T08:37:13.824Z" title="发表于 2022-03-11 16:37:13">2022-03-11</time></span></div><div class="content">
-1.pipe12#include &lt;unistd.h&gt;int pipe( int fd[2] );
-pipe函数会创建一个管道，我们规定数据只能从 fd[1] 中写入，只能从 fd[0] 中读出。12int socketpair(int domain,int type,int protocol,int fd[2]);//成功时返回0，失败时返回1。
-2.dup and dup212int dup(int file_descriptor);int dup2(int file_descriptor_one,int file_descriptor_two);
-dup函数会创建一个新的文件描述，该文件描述符和原文件描述符指向相同的文件，管道，或者网络连接，dup总是返回系统中最小的可用文件描述符
-dup2和dup类似，但他将返回第一个不小于file_descriptor_one的整数值
-dup和dup2函数调用失败就会返回-1并设置errno
-3.readv 和 writev
-readv函数会将数据从文件描述符读到分散的内存块中，writev则会将多块分散的内存数据一起写入文件描 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="page-number current">4</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+close的调用并非总是立即关闭一个连接，而是将fd的引用计数减去1，只有当fd的引用计数为0时，才真正关闭连接。多进程程序中， fork之后的，会将父进程中所有的socket引用计数加一，当我们需要关闭连接时，必须关闭父子进程中的socket。1int shutdown( int sockfd, int howto );
+但我们无论何时都要立即终止连接时，可以调用shutdown函数1234// howto的可选项 SHUT_RD		关闭读选项SHUT_WR		关闭写选项SHUT_RDWR	SHUT_RD &amp;&amp; SHUT_RDWR
+2. The API for TCP &#x2F; UDP
+TCP12ssize_t recv(int sockfd,void* buf,size_t buf,int flags);ssize_t send(int sockfd,const void* buf,size_t len,int flags);
+函数具体就不介绍了12看flags函数的参数详情请见 本书高性能 P82
+UD ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/3/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/#content-inner">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/5/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raw.githubusercontent.com/fansehep/img_HMStrange/master/headmy.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">fan</div><div class="author-info__description">coding for fun</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/fansehep"><i class="fab fa-github"></i><span>github</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fansehep" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/yfan3763@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=3142782867&amp;site=qq&amp;menu=yes" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/1.http_basic/" title="1.HTTP_基础">1.HTTP_基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/10.%20%E4%B8%8Ehttp%E5%8D%8F%E4%BD%9C%E7%9A%84%20Web%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="与HTTP 协作的 Web 服务器">与HTTP 协作的 Web 服务器</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/2.web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="Web及网络基础">Web及网络基础</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/3.%20HTTP%E5%A4%B4%E9%83%A8/" title="HTTP 头部">HTTP 头部</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/04/30/http/4.%20HTTP%20%E7%8A%B6%E6%80%81%E7%A0%81/" title="HTTP 状态玛">HTTP 状态玛</a><time datetime="2022-04-30T03:41:40.000Z" title="发表于 2022-04-30 11:41:40">2022-04-30</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="fas fa-folder-open"></i>
             <span>分类</span>
             
             </div>
             <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Lua-language/"><span class="card-category-list-name">Lua language</span><span class="card-category-list-count">10</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/http-%E5%8D%8F%E8%AE%AE/"><span class="card-category-list-name">http 协议</span><span class="card-category-list-count">9</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/HTTP/" style="font-size: 1.1em; color: #999">HTTP</a> <a href="/tags/Lua/" style="font-size: 1.5em; color: #99a9bf">Lua</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">19</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">15</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">34</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">17.5k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-05-01T04:41:24.058Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Lua-language/"><span class="card-category-list-name">Lua language</span><span class="card-category-list-count">10</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/OS/"><span class="card-category-list-name">OS</span><span class="card-category-list-count">11</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Server/"><span class="card-category-list-name">Server</span><span class="card-category-list-count">14</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/http-%E5%8D%8F%E8%AE%AE/"><span class="card-category-list-name">http 协议</span><span class="card-category-list-count">9</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/"><span class="card-category-list-name">分布式</span><span class="card-category-list-count">2</span></a></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/HTTP/" style="font-size: 1.2em; color: #999da3">HTTP</a> <a href="/tags/Lua/" style="font-size: 1.3em; color: #99a1ac">Lua</a> <a href="/tags/OS/" style="font-size: 1.4em; color: #99a5b6">OS</a> <a href="/tags/Server/" style="font-size: 1.5em; color: #99a9bf">Server</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.1em; color: #999">分布式</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/04/"><span class="card-archive-list-date">四月 2022</span><span class="card-archive-list-count">36</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/1998/12/"><span class="card-archive-list-date">十二月 1998</span><span class="card-archive-list-count">10</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">47</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">44.2k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-05-01T04:56:48.414Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By fan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
