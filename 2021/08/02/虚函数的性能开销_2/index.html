@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>虚函数的性能开销(2) | 断虹霁雨 修眉新绿</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="C++" />
+  
+  
+  
+  
+  <meta name="description" content="引言在虚函数的性能开销(1) 中我们提到了一种方法来解决虚函数的性能开销, 使用CRTP便可以稍微缓解此处问题. CRTP该类在多线程编程中甚是常见. 使用子类来继承基类, 从而达到使用子类调用基类的方法, 构造一个&#96;&#96;&#96;shared_ptr&#96;&#96;&#96;来使用.1234567&#96;&#96;&#96;c++class xxx : std::enable_shared_from_this&lt;xxx&gt; &amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚函数的性能开销(2)">
+<meta property="og:url" content="http://fansehep.com/2021/08/02/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_2/index.html">
+<meta property="og:site_name" content="断虹霁雨 修眉新绿">
+<meta property="og:description" content="引言在虚函数的性能开销(1) 中我们提到了一种方法来解决虚函数的性能开销, 使用CRTP便可以稍微缓解此处问题. CRTP该类在多线程编程中甚是常见. 使用子类来继承基类, 从而达到使用子类调用基类的方法, 构造一个&#96;&#96;&#96;shared_ptr&#96;&#96;&#96;来使用.1234567&#96;&#96;&#96;c++class xxx : std::enable_shared_from_this&lt;xxx&gt; &amp;#123;">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.328888.xyz/2022/12/22/AzayU.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2022/12/22/Az18v.jpeg">
+<meta property="article:published_time" content="2021-08-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-29T03:00:07.444Z">
+<meta property="article:author" content="凡">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.328888.xyz/2022/12/22/AzayU.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="断虹霁雨 修眉新绿" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/mylogo.jpg">
+  <link rel="apple-touch-icon" href="/css/images/mylogo.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+  
+<script src="/js/bootstrap.js"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css" >
+
+  
+    
+<link rel="stylesheet" href="/css/dialog.css">
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css" >
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css" >
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;"  
+                href="#" data-toggle="modal" data-target="#myModal" >
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/mylogo.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">Home</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">Archives</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">Categories</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">Tags</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">About</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div></li>
+            </div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-虚函数的性能开销_2" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" class="article-title" itemprop="name">
+      虚函数的性能开销(2)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2021/08/02/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_2/" class="article-date">
+	  <time datetime="2021-08-01T16:00:00.000Z" itemprop="datePublished">2021-08-02</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/C/">C++</a><a class="article-category-link" href="/categories/C/%E6%80%A7%E8%83%BD%E4%B8%8E%E6%8A%89%E6%8B%A9/">性能与抉择</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		PV:<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>在<code>虚函数的性能开销(1)</code> 中我们提到了一种方法来解决虚函数的性能开销, 使用<code>CRTP</code>便可以稍微缓解此处问题.</p>
+<h3 id="CRTP"><a href="#CRTP" class="headerlink" title="CRTP"></a>CRTP</h3><figure class="highlight plaintext"><figcaption><span>该类在多线程编程中甚是常见. 使用子类来继承基类, 从而达到使用子类调用基类的方法, 构造一个```shared_ptr<xxx>```来使用.</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```c++</span><br><span class="line">class xxx : std::enable_shared_from_this&lt;xxx&gt; &#123;</span><br><span class="line">  auto xxx_func() &#123;</span><br><span class="line">    return shared_from_this();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>std::enable_shared_form_this&lt;&gt; 实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* libstdc++ */</span></span><br><span class="line"><span class="comment">/* 做了一定简化 */</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">enable_shared_from_this</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function">shared_ptr&lt;T&gt; <span class="title">shared_from_this</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">shared_ptr</span>&lt;T&gt;(<span class="keyword">this</span>-&gt;weak_this);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">mutable</span> weak_ptr&lt;T&gt; weak_this;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>通过在模板基类中定义接口, 在调用子类的方法, 这种编程技巧, 称之为<code>CRTP</code>, 全名是<code>Curiously recurring template pattern</code>.</p>
+<p>那么如何在我们的代码中使用呢</p>
+<p>一个最初步想到的模型如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="comment">/* 必须是友元*/</span></span><br><span class="line">  <span class="keyword">friend</span> Base&lt;T&gt;;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">print_info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;T&gt;(<span class="keyword">this</span>)-&gt;<span class="built_in">print_info</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Child_1</span> : <span class="keyword">public</span> Base&lt;Child_1&gt; &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">print_info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child_1 info&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Child_2</span> : <span class="keyword">public</span> Base&lt;Child_2&gt; &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">print_info</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child_2 info&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>使用:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  Child_1 child_1;</span><br><span class="line">  child_1.<span class="built_in">print_info</span>();</span><br><span class="line">  Child_2 child_2;</span><br><span class="line">  child_2.<span class="built_in">print_info</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="comment">/* 但是我们不能 */</span></span><br><span class="line">  Base* child_1_ptr = <span class="keyword">new</span> <span class="built_in">Child_1</span>(); <span class="comment">/* error! */</span></span><br><span class="line">  child_1_ptr.<span class="built_in">print_info</span>();</span><br><span class="line">  <span class="keyword">delete</span> child_1_ptr;</span><br><span class="line">  child_1_ptr = <span class="keyword">new</span> <span class="built_in">Child_2</span>(); <span class="comment">/* error! */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这么看似乎可以解决问题, 但其实不然, 它仍然无法替代多态, 因为 <code>Base&lt;Child_1&gt;</code> 和 <code>Base&lt;Child_2&gt;</code> 是两个不同的类, 编译器实例化的是两个类. 我们仍然无法替换传统的多态.</p>
+<h3 id="Use-std-visit-and-std-variant-解决"><a href="#Use-std-visit-and-std-variant-解决" class="headerlink" title="Use std::visit and std::variant 解决"></a>Use std::visit and std::variant 解决</h3><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/utility/variant/visit">std::visit</a> 是 c++17 引入的一个函数, 意在解决访问任何变体的问题 (笔者注: abseil 也拥有此库).</p>
+<p>demo:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;queue&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;variant&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">Print</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;T*&gt;(<span class="keyword">this</span>)-&gt;<span class="built_in">Printimp</span>(); &#125;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">friend</span> T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_1</span> : Base&lt;Child_1&gt; &#123;</span><br><span class="line">  <span class="keyword">friend</span> Base&lt;Child_1&gt;;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">Printimp</span><span class="params">()</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;Child_1\n&quot;</span>); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_2</span> : Base&lt;Child_2&gt; &#123;</span><br><span class="line">  <span class="keyword">friend</span> Base&lt;Child_2&gt;;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">Printimp</span><span class="params">()</span> </span>&#123; <span class="built_in">printf</span>(<span class="string">&quot;Child_2\n&quot;</span>); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt;</span><br><span class="line"><span class="keyword">using</span> <span class="type">poly_t</span> = std::variant&lt;Ts...&gt;;</span><br><span class="line"><span class="keyword">using</span> container_type = std::vector&lt;<span class="type">poly_t</span>&lt;Child_1, Child_2&gt;&gt;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Manager</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Type&gt;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(Type&amp; type)</span> </span>&#123;</span><br><span class="line">    vec_actor.<span class="built_in">push_back</span>(type);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; base_iter : vec_actor) &#123;</span><br><span class="line">      std::<span class="built_in">visit</span>([](<span class="keyword">auto</span>&amp; act) &#123; act.<span class="built_in">Print</span>(); &#125;, base_iter);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  container_type vec_actor;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  Manager manager;</span><br><span class="line">  Child_1 child1&#123;&#125;;</span><br><span class="line">  manager.<span class="built_in">init</span>(child1);</span><br><span class="line">  manager.<span class="built_in">run</span>();</span><br><span class="line">  Child_2 child2&#123;&#125;;</span><br><span class="line">  </span><br><span class="line">  manager.<span class="built_in">init</span>(child2);</span><br><span class="line">  manager.<span class="built_in">run</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>即通过 <code>std::visit</code> and <code>std::variant</code> 构造 lambda 表达式来访问变体从而到达避开 <code>虚函数</code>来实现多态的效果, 似乎看起来啰哩啰嗦的, 不如测试一下.<br>通过使用 <code>std::variant</code> 将多个 <code>CRTP</code> 子类包含在一起(类似<code>std::optional</code>), 使用 <code>std::visit</code> 无视类型的直接调用函数.</p>
+<p>测试:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// crtp_test.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> crtp_ns &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;T*&gt;(<span class="keyword">this</span>)-&gt;<span class="built_in">work_impl</span>(); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_1</span> : Base&lt;Child_1&gt; &#123;</span><br><span class="line">    <span class="keyword">friend</span> Base&lt;Child_1&gt;;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work_impl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      ++i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> i&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_2</span> : Base&lt;Child_2&gt; &#123;</span><br><span class="line">    <span class="keyword">friend</span> Base&lt;Child_2&gt;;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work_impl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      ++i</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> i&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_3</span> : Base&lt;Child_3&gt; &#123;</span><br><span class="line">    <span class="keyword">friend</span> Base&lt;Child_3&gt;;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work_impl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      ++i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> i&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_4</span> : Base&lt;Child_4&gt; &#123;</span><br><span class="line">    <span class="keyword">friend</span> Base&lt;Child_4&gt;;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work_impl</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      ++i</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> i&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// namespace crtp_ns</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> virtual_ns &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">work</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Child_1</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">      ++x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> x&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_2</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">      ++x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> x&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_3</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">      ++x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> x&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Child_4</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">work</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">      ++x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> x&#123;<span class="number">0</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// namespace virtual_ns</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>test:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * gcc version: 12.2.0</span></span><br><span class="line"><span class="comment"> * google-benchmark version: 1.7.1-1</span></span><br><span class="line"><span class="comment"> * google-test version: 1.12.1-1</span></span><br><span class="line"><span class="comment"> * 构建命令: bazel build //test -c opt</span></span><br><span class="line"><span class="comment"> * 测试代码由 https://github.com/wu-hanqing 贡献</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;variant&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;benchmark/benchmark.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;crtp_virtual/crtp.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;crtp_virtual/virtual.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">size_t</span> k_test_objs = <span class="number">10&#x27;000</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> virtual_ns &#123;</span><br><span class="line"></span><br><span class="line">std::vector&lt;Base*&gt; objs;</span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> seed = <span class="number">0xDEADC0DE</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> x = []() &#123;</span><br><span class="line">    objs.<span class="built_in">clear</span>();</span><br><span class="line">    objs.<span class="built_in">reserve</span>(k_test_objs);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; k_test_objs; ++i) &#123;</span><br><span class="line">        <span class="keyword">auto</span> idx = <span class="built_in">rand_r</span>(&amp;seed) % <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">switch</span> (idx) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(<span class="keyword">new</span> Child_1&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(<span class="keyword">new</span> Child_2&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(<span class="keyword">new</span> Child_3&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(<span class="keyword">new</span> Child_4&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">benchmark</span><span class="params">(benchmark::State&amp; state)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> _ : state) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span>* obj : objs) &#123;</span><br><span class="line">            obj-&gt;<span class="built_in">work</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">teardown</span><span class="params">(<span class="type">const</span> benchmark::State&amp; state)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span>* obj : objs) &#123;</span><br><span class="line">        <span class="keyword">delete</span> obj;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;  <span class="comment">// namespace virtual_ns</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> crtp_ns &#123;</span><br><span class="line"></span><br><span class="line"><span class="type">unsigned</span> <span class="type">int</span> seed = <span class="number">0xDEADC0DE</span>;</span><br><span class="line"></span><br><span class="line">std::vector&lt;std::variant&lt;Child_1, Child_2, Child_3, Child_4&gt;&gt; objs;</span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span> x = []() &#123;</span><br><span class="line">    objs.<span class="built_in">clear</span>();</span><br><span class="line">    objs.<span class="built_in">reserve</span>(k_test_objs);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; k_test_objs; ++i) &#123;</span><br><span class="line">        <span class="keyword">auto</span> idx = <span class="built_in">rand_r</span>(&amp;seed) % <span class="number">4</span>;</span><br><span class="line">        <span class="keyword">switch</span> (idx) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(Child_1&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(Child_2&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(Child_3&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                objs.<span class="built_in">push_back</span>(Child_4&#123;&#125;);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Ts&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">overload</span> : Ts... &#123;</span><br><span class="line">    <span class="function"><span class="keyword">using</span> <span class="title">Ts::operator</span><span class="params">()</span>...</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Ts&gt;</span><br><span class="line"><span class="built_in">overload</span>(Ts...) -&gt; overload&lt;Ts...&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">benchmark</span><span class="params">(benchmark::State&amp; state)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> _ : state) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; obj : objs) &#123;</span><br><span class="line">            std::<span class="built_in">visit</span>([](<span class="keyword">auto</span>&amp; obj) &#123; obj.<span class="built_in">work</span>(); &#125;, obj);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;  <span class="comment">// namespace crtp_ns</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">BENCHMARK</span>(virtual_ns::benchmark);</span><br><span class="line"></span><br><span class="line"><span class="built_in">BENCHMARK</span>(crtp_ns::benchmark);</span><br><span class="line"></span><br><span class="line"><span class="built_in">BENCHMARK_MAIN</span>();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>测试结果:</p>
+<p><img src="https://i.328888.xyz/2022/12/22/AzayU.jpeg"></p>
+<p>上述测试不断的产生<code>cache miss</code> 和 <code>分支乱序</code>, 在这种情况下, <code>CRTP</code> 的性能要比 <code>virtual function</code> 好上不少.</p>
+<p>取消 <code>cache miss</code> 和 <code>分支乱序</code>, 笔者注释了关于<code>switch</code>的部分.<br>测试结果:</p>
+<p><img src="https://i.328888.xyz/2022/12/22/Az18v.jpeg"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在基类常常变化时, 使用<code>CRTP</code>可以减少性能的损失, 但当子类几乎不做改变时, 此时使用传统的<code>virtual</code> 是合适的做法.</p>
+<hr>
+<h4 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern">https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern</a> wikipedia CRTP</li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/GuillaumeDua/0239fda353264b67ddcb39b5d9a01105">https://gist.github.com/GuillaumeDua/0239fda353264b67ddcb39b5d9a01105</a> CppCon CRTP</li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/olibre/3d0774df0f7a16e2da10fae2b2f26c4f">https://gist.github.com/olibre/3d0774df0f7a16e2da10fae2b2f26c4f</a> CppCon CRTP</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+
+<script src="/js/vdonate.js"></script>
+
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: 'Donate', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>Post author:  </strong>凡</a>
+          </li>
+          <li class="post-copyright-link">
+          <strong>Post link:  </strong>
+          <a href="/2021/08/02/虚函数的性能开销_2/" target="_blank" title="虚函数的性能开销(2)">http://fansehep.com/2021/08/02/虚函数的性能开销_2/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>Copyright Notice:   </strong>
+            All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            unless stating additionally.
+          </li>
+         
+        </ul>
+<div>
+
+      
+      
+      
+        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/04/11/%E6%B5%85%E8%B0%88%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B(1)/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          浅谈网络编程(1)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/01/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">虚函数的性能开销(1)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CRTP"><span class="nav-number">2.</span> <span class="nav-text">CRTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Use-std-visit-and-std-variant-%E8%A7%A3%E5%86%B3"><span class="nav-number">3.</span> <span class="nav-text">Use std::visit and std::variant 解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">引用</span></a></li></ol></li></ol>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2023 断虹霁雨 修眉新绿 All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				UV : <span id="busuanzi_value_site_uv"></span> |  
+				PV : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+
+
+  
+<script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            断虹霁雨 修眉新绿
+          </div>
+          <div class="panel-body">
+            Copyright © 2023 凡 All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>

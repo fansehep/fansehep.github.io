@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>curvebs sync 的一些思考 | 断虹霁雨 修眉新绿</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  
+  <meta name="description" content="引言前段时间帮助Curve社区写了这样的一个PR, 但想来想去还是没有优化的太好. 在CurveBS ChunkServer会拥有多个Chunk, 多个Chunk构成一个CopySet, 所有的CopySet都交给CopySetManager来做管理. 但是用户在使用的时候, 发现此处的CopySet落盘(Sync时)有抖动. 原因:原来的设计使用了一个SyncTimer来每隔30s(固定的)来做">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CurveBS sync 的一些思考">
+<meta property="og:url" content="http://fansehep.com/2022/09/29/sync_%E6%80%9D%E8%80%83/index.html">
+<meta property="og:site_name" content="断虹霁雨 修眉新绿">
+<meta property="og:description" content="引言前段时间帮助Curve社区写了这样的一个PR, 但想来想去还是没有优化的太好. 在CurveBS ChunkServer会拥有多个Chunk, 多个Chunk构成一个CopySet, 所有的CopySet都交给CopySetManager来做管理. 但是用户在使用的时候, 发现此处的CopySet落盘(Sync时)有抖动. 原因:原来的设计使用了一个SyncTimer来每隔30s(固定的)来做">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-09-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-29T03:00:07.443Z">
+<meta property="article:author" content="凡">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="断虹霁雨 修眉新绿" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/mylogo.jpg">
+  <link rel="apple-touch-icon" href="/css/images/mylogo.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+  
+<script src="/js/bootstrap.js"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css" >
+
+  
+    
+<link rel="stylesheet" href="/css/dialog.css">
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css" >
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css" >
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;"  
+                href="#" data-toggle="modal" data-target="#myModal" >
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/mylogo.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">Home</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">Archives</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">Categories</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">Tags</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">About</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div></li>
+            </div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-sync_思考" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" class="article-title" itemprop="name">
+      CurveBS sync 的一些思考
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2022/09/29/sync_%E6%80%9D%E8%80%83/" class="article-date">
+	  <time datetime="2022-09-28T16:00:00.000Z" itemprop="datePublished">2022-09-29</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/C/">C++</a><a class="article-category-link" href="/categories/C/Curve/">Curve</a><a class="article-category-link" href="/categories/C/Curve/%E6%80%A7%E8%83%BD%E4%B8%8E%E6%8A%89%E6%8B%A9/">性能与抉择</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		PV:<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>前段时间帮助<code>Curve</code>社区写了这样的一个<a target="_blank" rel="noopener" href="https://github.com/opencurve/curve/pull/1912">PR</a>, 但想来想去还是没有优化的太好.</p>
+<p>在<code>CurveBS ChunkServer</code>会拥有多个<code>Chunk</code>, 多个<code>Chunk</code>构成一个<code>CopySet</code>, 所有的<code>CopySet</code>都交给<code>CopySetManager</code>来做管理. 但是用户在使用的时候, 发现此处的<code>CopySet</code>落盘(<code>Sync</code>时)有抖动.</p>
+<h3 id="原因"><a href="#原因" class="headerlink" title="原因:"></a>原因:</h3><p>原来的设计使用了一个<code>SyncTimer</code>来每隔<code>30s</code>(固定的)来做一次<code>sync</code>.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* src/chunkserver/copyset_node.h */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SyncTimer</span> : <span class="keyword">public</span> braft::RepeatedTimerTask &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SyncTimer</span>() : <span class="built_in">node_</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">SyncTimer</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">init</span><span class="params">(CopysetNode *node, <span class="type">int</span> timeoutMs)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">run</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">on_destroy</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;&#125;</span><br><span class="line">    CopysetNode *node_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>最开始我认为抖动的原因是<strong>30s</strong> 太频繁了(糟糕的想法), 后来和wuhanqing以及ilixiaocui讨论了一下, 发现我理解错了, 这里之所以发生抖动, 是因为<code>固定的 30 s</code> 可能已经积累了大量的数据, 在写入时大量的 <code>IO</code> 导致的磁盘抖动. 所以我们需要减少这种大<code>IO</code>所带来的影响, 将<code>Sync</code>操作平滑一下.</p>
+<h3 id="最终设计"><a href="#最终设计" class="headerlink" title="最终设计:"></a>最终设计:</h3><p>感谢legionxiong, 帮助我完成了PR的测试以及给了我一些建议.</p>
+<p>我将 <code>30s</code> 改为配置文件参数, 对于每一个<code>chunk</code>都共享<code>CopySet</code>唯一的<code>sumChunkRate</code>, 但每个<code>chunk</code>写入都将统计到<code>sunChunkRate</code>中去, 到达阈值<code>syncChunkLimits_</code>(默认是 2MB)时会触发<code>sync</code>, 同时<code>sync</code>也是异步的, 所有的<code>copyset</code>共享一个<code>ThreadPool</code>, 触发时只需要将<code>sync</code>任务丢入到线程池即可. 这是一个比较完善的解决方案.</p>
+<p>chunk 完成写入后通知的部分:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PS: 这里真的需要 get 吗, 是不是有点损失性能...</span></span><br><span class="line"><span class="keyword">if</span> (chunkrate_.<span class="built_in">get</span>() &amp;&amp; cvar_.<span class="built_in">get</span>()) &#123;</span><br><span class="line">    *chunkrate_ += length;</span><br><span class="line">    <span class="type">uint64_t</span> res = *chunkrate_;</span><br><span class="line">    <span class="comment">// if single write size &gt; syncThreshold, for cache friend to</span></span><br><span class="line">    <span class="comment">// delay to sync.</span></span><br><span class="line">    <span class="keyword">auto</span> actualSyncChunkLimits = <span class="built_in">MayUpdateWriteLimits</span>(res);</span><br><span class="line">    <span class="keyword">if</span> (*chunkrate_ &gt;= actualSyncChunkLimits &amp;&amp;</span><br><span class="line">            chunkrate_-&gt;<span class="built_in">compare_exchange_weak</span>(res, <span class="number">0</span>)) &#123;</span><br><span class="line">        cvar_-&gt;<span class="built_in">notify_one</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>legionxiong的改进: 在触发<code>sync</code>通知时, 可以更友好的利用缓存, 由于单次 <code>IO</code> 如果过大时, 此时直接触发<code>sync</code>是不值得的, 为了更友好的利用缓存, 在单次<code>IO</code> 过大时, 会将<code>syncChunkLimits_</code> 翻倍, 从而获得更好的cache友好.</p>
+<h3 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">优雅的设计是需要思考的. </span><br><span class="line">                      --鲁迅</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>上述中很多共享行为, 最初是使用<code>setCondPtr</code> 和<code>setSyncLimit</code> 等等这些函数来完成操作, 导致变量被定义多份, 后来ilixiaocui 提到了, 想想确实很不优雅, 而且这是共享行为, 使用<code>static</code>变量是合适的.</p>
+</li>
+<li><p>几乎现代所有的软件为了可扩展性, 都提供了配置文件按给用户. 内部往往会有那么一套逻辑, 来读取配置文件, <code>CurveBS</code> 这里的逻辑主要在<code>config_info.h</code> 该头文件中, 内部用了一些变量赋值的方法来提取配置文件, 真的需要提取吗, 为什么不让他成为一个全局的类, 每次需要使用直接访问即可呢?(Dog) 一些浅薄的想法, 不过提取配置文件还有一个好处就是, cache 友好吧, 访问一个类的内部变量可能会快一点?&gt;_&lt;</p>
+</li>
+</ul>
+<h3 id="To-be-or-not-to-be"><a href="#To-be-or-not-to-be" class="headerlink" title="To be or not to be"></a>To be or not to be</h3><p>引言中我个人认为这样设计还是不太好的原因:</p>
+<ul>
+<li>所有的<code>CopySet</code>都被一个<code>CopySetManager</code>所管理, 当<code>sync</code>触发时, 会去遍历所有的<code>chunk</code>来做异步的<code>sync</code>, 由于现有的设计是多对一, 及多个copyset 共享一个<code>std::shared_ptr&lt;std::condition_variable&gt;</code> 对应一个<code>std::mutex</code>, 当条件触发(满足阈值或者超时) 时, 都会去遍历所有的<code>copyset</code>来进行<code>sync</code>. 但是如果此处使用<code>协程</code>, 则会完全不同, 可以使用一个&#x3D;&#x3D;bg_thread&#x3D;&#x3D;, 来管理其他的对应的协程的&#x3D;&#x3D;cond&#x3D;&#x3D;, 当某个对应的cond 触发时, 之接去刷对应的 <code>copyset</code> 即可.</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">任何没有经过测试的优化都是纸上谈兵.</span><br><span class="line">                            -- &lt;&lt;性能之巅&gt;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>看上去协程很美好, 但是事实上没有什么东西是<code>银弹</code>, 协程也有自己的问题, 在上述的环境中, 协程之间带来的切换, 以及单独<code>sync</code>的这种并发安全问题, 都是应该被考虑的.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+
+<script src="/js/vdonate.js"></script>
+
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: 'Donate', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>Post author:  </strong>凡</a>
+          </li>
+          <li class="post-copyright-link">
+          <strong>Post link:  </strong>
+          <a href="/2022/09/29/sync_思考/" target="_blank" title="CurveBS sync 的一些思考">http://fansehep.com/2022/09/29/sync_思考/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>Copyright Notice:   </strong>
+            All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            unless stating additionally.
+          </li>
+         
+        </ul>
+<div>
+
+      
+      
+      
+        
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/11/24/Arch%20Linux%20%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Arch Linux 配置静态 IP
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/08/11/C_C++%20%E5%B7%A5%E5%85%B7%E8%B6%A3%E8%B0%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">C, C++ 工具趣谈</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%9F%E5%9B%A0"><span class="nav-number">2.</span> <span class="nav-text">原因:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">最终设计:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%86%E8%8A%82"><span class="nav-number">4.</span> <span class="nav-text">细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#To-be-or-not-to-be"><span class="nav-number">5.</span> <span class="nav-text">To be or not to be</span></a></li></ol>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2023 断虹霁雨 修眉新绿 All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				UV : <span id="busuanzi_value_site_uv"></span> |  
+				PV : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+
+
+  
+<script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            断虹霁雨 修眉新绿
+          </div>
+          <div class="panel-body">
+            Copyright © 2023 凡 All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>

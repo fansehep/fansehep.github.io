@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>虚函数的性能开销(1) | 断虹霁雨 修眉新绿</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="C++" />
+  
+  
+  
+  
+  <meta name="description" content="Cpper 总是鼓吹着 0 抽象成本之类的话题, 但0 抽象成本(笔者注: 0 抽象成本指的是: 你不需要为你的抽象复出性能代价, 也不需要为你用不到的东西而付出性能开销)其实是一个美丽的神话, gcc 和 clang 都实现了不同的程度的性能优化(-O0 ~ -OFast)对应不同的优化版本. 如果说 O0 与 OFast 都是 0 抽象成本. 那才是贻笑大方. 引言前段时间, 观看了 CppC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚函数的性能开销(1)">
+<meta property="og:url" content="http://fansehep.com/2021/04/01/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_1/index.html">
+<meta property="og:site_name" content="断虹霁雨 修眉新绿">
+<meta property="og:description" content="Cpper 总是鼓吹着 0 抽象成本之类的话题, 但0 抽象成本(笔者注: 0 抽象成本指的是: 你不需要为你的抽象复出性能代价, 也不需要为你用不到的东西而付出性能开销)其实是一个美丽的神话, gcc 和 clang 都实现了不同的程度的性能优化(-O0 ~ -OFast)对应不同的优化版本. 如果说 O0 与 OFast 都是 0 抽象成本. 那才是贻笑大方. 引言前段时间, 观看了 CppC">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.328888.xyz/2022/12/21/AExIP.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2022/12/22/AzBjP.jpeg">
+<meta property="article:published_time" content="2021-03-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-29T03:00:07.444Z">
+<meta property="article:author" content="凡">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.328888.xyz/2022/12/21/AExIP.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="断虹霁雨 修眉新绿" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/mylogo.jpg">
+  <link rel="apple-touch-icon" href="/css/images/mylogo.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+  
+<script src="/js/bootstrap.js"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css" >
+
+  
+    
+<link rel="stylesheet" href="/css/dialog.css">
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css" >
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css" >
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;"  
+                href="#" data-toggle="modal" data-target="#myModal" >
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/mylogo.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">Home</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">Archives</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">Categories</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">Tags</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">About</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div></li>
+            </div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-虚函数的性能开销_1" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" class="article-title" itemprop="name">
+      虚函数的性能开销(1)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2021/04/01/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_1/" class="article-date">
+	  <time datetime="2021-03-31T16:00:00.000Z" itemprop="datePublished">2021-04-01</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/C/">C++</a><a class="article-category-link" href="/categories/C/%E6%80%A7%E8%83%BD%E4%B8%8E%E6%8A%89%E6%8B%A9/">性能与抉择</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		PV:<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Cpper 总是鼓吹着<code> 0 抽象成本</code>之类的话题, 但<code>0 抽象成本</code>(笔者注:<code> 0 抽象成本指的是: 你不需要为你的抽象复出性能代价, 也不需要为你用不到的东西而付出性能开销</code>)其实是一个美丽的神话, gcc 和 clang 都实现了不同的程度的性能优化(<code>-O0 ~ -OFast</code>)对应不同的优化版本. 如果说 <code>O0</code> 与 <code>OFast</code> 都是 0 抽象成本. 那才是<code>贻笑大方</code>.</p>
+<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>前段时间, 观看了 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=rHIkrotSwcc">CppCon 2019</a>, 老哥列举了多处 C++ 并非是<code>完全 0 开销抽象的成本</code>, 这里举几个例子:</p>
+<ul>
+<li><code>std::unique_pt&lt;&gt;</code>只限制类的转移, 只能使用<code>std::move()</code>来进行赋值, 但是该类的析构函数只有在<code>-O2</code> 及以上才会被<code>inline</code>, 所以如果平常在使用 DEBUG 模式时, 可能就会有轻微的性能开销.</li>
+<li>记得前段时间看过一个Reddit上的一篇博客(找不到了…), 大意是说, 他们是游戏开发者, 在开发游戏时, 他们也需要 debug, 但是<code>C++</code> 的不同的优化级别所对应的不同的游戏的效果有一定差距, 在某些场景下, FPS 可能相差有 50 ~ 60 帧之间, 一度让他们怀疑他们用错了<code>unreal engine</code>, 给他们的开发带来了些许的困扰.</li>
+</ul>
+<h3 id="美丽的神话"><a href="#美丽的神话" class="headerlink" title="美丽的神话"></a>美丽的神话</h3><p>Java 有包装类, 包装类是对基础的类型的封装. C++标准库没有. 在 Java 中, 使用包装类有略微的性能开销.<br>笔者简单封装一个 C++ 版本的 <code>class Integer</code>.</p>
+<p>以下是一个包装类的简单实现, 这个类与传统的<code>uint64_t</code>类型更加的面向对象, 封装了一下int 的函数, 封装之后在C++中与传统的使用<code>uint64_t</code> 并没有性能开销.</p>
+<p>测试</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * gcc version: 12.2.0</span></span><br><span class="line"><span class="comment"> * google-benchmark version: 1.7.1-1</span></span><br><span class="line"><span class="comment"> * google-test version: 1.12.1-1</span></span><br><span class="line"><span class="comment"> * 构建命令: g++ test.cpp -o test -O2 -lgtest -lbenchmark</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;benchmark/benchmark.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Integer</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Integer</span>() = <span class="keyword">default</span>;</span><br><span class="line">  ~<span class="built_in">Integer</span>() = <span class="keyword">default</span>;</span><br><span class="line">  <span class="built_in">Integer</span>(<span class="type">const</span> Integer &amp;lef_val) : <span class="built_in">value_</span>(lef_val.value_) &#123;&#125;</span><br><span class="line">  Integer &amp;<span class="keyword">operator</span>++(<span class="type">const</span> <span class="type">int</span>) &#123;</span><br><span class="line">    value_++;</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="type">const</span> <span class="keyword">auto</span> <span class="title">getValue</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> value_; &#125;</span><br><span class="line">  <span class="comment">/* 其他的一些实现 */</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="type">uint64_t</span> value_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">uint32_t</span> addN = <span class="built_in">rand</span>();</span><br><span class="line"><span class="type">uint64_t</span> result;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_integer</span><span class="params">(benchmark::State &amp;state)</span> </span>&#123;</span><br><span class="line">  Integer val;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> _ : state) &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (; i &lt; addN; i++) &#123;</span><br><span class="line">      val++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  result = val.<span class="built_in">getValue</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_int</span><span class="params">(benchmark::State &amp;state)</span> </span>&#123;</span><br><span class="line">  <span class="type">uint64_t</span> val;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> _ : state) &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (; i &lt; addN; i++) &#123;</span><br><span class="line">      val++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  result = val;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">BENCHMARK</span>(test_int);</span><br><span class="line"><span class="built_in">BENCHMARK</span>(test_integer);</span><br><span class="line"><span class="built_in">BENCHMARK_MAIN</span>();</span><br></pre></td></tr></table></figure>
+<p>结果:</p>
+<p><img src="https://i.328888.xyz/2022/12/21/AExIP.jpeg"></p>
+<p>意料之中, <code>0 抽象开销</code> 的确再现了, 甚至 <code>test_integer</code> 还略快于 <code>test_int</code>. 不过我们可以断定确实<code>C++</code> 在这里的抽象并没有花费额外的性能.</p>
+<p>探索:</p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/5jEj6abc1">O0 优化的汇编</a></p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/MEGE3Woq7">O2 优化的汇编</a></p>
+<p>O0 优化则几乎不优化, 生成的汇编又臭又长, O2 所生产的汇编则几乎一致, 也从侧面证明了为什么 <code>上述测试中</code> 两个测试的时间一样长的原因.</p>
+<p>C++ 中很多类和函数的使用确实不是 <code>0 开销抽象</code>, 但当你启用高度的优化方式时, 编译器会激进的为你优化代码, 从而产生更好的性能. 但一般 <code>release</code> 的软件几乎都默认启用 <code>O2</code> 优化.</p>
+<h3 id="虚函数的乌云"><a href="#虚函数的乌云" class="headerlink" title="虚函数的乌云"></a>虚函数的乌云</h3><p>接口一词现代语言几乎都实现了, 在<code>C++</code>中, 使用 纯虚函数 <code>+</code> 继承 的方式来实现继承</p>
+<p>example:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">   <span class="built_in">Base</span>() = <span class="keyword">default</span>;</span><br><span class="line">   <span class="keyword">virtual</span> ~<span class="built_in">Base</span>() = <span class="keyword">default</span>;</span><br><span class="line">   <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">BaseInterfase</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Child_1</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">BaseInterfase</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* implement */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Child_2</span> : <span class="keyword">public</span> Base &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">BaseInterfase</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* implement */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/PKeE3joe8">完整汇编链接</a><br>如下图所示, 在<code>-O0</code>优化之下, 可以看到旁边的汇编展示中有明显的<code>FLAT::vtable for Base</code> 偏移.<br><img src="https://i.328888.xyz/2022/12/22/AzBjP.jpeg"></p>
+<p>使用则是持有一个<code>Base</code>指针或者应用来调用 <code>BaseInterfase</code>, 来达到基类对应多份实现的效果.<br>现代编译器<code>gcc</code>and<code>clang</code>的实现都是在基类的虚指针处放置一个虚函数表, 在运行时做函数指针迁移, 从而调用对应的子类函数.</p>
+<p>那么这一次的函数迁移事实上是发生在运行期的, 有一定性能开销</p>
+<ul>
+<li>inline: 虚函数无法<code>inline</code>, 由于虚函数是发生的运行期间的, 编译器无法在编译期间知道此处需要的调用函数, 便无法<code>inline</code>.</li>
+<li>cache miss : 整个的一个函数跳转类似于 <code>if else if ...</code> 这样, 现代<code>CPU</code>都实现了<code>pipeline</code>流水线, 也会进行<code>分支判断</code>, 当分支预测失败, 便会触发分支预测惩罚, 从而造成cache 不友好, 导致更差的性能.<br>上述便是虚函数的一些性能开销, 但随着发展, 人们发现一些黑魔法来避过它.<br>详见 <a href="">虚函数的性能开销(2)</a>.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+
+<script src="/js/vdonate.js"></script>
+
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: 'Donate', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>Post author:  </strong>凡</a>
+          </li>
+          <li class="post-copyright-link">
+          <strong>Post link:  </strong>
+          <a href="/2021/04/01/虚函数的性能开销_1/" target="_blank" title="虚函数的性能开销(1)">http://fansehep.com/2021/04/01/虚函数的性能开销_1/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>Copyright Notice:   </strong>
+            All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            unless stating additionally.
+          </li>
+         
+        </ul>
+<div>
+
+      
+      
+      
+        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/08/02/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          虚函数的性能开销(2)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/11/11/%E5%A6%82%E4%BD%95%E6%8F%90%E9%AB%98ssh%E7%9A%84%E9%80%9F%E5%BA%A6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何提高 ssh 的速度?</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BE%8E%E4%B8%BD%E7%9A%84%E7%A5%9E%E8%AF%9D"><span class="nav-number">2.</span> <span class="nav-text">美丽的神话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E4%B9%8C%E4%BA%91"><span class="nav-number">3.</span> <span class="nav-text">虚函数的乌云</span></a></li></ol>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2023 断虹霁雨 修眉新绿 All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				UV : <span id="busuanzi_value_site_uv"></span> |  
+				PV : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+
+
+  
+<script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            断虹霁雨 修眉新绿
+          </div>
+          <div class="panel-body">
+            Copyright © 2023 凡 All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>命令行工具分享 | 断虹霁雨 修眉新绿</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  
+  <meta name="description" content="引言笔者在最近一年中接触到了很多命令行工具, 大多数都不错, 笔者有意将其分享出来. 彩色的 lsls 几乎可以说是你使用 Linux 最常用的命令之一, 普通的 ls 实在是不够让人看的舒服. exa 的彩色让人赏心悦目.  此外, 该命令还有额外的图标支持 github link: https:&#x2F;&#x2F;github.com&#x2F;ogham&#x2F;exa btop vs htop vs btmhtop 大概应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命令行工具分享">
+<meta property="og:url" content="http://fansehep.com/2023/01/24/%E8%B6%A3%E8%B0%88%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="断虹霁雨 修眉新绿">
+<meta property="og:description" content="引言笔者在最近一年中接触到了很多命令行工具, 大多数都不错, 笔者有意将其分享出来. 彩色的 lsls 几乎可以说是你使用 Linux 最常用的命令之一, 普通的 ls 实在是不够让人看的舒服. exa 的彩色让人赏心悦目.  此外, 该命令还有额外的图标支持 github link: https:&#x2F;&#x2F;github.com&#x2F;ogham&#x2F;exa btop vs htop vs btmhtop 大概应">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.328888.xyz/2023/01/25/bHwpk.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2023/01/25/bHjdv.png">
+<meta property="og:image" content="https://i.328888.xyz/2023/01/25/bHckZ.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2023/01/25/bHmpF.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2023/02/16/mTAVc.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2023/02/16/mTU6o.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2023/02/16/mTkgd.jpeg">
+<meta property="og:image" content="https://i.328888.xyz/2023/02/16/mTlUq.jpeg">
+<meta property="article:published_time" content="2023-01-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-03T16:28:11.863Z">
+<meta property="article:author" content="凡">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.328888.xyz/2023/01/25/bHwpk.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="断虹霁雨 修眉新绿" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/mylogo.jpg">
+  <link rel="apple-touch-icon" href="/css/images/mylogo.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+  
+<script src="/js/bootstrap.js"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css" >
+
+  
+    
+<link rel="stylesheet" href="/css/dialog.css">
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css" >
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css" >
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;"  
+                href="#" data-toggle="modal" data-target="#myModal" >
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/mylogo.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">Home</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">Archives</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">Categories</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">Tags</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">About</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div></li>
+            </div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-趣谈命令行工具" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" class="article-title" itemprop="name">
+      命令行工具分享
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2023/01/24/%E8%B6%A3%E8%B0%88%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7/" class="article-date">
+	  <time datetime="2023-01-23T16:00:00.000Z" itemprop="datePublished">2023-01-24</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/Linux-Command-tools/">Linux Command tools</a><a class="article-category-link" href="/categories/Linux-Command-tools/Rust/">Rust</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		PV:<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>笔者在最近一年中接触到了很多命令行工具, 大多数都不错, 笔者有意将其分享出来.</p>
+<h3 id="彩色的-ls"><a href="#彩色的-ls" class="headerlink" title="彩色的 ls"></a>彩色的 ls</h3><p>ls 几乎可以说是你使用 Linux 最常用的命令之一, 普通的 ls 实在是不够让人看的舒服. exa 的彩色让人赏心悦目.</p>
+<p><img src="https://i.328888.xyz/2023/01/25/bHwpk.jpeg"></p>
+<p>此外, 该命令还有额外的图标支持</p>
+<p>github link: <a target="_blank" rel="noopener" href="https://github.com/ogham/exa">https://github.com/ogham/exa</a></p>
+<h3 id="btop-vs-htop-vs-btm"><a href="#btop-vs-htop-vs-btm" class="headerlink" title="btop vs htop vs btm"></a>btop vs htop vs btm</h3><p>htop 大概应该足够好, 但 btop 似乎能给我们更多的体验和视觉?</p>
+<p><img src="https://i.328888.xyz/2023/01/25/bHjdv.png"></p>
+<p>btop github link: <a target="_blank" rel="noopener" href="https://github.com/aristocratos/btop">https://github.com/aristocratos/btop</a></p>
+<p>btm 则似乎不讨喜.</p>
+<h3 id="更快的-grep"><a href="#更快的-grep" class="headerlink" title="更快的 grep"></a>更快的 grep</h3><p>传统的 grep 的速度有时不那么如意, ripgrep 几乎完全兼容 grep, 而且速度有飞快一般的提升.</p>
+<p>github link: <a target="_blank" rel="noopener" href="https://github.com/BurntSushi/ripgrep">https://github.com/BurntSushi/ripgrep</a></p>
+<h3 id="更好看的-cat"><a href="#更好看的-cat" class="headerlink" title="更好看的 cat"></a>更好看的 cat</h3><p>bat 可以给我们更好的视觉体验, 但他的复制效果是一场灾难. 此外 bat 可以和 manpage 一起使用.</p>
+<p><img src="https://i.328888.xyz/2023/01/25/bHckZ.jpeg"></p>
+<p>github link: <a href="mailto:&#x67;&#105;&#116;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#x6f;&#109;">&#x67;&#105;&#116;&#x40;&#x67;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#x6f;&#109;</a>:sharkdp&#x2F;bat.git</p>
+<h3 id="更好看的查看空间命令"><a href="#更好看的查看空间命令" class="headerlink" title="更好看的查看空间命令"></a>更好看的查看空间命令</h3><p>duf 用以取代 df, 更友好的查看当前设备空间状态</p>
+<p><img src="https://i.328888.xyz/2023/01/25/bHmpF.jpeg"></p>
+<h3 id="更好的-ps"><a href="#更好的-ps" class="headerlink" title="更好的 ps"></a>更好的 ps</h3><p>procs 可以可以给出更友好的进程信息</p>
+<p><img src="https://i.328888.xyz/2023/02/16/mTAVc.jpeg"></p>
+<h3 id="mordern-tree"><a href="#mordern-tree" class="headerlink" title="mordern tree"></a>mordern tree</h3><p>dust 可以快速展示当前目录占用</p>
+<p><img src="https://i.328888.xyz/2023/02/16/mTU6o.jpeg"></p>
+<h3 id="终端的文件夹"><a href="#终端的文件夹" class="headerlink" title="终端的文件夹"></a>终端的文件夹</h3><p><img src="https://i.328888.xyz/2023/02/16/mTkgd.jpeg"></p>
+<h3 id="mordern-curl"><a href="#mordern-curl" class="headerlink" title="mordern curl"></a>mordern curl</h3><p><img src="https://i.328888.xyz/2023/02/16/mTlUq.jpeg"></p>
+<h3 id="待更新"><a href="#待更新" class="headerlink" title="待更新"></a>待更新</h3>
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+
+<script src="/js/vdonate.js"></script>
+
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: 'Donate', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>Post author:  </strong>凡</a>
+          </li>
+          <li class="post-copyright-link">
+          <strong>Post link:  </strong>
+          <a href="/2023/01/24/趣谈命令行工具/" target="_blank" title="命令行工具分享">http://fansehep.com/2023/01/24/趣谈命令行工具/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>Copyright Notice:   </strong>
+            All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            unless stating additionally.
+          </li>
+         
+        </ul>
+<div>
+
+      
+      
+      
+        
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/05/29/lexer%E5%92%8Cparser/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Lexer和Parser
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/11/24/Arch%20Linux%20%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81ip/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Arch Linux 配置静态 IP</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%A9%E8%89%B2%E7%9A%84-ls"><span class="nav-number">2.</span> <span class="nav-text">彩色的 ls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#btop-vs-htop-vs-btm"><span class="nav-number">3.</span> <span class="nav-text">btop vs htop vs btm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%BF%AB%E7%9A%84-grep"><span class="nav-number">4.</span> <span class="nav-text">更快的 grep</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%A5%BD%E7%9C%8B%E7%9A%84-cat"><span class="nav-number">5.</span> <span class="nav-text">更好看的 cat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%A5%BD%E7%9C%8B%E7%9A%84%E6%9F%A5%E7%9C%8B%E7%A9%BA%E9%97%B4%E5%91%BD%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">更好看的查看空间命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%A5%BD%E7%9A%84-ps"><span class="nav-number">7.</span> <span class="nav-text">更好的 ps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mordern-tree"><span class="nav-number">8.</span> <span class="nav-text">mordern tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">9.</span> <span class="nav-text">终端的文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mordern-curl"><span class="nav-number">10.</span> <span class="nav-text">mordern curl</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%85%E6%9B%B4%E6%96%B0"><span class="nav-number">11.</span> <span class="nav-text">待更新</span></a></li></ol>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2023 断虹霁雨 修眉新绿 All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				UV : <span id="busuanzi_value_site_uv"></span> |  
+				PV : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+
+
+  
+<script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            断虹霁雨 修眉新绿
+          </div>
+          <div class="panel-body">
+            Copyright © 2023 凡 All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>

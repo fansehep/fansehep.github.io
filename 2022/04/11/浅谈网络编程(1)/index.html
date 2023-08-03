@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>浅谈网络编程(1) | 断虹霁雨 修眉新绿</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  
+  <meta name="description" content="引言作为一个Linux上现在(笔者注:截止到 2023&#x2F;1&#x2F;12主要写C++的coder来说, 网络编程是一个很宽泛的话题, 如何利用Linux 系统调用设计高并发, 高可靠的网络框架是该领域的主要目标之一. C10k 问题的引入随着网络技术的发展(3G -&gt; 4G -&gt; 5G), 上网几乎成为了当今所有人的共同需求, 网络的服务器五花八门, HTTP 服务器, S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈网络编程(1)">
+<meta property="og:url" content="http://fansehep.com/2022/04/11/%E6%B5%85%E8%B0%88%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B(1)/index.html">
+<meta property="og:site_name" content="断虹霁雨 修眉新绿">
+<meta property="og:description" content="引言作为一个Linux上现在(笔者注:截止到 2023&#x2F;1&#x2F;12主要写C++的coder来说, 网络编程是一个很宽泛的话题, 如何利用Linux 系统调用设计高并发, 高可靠的网络框架是该领域的主要目标之一. C10k 问题的引入随着网络技术的发展(3G -&gt; 4G -&gt; 5G), 上网几乎成为了当今所有人的共同需求, 网络的服务器五花八门, HTTP 服务器, S">
+<meta property="og:locale">
+<meta property="og:image" content="https://i.328888.xyz/2023/01/15/2AWZE.jpeg">
+<meta property="article:published_time" content="2022-04-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-29T03:00:07.443Z">
+<meta property="article:author" content="凡">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.328888.xyz/2023/01/15/2AWZE.jpeg">
+  
+    <link rel="alternate" href="/atom.xml" title="断虹霁雨 修眉新绿" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/mylogo.jpg">
+  <link rel="apple-touch-icon" href="/css/images/mylogo.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+  
+<script src="/js/bootstrap.js"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css" >
+
+  
+    
+<link rel="stylesheet" href="/css/dialog.css">
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css" >
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css" >
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;"  
+                href="#" data-toggle="modal" data-target="#myModal" >
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/mylogo.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">Home</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">Archives</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">Categories</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">Tags</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">About</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div></li>
+            </div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-浅谈网络编程(1)" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" class="article-title" itemprop="name">
+      浅谈网络编程(1)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2022/04/11/%E6%B5%85%E8%B0%88%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B(1)/" class="article-date">
+	  <time datetime="2022-04-10T16:00:00.000Z" itemprop="datePublished">2022-04-11</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/Linux-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">Linux 网络编程</a><a class="article-category-link" href="/categories/Linux-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/C/">C++</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		PV:<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>作为一个<code>Linux</code>上现在(笔者注:截止到 2023&#x2F;1&#x2F;12主要写<code>C++</code>的coder来说, 网络编程是一个很宽泛的话题, 如何利用<code>Linux 系统调用</code>设计高并发, 高可靠的网络框架是该领域的主要目标之一.</p>
+<h3 id="C10k-问题的引入"><a href="#C10k-问题的引入" class="headerlink" title="C10k 问题的引入"></a>C10k 问题的引入</h3><p>随着网络技术的发展(3G -&gt; 4G -&gt; 5G), 上网几乎成为了当今所有人的共同需求, 网络的服务器五花八门, HTTP 服务器, SMTP 服务器(邮件), DB 服务器, 这些服务器都有着共同的目标 -&gt; 高性能, 低延迟, 高并发.</p>
+<p>共同的本质, 是因为都有着共同的目标: 多个客户端(笔者注: 此处多个可以理解为 任意) 并行发送请求, 服务器需要提供高效的, 低延迟, 高吞吐的流量处理.</p>
+<p>1993 ~ 2004 年之间, 经典网络服务器 (Apache Httpd, Inetd) 这些的主要设计, 是为每一个连接 都 分配一个 进程 (process), 在当时几乎成为了唯一的选择, 并且不断发展.  进程池思想之类的. 后来进程被线程取代, 则又有 per client per thread 这类做法. 总结: 这类所有的编程思想可以总结为: 让每一个连接都对应一个执行流(process or thread), 让该执行流不断为该连接服务, 直至连接断开. 优点似乎也很明确:</p>
+<ol>
+<li>简单</li>
+<li>可以自由的执行任意系统调用, 阻塞非阻塞都可以.</li>
+</ol>
+<p>W. Richard Stevens 在他的&lt;&lt;Unix 环境编程&gt;&gt;一书中称上述网络编程方式为同步编程, 代码几乎都是线性的, 容易理解. 整个过程大概可以描述为: 读取套接字, 解析请求, 执行请求, 返回结果.</p>
+<p>残酷的现实是无论是 Windows 还是 Linux, 创建一个进程的开销还是很大的, 操作系统要为此初始化很多东西, 切换到线程, 固然可以减少创建进程的开销(速度, 内存使用等等), 但是, 当时人们发现这种同步为每一个连接分配一个执行流的性能仍然不太好, 当连接数过多数, 性能快速下降. </p>
+<p>1999 年, Dan kigel 提出了 <strong>C10k 问题</strong>, 简单来说, 就是一台服务器需要能高效处理 10 * 1000 个连接.</p>
+<h3 id="IO-Multiplex-时代降临"><a href="#IO-Multiplex-时代降临" class="headerlink" title="IO Multiplex 时代降临"></a>IO Multiplex 时代降临</h3><p>在接下来 10 年, 事件驱动, 异步(event dirve, )该词被大肆宣扬, linux 2.5.44 引入了 epoll, 虽然我们在此处来看, linux 是现在的胜利者, 不过历史有时候也会和我们开玩笑, 事实上, 早在 2000 年 7月, FreeBSD 在 4.1 中便引入了 kqueue 作为事件通知接口, linux 对此晚了约 2 年, 所以在这期间, C10k 问题最早在 FreeBSD 系统上所解决的.</p>
+<p>事件驱动的编程方式: 单个线程紧密的运行一个循环, <code>poll</code> 或者 <code>epoll</code> &#x2F; <code>kqueue</code>, 这些系统调用管理着很多文件描述符, 每次调用时返回文件描述符的新事件, 例如: 套接字变得可读 &#x2F; 可写 &#x2F; 需要断开连接. 应用程序通过 <strong>非阻塞调用</strong> 来批量地对这些事件进行处理.</p>
+<p>这种异步的基于事件的编程方式在当时很快就被证明: 性能确实得到了大幅度提升, 然而天下没有免费的午餐, 这种编程方式也有很多挑战性:</p>
+<ol>
+<li>回调地域: 由于是基于事件的编程方式, 单个的连接在此处都被视为是由于事件的触发, 使用回调函数来处理事件, 事件很多时, 各种各样的回调函数, 实在是让人头疼, 这就是臭名昭著的<strong>回调地域</strong>.</li>
+<li>非阻塞: 单个线程不再只管理一个连接, 相反, 一个线程要对所有的连接做出反馈, 如果在某个事件中调用了阻塞系统调用, 那对于后续的事件来说, 将会是一场灾难.</li>
+</ol>
+<p>但当你的应用程序需要好的性能, 我相信你总是会选择 io multiplex.</p>
+<p>时至今日, IO 多路复用仍然是 Linux 网络编程的必修课程, 基于 epoll 的回调函数也在诸多软件上被使用, nginx, redis 等等.</p>
+<p>笔者对于 epoll 的一些思考: epoll 是 linux 上的系统调用, 通过 <code>epoll_wait</code> 该系统调用来获取通知事件, 这种基于回调函数的编程方式倒也不能说恶心, 只是实在是不符合人类的直觉, 但若有清晰的思路, 其实也未尝不可. linux 在后续的发展中, 也为 epoll 提供了诸多特性, 如定时器, 信号量等等, 前段时间了解到内核引入了一种高精度定时器设计 <strong>hrtimer.h</strong> 大概也能被 epoll 所使用. </p>
+<h4 id="IOUring-的横空出世"><a href="#IOUring-的横空出世" class="headerlink" title="IOUring 的横空出世"></a>IOUring 的横空出世</h4><p>iouring 是 linux kernel 在 5.1 中所引入的异步 IO 接口, 作者是 存储大神 Axboe, 初衷是 linux 原有的异步 IO <code>aio</code> 不太好用, 而且由于不恰当的使用, 导致性能也不太好. </p>
+<p>有趣的是, 在 linus 看到 iouring 接口时, 赞扬了其作者, 他同时点明了 epoll 的糟糕设计.</p>
+<p>关于 iouring 的学习, <a target="_blank" rel="noopener" href="https://unixism.net/loti/">unixsm_iouring_doc</a> 该网址笔者认为很好.</p>
+<p>unix 的设计哲学一切皆文件, 但 epoll 不能处理<code>文件类 IO</code>, 传统的<code>aio</code> 又实在差强人意, iouring 作为大一统的异步 IO 接口, 笔者曾使用过 liburing(iouring 的包装库), 接口设计不错, 较为优雅.</p>
+<p>axboe 对于 io_uring 的性能很有信心, 从一些测试表明, iouring 的性能在某些场景下能和 dpdk 一比, 甚至能超过, 与 aio 的性能也有一定的提升, 但 axboe 说 : “其实 aio 的性能不差, 但接口设计不好, 很多人用的不对, 所以性能较差”(笔者个人翻译). 有趣的是, 这个作者一直在小蓝鸟上分享 iouring 的性能测试(大概是亲儿子那般对待吧):</p>
+<p><img src="https://i.328888.xyz/2023/01/15/2AWZE.jpeg"></p>
+<h4 id="趣谈-dpdk"><a href="#趣谈-dpdk" class="headerlink" title="趣谈 dpdk"></a>趣谈 dpdk</h4><p>dpdk 是 intel 推出的一向 bypass kernel 技术以来提高网络吞吐, 笔者对其不熟悉, 不做过多介绍.</p>
+<p>不过有趣的是, kernel 开发者似乎对于 dpdk, spdk, rdma 这类 bypass 技术感到不适, 一些 reddit 上的帖子说他们觉得总是要 pass kernel, 但你 pass kernel 的同时也在自我承担着风险. 不过似乎这类吐槽很无力, 大多数测试表明, 这些技术总是能提高 IO 的.</p>
+<h3 id="用户态协议"><a href="#用户态协议" class="headerlink" title="用户态协议"></a>用户态协议</h3><p>TCP&#x2F;IP 如今已经是标准了, 几乎所有的操作系统都提供了内核态的 TCP 实现, 滑动窗口, 拥塞控制这些技术也耳熟能详, 以及 RFC 7413 所提出的 TCP FastOpen, 去年(2022年) Google 所提出的一种全新的TCP 负载均衡技术, 这些技术都在让 TCP 协议不断发展, 但事实上, 内核态 TCP 性能有限, kernel 要考虑很多种情况, 而且由于 TCP 的设计老过于陈旧, 总是被人批评, 但我们也对其无可奈何, 总不可能让全世界的机器都升级 TCP协议.</p>
+<p>Google 最近几年不断的推行 QUIC 协议, 一种使用 UDP 在用户态做可靠传输的协议. 事实上, 在用户态做可靠传输早已有技术在做, 不过由于 TCP 复杂的状态机, 大多数应用任然选择基于 TCP 编程. 抄袭一个用户态 TCP 应该不难, 大概可以看看 FreeBSD 的设计, 但如何在此之上设计出更高性能, 更可靠的传输协议就更有趣了. 我相信如果是同一数据中心之间的机器负责通信, 那么 UDP 似乎更适合不过, 数据中心之间的数据交换几乎不会发生断开, 网络较差等等. 而且大概使用的都是万兆网卡. 那么笔者认为用户态协议的设计应该是提高性能的诀窍之一吧.</p>
+<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><p>如果你是一名 go 程序员, 那么 gorountine 你几乎不可避免会使用, 协程是最近几年才火热起来的, 不过其概念早在上世纪便已经提出, 但似乎最近几年才火热. 协程将人们的编程思维又改变了, 我们同时可以拥有很多执行流, 而且每个协程的开启代价微乎其微, 相比于线程进程高额的上下文切换, 协程的切换则相当客观, 笔者认为, 回调地狱确实让人很难受, 协程的出现解放了我们的大脑, 不过协程也不是银弹, 只有在合适的地方使用大概才会有性能的提升吧. </p>
+<h3 id="编程语言"><a href="#编程语言" class="headerlink" title="编程语言"></a>编程语言</h3><p>一些语言运行在虚拟机之上, 如 Java, C# 等等, 这些语言使用虚拟机技术换来了可移植性, 但同时也牺牲了性能. 编写高性能的网络编程程序, 笔者建议使用系统级编程语言, 高效的使用硬件.(笔者注: 笔者并非对这些语言抱有偏见)</p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><ol>
+<li>^ iouring 的文档 <a target="_blank" rel="noopener" href="https://unixism.net/loti/">https://unixism.net/loti/</a></li>
+<li>^ <a target="_blank" rel="noopener" href="https://twitter.com/axboe?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">https://twitter.com/axboe?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+
+<script src="/js/vdonate.js"></script>
+
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: 'Donate', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>Post author:  </strong>凡</a>
+          </li>
+          <li class="post-copyright-link">
+          <strong>Post link:  </strong>
+          <a href="/2022/04/11/浅谈网络编程(1)/" target="_blank" title="浅谈网络编程(1)">http://fansehep.com/2022/04/11/浅谈网络编程(1)/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>Copyright Notice:   </strong>
+            All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            unless stating additionally.
+          </li>
+         
+        </ul>
+<div>
+
+      
+      
+      
+        
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/11/C_C++%20%E5%B7%A5%E5%85%B7%E8%B6%A3%E8%B0%88/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          C, C++ 工具趣谈
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/08/02/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">虚函数的性能开销(2)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C10k-%E9%97%AE%E9%A2%98%E7%9A%84%E5%BC%95%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">C10k 问题的引入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO-Multiplex-%E6%97%B6%E4%BB%A3%E9%99%8D%E4%B8%B4"><span class="nav-number">3.</span> <span class="nav-text">IO Multiplex 时代降临</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IOUring-%E7%9A%84%E6%A8%AA%E7%A9%BA%E5%87%BA%E4%B8%96"><span class="nav-number">3.1.</span> <span class="nav-text">IOUring 的横空出世</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B6%A3%E8%B0%88-dpdk"><span class="nav-number">3.2.</span> <span class="nav-text">趣谈 dpdk</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%80%81%E5%8D%8F%E8%AE%AE"><span class="nav-number">4.</span> <span class="nav-text">用户态协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">协程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80"><span class="nav-number">6.</span> <span class="nav-text">编程语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">引用</span></a></li></ol>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2023 断虹霁雨 修眉新绿 All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				UV : <span id="busuanzi_value_site_uv"></span> |  
+				PV : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+
+
+  
+<script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            断虹霁雨 修眉新绿
+          </div>
+          <div class="panel-body">
+            Copyright © 2023 凡 All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>

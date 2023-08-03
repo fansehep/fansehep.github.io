@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>rust, c++ 的一些想法 | 断虹霁雨 修眉新绿</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  
+  <meta name="description" content="引言笔者在 2022 年末，才开始学习 Rust, 最近有幸用上了, 用来开发 Monkey-Lang-rs, 期间遇到了不少 borrow 问题, 与编译器抗争了很长时间. 简单的记录笔者对于 C++(笔者常用的语言) 与 Rust 的区别与感受吧. 笔者还是蛮喜欢函数式编程的, 这种简单连续的写法在 C++ 中其实大多数时候不太常见. 例如 1234let vec &#x3D; vec![1, 2, 3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust, C++ 的一些想法">
+<meta property="og:url" content="http://fansehep.com/2023/06/16/rust_vs_c++/index.html">
+<meta property="og:site_name" content="断虹霁雨 修眉新绿">
+<meta property="og:description" content="引言笔者在 2022 年末，才开始学习 Rust, 最近有幸用上了, 用来开发 Monkey-Lang-rs, 期间遇到了不少 borrow 问题, 与编译器抗争了很长时间. 简单的记录笔者对于 C++(笔者常用的语言) 与 Rust 的区别与感受吧. 笔者还是蛮喜欢函数式编程的, 这种简单连续的写法在 C++ 中其实大多数时候不太常见. 例如 1234let vec &#x3D; vec![1, 2, 3">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-06-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-31T16:56:50.323Z">
+<meta property="article:author" content="凡">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="断虹霁雨 修眉新绿" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/mylogo.jpg">
+  <link rel="apple-touch-icon" href="/css/images/mylogo.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+  
+<script src="/js/bootstrap.js"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css" >
+
+  
+    
+<link rel="stylesheet" href="/css/dialog.css">
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css" >
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css" >
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;"  
+                href="#" data-toggle="modal" data-target="#myModal" >
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/mylogo.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">Home</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">Archives</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">Categories</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">Tags</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">About</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div></li>
+            </div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-rust_vs_c++" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" class="article-title" itemprop="name">
+      Rust, C++ 的一些想法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2023/06/16/rust_vs_c++/" class="article-date">
+	  <time datetime="2023-06-15T16:00:00.000Z" itemprop="datePublished">2023-06-16</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/Rust/">Rust</a><a class="article-category-link" href="/categories/Rust/Language/">Language</a><a class="article-category-link" href="/categories/Rust/Language/C/">C++</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		PV:<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>笔者在 2022 年末，才开始学习 Rust, 最近有幸用上了, 用来开发 Monkey-Lang-rs, 期间遇到了不少 borrow 问题, 与编译器抗争了很长时间. 简单的记录笔者对于 C++(笔者常用的语言) 与 Rust 的区别与感受吧.</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>笔者还是蛮喜欢函数式编程的, 这种简单连续的写法在 C++ 中其实大多数时候不太常见. 例如</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">vec</span> = <span class="built_in">vec!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="keyword">let</span> <span class="variable">sss</span> = vec.<span class="title function_ invoke__">iter</span>()</span><br><span class="line">             .<span class="title function_ invoke__">map</span>(|v| xxx )</span><br><span class="line">             .<span class="title function_ invoke__">collect</span>();</span><br></pre></td></tr></table></figure>
+<p>如果要在 C++ 做类似的逻辑则不太那么易懂或者说简略, Rust 承诺这种FP 的写法和手写的效率一样高, 这点从 compile exploer 生成的汇编来看确实是这样.</p>
+<p>match 表达式笔者也很喜欢, 可以省下很大一部分逻辑, 而且 match 表达式可以用来节省很多逻辑:<br>例如为某个 type 实现 fmt::Display trait.</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> <span class="title class_">fmt</span>::Display <span class="keyword">for</span> <span class="title class_">XXXtype</span> &#123;</span><br><span class="line">  <span class="keyword">fn</span> <span class="title function_">fmt</span>(&amp;<span class="keyword">self</span>, f: &amp;<span class="keyword">mut</span> fmt::Formatter&lt;<span class="symbol">&#x27;_</span>&gt;) <span class="punctuation">-&gt;</span> fmt::<span class="type">Result</span> &#123;</span><br><span class="line">    <span class="built_in">write!</span>(f, <span class="string">&quot;XXX XXX &#123;&#125; &#123;&#125; &quot;</span>,</span><br><span class="line">      <span class="keyword">match</span> xxx, <span class="keyword">match</span> xxx);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这种写法可以为我剩下很大一部分逻辑，输出对于一个复杂类型其实要有很多判断的，直接在 match 里面判断则会显得更加直观.</p>
+<p>包管理器, 无论如何 Cargo 是这么多年编译性语言里做的最好的没有之一, C++ 这里四分五裂, CMake, Bazel, Makefile, Meson, Ninja, XMake… 系统包管理器 apt, pacman, dnf, yum 更是各自为战，十分恶心. 固然 Bazel 是我的最常用的包管理器, 但有时要引入别的项目依赖，如果要自己写 BUILD 文件实在是一件痛苦的事情, 各种编译条件, 所以包管理器这里 C++ 败的一塌糊涂, 笔者曾经尝试给 RocksDB 写过 bazel 的构建文件, 但最终因文件太多而失败.</p>
+<p>阅读 Rust 代码让我有一种行云流水之感，这种感觉笔者认为是他强大的设计, Option, Result(非常好的设计), match 表达式, enum witch value, trait 设计, 我非常看好 Rust, 除了其有点难的一些 borrow and ownership 原则, C++ 则显得老态龙钟了, 不过相比于过去, C++ 标准委员会算是好很多了, 对于 trait 设计，个人感觉非常优雅, C++ 现在也在尽力往次靠拢(🤪，越来越复杂). 20 的 coroutine 不带有运行时暂时还不太好用, std::span, module, 可能 C++ 未来应该会越来越好的吧?</p>
+<p>同时, Rust 拥有非常严格的编译系统, C++ 中开启 -Wall, -Werror, -Wextra 其实也很严格, 但相比 Rust 是强制做这些check, C++ 则可以 close 这些option. 如果是一个自由主义者, 那么 C++ 应该是最自由的语言之一了, 几乎没有什么硬性限制。毕竟 黑魔法实在是多的数不过来.</p>
+<p>兼容是好事还是坏事, 这取决于不同的看法. 如果 C++ 不选择兼容 C 语言, 那么他也不会有那么多的使用量. C++ 的宗旨笔者认为是尽可能相信作者, 给你从高级抽象到直接操作硬件都是可以的, 但从现实世界来看, 能熟练的并不是太多, core dump 和 空指针的错误每天上演, 自由可能很多时候不是那么好, 有限的自由或许能带来更大的收益. 相信程序员的坏处还有很多，例如在 C++ 语言中最多的就是复制了, 我相信还有很多人不太了解什么时候该用 emplace or insert, 为什么需要 emplace, 我还见过更有甚者 emplace(std::make_pair) 这在 C++ 中不会error，也不会 warning, 笔者看来这种过度的自由不太适合人类作为程序员.</p>
+<p>Rust 的哲学则似乎在有限的范围做合适的操作, 不得不说, Rust 的设计很好, 但这种高度限制如果不那么熟悉的话，反而会限制程序员的自由及效率. 但笔者认为是合适的, 显式的复制，显式的构造, 显式的传递, 去掉 C++ 那些臭名昭著的陋习。Unsafe 的设计也非并无道理. Unsafe 里面同时还会限制 borrow 。。。, Rust 的 borrow 机制在 代码庞大时实在不太好处理.</p>
+<p>Rust 的规范也让我觉得很好, std::Arc 与 std::shared_ptr 这两个类的命名, Arc 则更胜一筹, Rust 要求 Type 大写, 函数签名小写, 全局变量大写, 参数小写, 鼓励多使用下划线. C++ 的命名规范则十分混乱, Google C++ Coding Systle, MicroSoft C++ Coding Style, LLVM C++ Coding Style, 这些不同公司，不同社区因为方方面面的原因有自己的规范, 这让我觉得不太优雅, 作为工程师, 我们的项目遵循同一种规范, 但大多数时候我们都要引入一些别的 library, 不同的命名规范在同一个代码里则让人觉得很难受, 笔者以前很喜欢驼峰命名法, 后期发现这种的可读性没有蛇形命名法那么易读.</p>
+<p>C++ 的宏的问题臭名昭著，众所周知，标准库的代码(libc++) 的可读性几乎为 0, 各种成员变量命名为 __M__Sxx 之类的, C++ 的宏带有很强大的侵略性, 稍不注意就感染代码, Rust 通过引入 ! 来区分这是一个宏还是 Function, 笔者认为该设计不错.</p>
+<p>无论如何, 我会给新开的项目推荐考虑一下 Rust, 最近 InfuxData 发了一篇 blog, 他们的 InfuxDB 3.0 已经完全使用 Rust 重写了, Native 语言的性能是原来的 3 倍之多, 无论如何我都认为学习 Rust 是一个很不错的投资自己的机会。</p>
+<p>项目兼容也是需要考虑的, 切换语言还要考虑你所需要使用的库也随之发生了变化, 如果原来使用的是 C++ 的 seastar 库，则要考虑切换带来的影响, tokio 可没有 seastar 那么精巧的设计. 以及 DPDK RDMA 这些库都是 c Library, 做 Binding 似乎也可以。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+
+<script src="/js/vdonate.js"></script>
+
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: 'Donate', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>Post author:  </strong>凡</a>
+          </li>
+          <li class="post-copyright-link">
+          <strong>Post link:  </strong>
+          <a href="/2023/06/16/rust_vs_c++/" target="_blank" title="Rust, C++ 的一些想法">http://fansehep.com/2023/06/16/rust_vs_c++/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>Copyright Notice:   </strong>
+            All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            unless stating additionally.
+          </li>
+         
+        </ul>
+<div>
+
+      
+      
+      
+        
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/05/29/lexer%E5%92%8Cparser/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Lexer和Parser</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text"></span></a></li></ol>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2023 断虹霁雨 修眉新绿 All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				UV : <span id="busuanzi_value_site_uv"></span> |  
+				PV : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+
+
+  
+<script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            断虹霁雨 修眉新绿
+          </div>
+          <div class="panel-body">
+            Copyright © 2023 凡 All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>
