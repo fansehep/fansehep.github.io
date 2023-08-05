@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>为 shaundb 支持 sql | 断虹霁雨 修眉新绿</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  
+  
+  <meta name="description" content="引言周末不上班对于我这种小镇做题家总想要做些什么, 在实习过程中, 笔者陆陆续续看了一些编译原理的书, 笔者倒是对编译器没什么感觉, 只是想学一下词法解析和语法解析, 畅想一下在 KV 之上实现 SQL, 再也不用 set, get, put 简单的命令, SQL 的魅力😘远大于 Redis protocol. 不过笔者当时尝试解析 RedisProtocol 也不太容易. 为什么要做这件事在过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为 ShaunDB 支持 SQL">
+<meta property="og:url" content="http://fansehep.com/2023/07/15/%E4%B8%BAShaunDB%E6%94%AF%E6%8C%81SQL/index.html">
+<meta property="og:site_name" content="断虹霁雨 修眉新绿">
+<meta property="og:description" content="引言周末不上班对于我这种小镇做题家总想要做些什么, 在实习过程中, 笔者陆陆续续看了一些编译原理的书, 笔者倒是对编译器没什么感觉, 只是想学一下词法解析和语法解析, 畅想一下在 KV 之上实现 SQL, 再也不用 set, get, put 简单的命令, SQL 的魅力😘远大于 Redis protocol. 不过笔者当时尝试解析 RedisProtocol 也不太容易. 为什么要做这件事在过">
+<meta property="og:locale">
+<meta property="article:published_time" content="2023-07-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-05T06:00:34.796Z">
+<meta property="article:author" content="凡">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="断虹霁雨 修眉新绿" type="application/atom+xml">
+  
+
+  
+
+  <link rel="icon" href="/css/images/avatar.jpg">
+  <link rel="apple-touch-icon" href="/css/images/avatar.jpg">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt; src:url("/css/fonts/FuturaPTBold.otf") format("woff");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt-light; src:url("/css/fonts/FuturaPTBook.otf") format("woff");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt-italic; src:url("/css/fonts/FuturaPTBookOblique.otf") format("woff");font-weight:400;font-style:italic;}
+}
+
+  </style>
+  
+<link rel="stylesheet" href="/css/style.css">
+
+
+  
+<script src="/js/jquery-3.1.1.min.js"></script>
+
+  
+<script src="/js/bootstrap.js"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css" >
+
+  
+    
+<link rel="stylesheet" href="/css/dialog.css">
+
+  
+
+  
+
+  
+    <link rel="stylesheet" href="/css/header-post.css" >
+  
+
+  
+  
+  
+    <link rel="stylesheet" href="/css/vdonate.css" >
+  
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  <div id="container">
+    <div id="wrap">
+      
+        <header>
+
+    <div id="allheader" class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="navbar-inner">
+          
+          <div class="container"> 
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+
+            
+              <a class="brand" style="
+                 margin-top: 0px;"  
+                href="#" data-toggle="modal" data-target="#myModal" >
+                  <img width="124px" height="124px" alt="Hike News" src="/css/images/avatar.jpg">
+              </a>
+            
+            
+            <div class="navbar-collapse collapse">
+              <ul class="hnav navbar-nav">
+                
+                  <li> <a class="main-nav-link" href="/">Home</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/archives">Archives</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/categories">Categories</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/tags">Tags</a> </li>
+                
+                  <li> <a class="main-nav-link" href="/about">About</a> </li>
+                
+                  <li><div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div></li>
+            </div>
+          </div>
+                
+      </div>
+    </div>
+
+</header>
+
+
+
+      
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-为ShaunDB支持SQL" style="width: 75%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" class="article-title" itemprop="name">
+      为 ShaunDB 支持 SQL
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2023/07/15/%E4%B8%BAShaunDB%E6%94%AF%E6%8C%81SQL/" class="article-date">
+	  <time datetime="2023-07-14T16:00:00.000Z" itemprop="datePublished">2023-07-15</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/SQL/">SQL</a><a class="article-category-link" href="/categories/SQL/DataBase/">DataBase</a><a class="article-category-link" href="/categories/SQL/DataBase/C/">C++</a>
+
+      
+	<a class="article-views">
+	<span id="busuanzi_container_page_pv">
+		PV:<span id="busuanzi_value_page_pv"></span>
+	</span>
+	</a>
+
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>周末不上班对于我这种小镇做题家总想要做些什么, 在实习过程中, 笔者陆陆续续看了一些编译原理的书, 笔者倒是对编译器没什么感觉, 只是想学一下词法解析和语法解析, 畅想一下在 KV 之上实现 SQL, 再也不用 set, get, put 简单的命令, SQL 的魅力😘远大于 Redis protocol. 不过笔者当时尝试解析 RedisProtocol 也不太容易.</p>
+<h3 id="为什么要做这件事"><a href="#为什么要做这件事" class="headerlink" title="为什么要做这件事"></a>为什么要做这件事</h3><p>在过去的一篇Blog&lt;&lt;Lexer 和 Parser&gt;&gt;, 我说过我完成了 Monkey-Lang-rs 这一门语言解释器, 手写 Lexer, Parser, Executor, DataBase 的构造和此十分类似, Lexer-&gt;Parser-&gt;Binder-&gt;Planner-&gt;Optimizer-&gt;Executor-&gt;Storage. </p>
+<p>Lexer 和 Parser 我并没有选择 flex, bison 或者其他的工具生成, 主要原因我信奉 What i cant’t create what i don’t understand. 我不能理解我所不能创造的. 似乎有点疯狂造轮子的感觉. 但无论如何, 我仍然选择自己手写词法解析和语法解析. 我目前已经实现了 Lexer 和正在实现 Parser.</p>
+<p>ShaunDB 的存储层kv实现 (master的分支) 实现个人感觉玩具的成分更多一些, 远不如 RocksDB 这种实现的功能多, 诸如前缀迭代, 事务支持. 不过作为我的第一个(准确来说不是第一个, 因为以前写过一个WebServer(😭 实在是老掉牙了)).<br>同时我参考了 <a target="_blank" rel="noopener" href="https://github.com/erikgrinaker/toydb">toydb</a> 和 <a target="_blank" rel="noopener" href="https://github.com/cmu-db/bustub.git">bustub</a>. 后者是 15445 所配套的Lab, 笔者强烈推荐想 DataBase Kernel Dev 的人学习一下这门课. 前者是一个 Cockroachdb 的一名大师业余时间使用 rust 编写的一个简单的玩具数据库. 笔者在 &lt;&lt;rust_vs_c++&gt;&gt; 中说到, 阅读 rust 代码有一种行云流水之感, 便是读的toydb 的 SQL 层代码.</p>
+<h1 id="Lexer"><a href="#Lexer" class="headerlink" title="Lexer"></a>Lexer</h1><p>ShaunDB Lexer 位于 <a target="_blank" rel="noopener" href="https://github.com/fansehep/ShaunDB/blob/new_arch/src/sql/lexer.cc">shaundb_lexer</a>, 并且做了详细的测试 <a target="_blank" rel="noopener" href="https://github.com/fansehep/ShaunDB/blob/new_arch/tests/sql/lexer_test.cc">shaundb_lexer_test</a>. 我在实习的第一个月(5.1 号开始实习), 编写了大量的 python 测试, 总的来说, 我是不太喜欢写测试的, 但测试是用以保证产品的可靠性, 稳定性, 性能等等的一个必须点. 我在 shaundb master 分支并未加过太多测试, 这导致了他最终成为一个玩具项目. 从我写这篇blog时间点来看, 这几乎是一个必然事件, 因为当时的我并没有太多大型项目开发经验, 而且也并未有过非常详细的设计和思考. 实习时，则恰恰相反, 设计方案需要被多人共同评审, 而且会要考虑多方面的因素, 包括不限于开发难度, 开发时间, 可行性, 性能影响, 后续可拓展性, 可测试性, 稳定性, 资源占用等等. 总之我认为个人项目, 在做任何开发之前, 都应该要有很详细的设计和思考, 有空, 回学校了, 我想把这些经验分享给学弟学妹们. 希望他们能早点明白这一点, 在做自己的个人项目, 多与他人交流, 每个人的思考不同, 虽然这可能要花费一些时间, 但笔者认为利远大于弊.</p>
+<p>看一下 shaun::lexer 目前的结果</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">const <span class="type">char</span> <span class="operator">*</span><span class="keyword">sql</span> <span class="operator">=</span></span><br><span class="line">     &quot;SELECT   m.id, m.title, g.name AS genre, m.released, s.name AS studio\n&quot;</span><br><span class="line">     &quot;       FROM     movies m JOIN genres g ON m.genre_id = g.id,\n&quot;</span><br><span class="line">     &quot;                studios s JOIN movies good ON good.studio_id = s.id AND &quot;</span><br><span class="line">     &quot;good.rating &gt;= 8\n&quot;</span><br><span class="line">     &quot;       WHERE    m.studio_id = s.id AND m.released &gt;= 2000 AND g.id = 1\n&quot;</span><br><span class="line">     &quot;       ORDER BY m.title ASC;&quot;;</span><br><span class="line"></span><br><span class="line">std::vector<span class="operator">&lt;</span>Token<span class="operator">&gt;</span> res <span class="operator">=</span> &#123;</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">Select</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;id&quot;),</span><br><span class="line">     Token(TokenType::Comma),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;title&quot;),</span><br><span class="line">     Token(TokenType::Comma),</span><br><span class="line">     Token(TokenType::Ident, &quot;g&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;name&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">As</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;genre&quot;),</span><br><span class="line">     Token(TokenType::Comma),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;released&quot;),</span><br><span class="line">     Token(TokenType::Comma),</span><br><span class="line">     Token(TokenType::Ident, &quot;s&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;name&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">As</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;studio&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">From</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;movies&quot;),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">Join</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;genres&quot;),</span><br><span class="line">     Token(TokenType::Ident, &quot;g&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">On</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;genre_id&quot;),</span><br><span class="line">     Token(TokenType::Equal),</span><br><span class="line">     Token(TokenType::Ident, &quot;g&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;id&quot;),</span><br><span class="line">     Token(TokenType::Comma),</span><br><span class="line">     Token(TokenType::Ident, &quot;studios&quot;),</span><br><span class="line">     Token(TokenType::Ident, &quot;s&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">Join</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;movies&quot;),</span><br><span class="line">     Token(TokenType::Ident, &quot;good&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">On</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;good&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;studio_id&quot;),</span><br><span class="line">     Token(TokenType::Equal),</span><br><span class="line">     Token(TokenType::Ident, &quot;s&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;id&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">And</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;good&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;rating&quot;),</span><br><span class="line">     Token(TokenType::GreaterThanOrEqual),</span><br><span class="line">     Token(TokenType::Number, &quot;8&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">Where</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;studio_id&quot;),</span><br><span class="line">     Token(TokenType::Equal),</span><br><span class="line">     Token(TokenType::Ident, &quot;s&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;id&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">And</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;released&quot;),</span><br><span class="line">     Token(TokenType::GreaterThanOrEqual),</span><br><span class="line">     Token(TokenType::Number, &quot;2000&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">And</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;g&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;id&quot;),</span><br><span class="line">     Token(TokenType::Equal),</span><br><span class="line">     Token(TokenType::Number, &quot;1&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">Order</span>),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">By</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;m&quot;),</span><br><span class="line">     Token(TokenType::<span class="keyword">Period</span>),</span><br><span class="line">     Token(TokenType::Ident, &quot;title&quot;),</span><br><span class="line">     Token(TokenType::KeyWord, Keyword::<span class="keyword">Asc</span>),</span><br><span class="line">     Token(TokenType::Semicolon),</span><br><span class="line">     Token(TokenType::Eof),</span><br></pre></td></tr></table></figure>
+
+<p>我在设计 Lexer 中, 将 TokenType 分为了传统的符号, 诸如 LeftParen, Comma, Semicolon 等等这些.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      
+        <div id="donation_div"></div>
+
+
+<script src="/js/vdonate.js"></script>
+
+<script>
+var a = new Donate({
+  title: '如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作!', // 可选参数，打赏标题
+  btnText: 'Donate', // 可选参数，打赏按钮文字
+  el: document.getElementById('donation_div'),
+  wechatImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/WeChanQR.png',
+  alipayImage: 'https://raw.githubusercontent.com/iTimeTraveler/iTimeTraveler.github.io/site/source/about/donate/images/AliPayQR.jpg'
+});
+</script>
+      
+      
+      <div>
+        <ul class="post-copyright">
+          <li class="post-copyright-author">
+          <strong>Post author:  </strong>凡</a>
+          </li>
+          <li class="post-copyright-link">
+          <strong>Post link:  </strong>
+          <a href="/2023/07/15/为ShaunDB支持SQL/" target="_blank" title="为 ShaunDB 支持 SQL">http://fansehep.com/2023/07/15/为ShaunDB支持SQL/</a>
+          </li>
+          <li class="post-copyright-license">
+            <strong>Copyright Notice:   </strong>
+            All articles in this blog are licensed under <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+            unless stating additionally.
+          </li>
+         
+        </ul>
+<div>
+
+      
+      
+      
+        
+      
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/06/16/rust_vs_c++/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Rust, C++ 的一些想法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="toc-sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E8%BF%99%E4%BB%B6%E4%BA%8B"><span class="nav-number">2.</span> <span class="nav-text">为什么要做这件事</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lexer"><span class="nav-number"></span> <span class="nav-text">Lexer</span></a>
+    
+    </div>
+  </aside>
+
+</section>
+        
+      </div>
+      
+      <footer id="footer">
+  
+
+  <div class="container">
+      	<div class="row">
+	      <p> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/iTimeTraveler/hexo-theme-hiker" target="_blank">Hexo-theme-hiker</a> </p>
+	      <p id="copyRightEn">Copyright &copy; 2013 - 2023 断虹霁雨 修眉新绿 All Rights Reserved.</p>
+	      
+	      
+    		<p class="busuanzi_uv">
+				UV : <span id="busuanzi_value_site_uv"></span> |  
+				PV : <span id="busuanzi_value_site_pv"></span>
+		    </p>
+  		   
+		</div>
+
+		
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+    var allheader = document.getElementById("allheader");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight + "px";
+    if (allheader != null) {
+      contentdiv.style.minHeight = document.body.offsetHeight - allheader.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    } else {
+      contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    }
+</script>
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/scripts.js"></script>
+
+
+
+  
+<script src="/js/home.js"></script>
+
+
+
+
+  
+<script src="/js/dialog.js"></script>
+
+
+
+
+
+
+
+
+
+	<div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="myModalLabel">设置</h2>
+      </div>
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+
+
+      <div class="modal-body">
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" onclick="javascript:setFontSize();" aria-expanded="true" aria-controls="collapseOne">
+              正文字号大小
+            </a>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            您已调整页面字体大小
+          </div>
+        </div>
+      
+
+
+          <div style="margin:6px;">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" onclick="javascript:setBackground();" aria-expanded="true" aria-controls="collapseTwo">
+              夜间护眼模式
+            </a>
+        </div>
+          <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            夜间模式已经开启，再次单击按钮即可关闭 
+          </div>
+        </div>
+
+        <div>
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关 于&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            断虹霁雨 修眉新绿
+          </div>
+          <div class="panel-body">
+            Copyright © 2023 凡 All Rights Reserved.
+          </div>
+        </div>
+      </div>
+
+
+      <hr style="margin-top:0px; margin-bottom:0px; width:80%; border-top: 1px solid #000;">
+      <hr style="margin-top:2px; margin-bottom:0px; width:80%; border-top: 3px solid #000;">
+      <div class="modal-footer">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+  
+    <a id="menu-switch"><i class="fa fa-bars fa-lg"></i></a>
+  
+</body>
+</html>

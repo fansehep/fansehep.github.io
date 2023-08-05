@@ -169,6 +169,59 @@
         
           <section id="main" style="float:none;">
   
+    <article id="post-为ShaunDB支持SQL"  class="article article-type-post" itemscope itemprop="blogPost" >
+  <div id="articleInner" class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2023/07/15/%E4%B8%BAShaunDB%E6%94%AF%E6%8C%81SQL/">为 ShaunDB 支持 SQL</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2023/07/15/%E4%B8%BAShaunDB%E6%94%AF%E6%8C%81SQL/" class="article-date">
+	  <time datetime="2023-07-14T16:00:00.000Z" itemprop="datePublished">2023-07-15</time>
+	</a>
+
+      
+    <a class="article-category-link" href="/categories/SQL/">SQL</a><a class="article-category-link" href="/categories/SQL/DataBase/">DataBase</a><a class="article-category-link" href="/categories/SQL/DataBase/C/">C++</a>
+
+      
+      
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p class="article-excerpt-content">
+          引言周末不上班对于我这种小镇做题家总想要做些什么, 在实习过程中, 笔者陆陆续续看了一些编译原理的书, 笔者倒是对编译器没什么感觉, 只是想学一下词法解析和语法解析, 畅想一下在 KV 之上实现 SQL, 再也不用 set, get, put 简单的命令, SQL 的魅力😘远大于 Redis protocol. 不过笔者当时尝试解析 RedisProtocol 也不太容易.
+为什么要做这件事在过去的一篇Blog&lt;&lt;Lexer 和 Parser&gt;&gt;, 我说过我完成了...
+        </p>
+        <p class="article-more-link">
+          <a href="/2023/07/15/%E4%B8%BAShaunDB%E6%94%AF%E6%8C%81SQL/#more">Read More</a>
+        </p>
+      
+    </div>
+    <footer class="article-footer">
+      
+      
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+
+  
     <article id="post-rust_vs_c++"  class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="article-inner">
     
@@ -199,9 +252,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p class="article-excerpt-content">
-          引言笔者在 2022 年末，才开始学习 Rust, 最近有幸用上了, 用来开发 Monkey-Lang-rs, 期间遇到了不少 borrow 问题, 与编译器抗争了很长时间. 简单的记录笔者对于 C++(笔者常用的语言) 与 Rust 的区别与感受吧.
-笔者还是蛮喜欢函数式编程的, 这种简单连续的写法在 C++ 中其实大多数时候不太常见. 例如
-1234let vec = vec![1, 2, 3, 4];let sss = vec.iter()             .map(|v| ...
+          引言笔者在 2022 年末，才开始学习 Rust, 最近有幸用上了, 用来开发 Monkey-Lang-rs, 期间遇到了不少 borrow 问题, 与编译器抗争了很长时间. 简单的记录笔者对于 C++(笔者常用的语言) 与 Rust 的区别与感受吧. (本文所讨论的 C++, Rust 特性均只考虑 Linux, 本文默认说的是 gcc13.1 &amp;&amp; clang 15.1, Rust version: 1.70(release version)).
+感想笔者还是蛮喜欢函数...
         </p>
         <p class="article-more-link">
           <a href="/2023/06/16/rust_vs_c++/#more">Read More</a>
@@ -643,61 +695,6 @@ CRTP该类在多线程编程中甚是常见. 使用子类来继承基类, 从而
         </p>
         <p class="article-more-link">
           <a href="/2021/04/01/%E8%99%9A%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80_1/#more">Read More</a>
-        </p>
-      
-    </div>
-    <footer class="article-footer">
-      
-      
-      
-      
-
-    </footer>
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-
-  
-    <article id="post-如何提高ssh的速度"  class="article article-type-post" itemscope itemprop="blogPost" >
-  <div id="articleInner" class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2020/11/11/%E5%A6%82%E4%BD%95%E6%8F%90%E9%AB%98ssh%E7%9A%84%E9%80%9F%E5%BA%A6/">如何提高 ssh 的速度?</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2020/11/11/%E5%A6%82%E4%BD%95%E6%8F%90%E9%AB%98ssh%E7%9A%84%E9%80%9F%E5%BA%A6/" class="article-date">
-	  <time datetime="2020-11-10T16:00:00.000Z" itemprop="datePublished">2020-11-11</time>
-	</a>
-
-      
-    <a class="article-category-link" href="/categories/Linux-%E4%BD%BF%E7%94%A8/">Linux 使用</a>
-
-      
-      
-
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p class="article-excerpt-content">
-          最近一直是 ssh 开发, 使用 vscode 开发没什么延迟的感受, 但当我终端 ssh 连接总是不太流畅.
-ssh 多路复用
-ssh 多路复用指的是: 我们可能会频繁产生ssh连接, 当我们退出某次ssh时, 无需真的退掉会话, 下一次连接复用即可. 大概是那种池化的思想… 1vim ~/.ssh/config
-在需要配置的主机加上123ControlPath ~/.ssh/controlmasters/%r@%h:%pControlMaster autoControlPersist ...
-        </p>
-        <p class="article-more-link">
-          <a href="/2020/11/11/%E5%A6%82%E4%BD%95%E6%8F%90%E9%AB%98ssh%E7%9A%84%E9%80%9F%E5%BA%A6/#more">Read More</a>
         </p>
       
     </div>
