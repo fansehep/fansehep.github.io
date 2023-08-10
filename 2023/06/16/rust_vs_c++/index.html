@@ -17,7 +17,7 @@
 <meta property="og:description" content="引言笔者在 2022 年末，才开始学习 Rust, 最近有幸用上了, 用来开发 Monkey-Lang-rs, 期间遇到了不少 borrow 问题, 与编译器抗争了很长时间. 简单的记录笔者对于 C++(笔者常用的语言) 与 Rust 的区别与感受吧. (本文所讨论的 C++, Rust 特性均只考虑 Linux, 本文默认说的是 gcc13.1 &amp;&amp; clang 15.1, Ru">
 <meta property="og:locale">
 <meta property="article:published_time" content="2023-06-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-08-04T05:45:16.341Z">
+<meta property="article:modified_time" content="2023-08-10T16:21:19.292Z">
 <meta property="article:author" content="凡">
 <meta name="twitter:card" content="summary">
   
@@ -224,6 +224,7 @@
 <p>项目兼容也是需要考虑的, 切换语言还要考虑你所需要使用的库也随之发生了变化, 如果原来使用的是 C++ 的 seastar 库，则要考虑切换带来的影响, tokio 可没有 seastar 那么精巧的设计. 以及 DPDK RDMA 这些库都是 c Library, 做 Binding 似乎也可以。</p>
 <h3 id="Rust-的问题-和-C-的问题"><a href="#Rust-的问题-和-C-的问题" class="headerlink" title="Rust 的问题 和 C++ 的问题"></a>Rust 的问题 和 C++ 的问题</h3><p>语言都是有双面的, 被限制住自由可能会损害自己的开发效率, Rust 的问题笔者个人认为除了你要很清楚计算机的一些额外知识, 包括不限于生命周期, 借用, 模块, 我个人认为从 C++ 转到 Rust 不难, 毕竟二者很多设计都很类似(我才不会说他们互相抄特性), 无论是命名, RAII 思想. C++ 似乎也感受到了 Rust 的威胁, 从最近的一些提案来看, std::expected(C++ 23) 对标 std::Result (Rust), 想要引入 trait 关键字, 以及 C++ 之父什么内存安全只是安全的一方面的胡言乱语. 与其搞那么多乱七八糟的提案特性, 不如好好把 module 特性完善一下, 截止到 gcc13.1 &amp;&amp; clang15.1 我都不能完整体验 module, 包管理器也是如此. 不过也算是比较努力了吧, 从 C++ 11 开始, 每三年更新一个版本, stackoverflow 统计每年 C++ 的使用人数都在增加. Carbon Language 曾轰动一时, Google 明显想对 C++ 有很强烈的控制欲望, Google 对于 clang 的开发投入了不少人力, 但后面的很多提案都未予通过。Carbon Language 我个人认为还是值得关注的, 不过选择兼容 C++ 笔者看来似乎不太是一个明智的决定.</p>
 <h3 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h3><p>pingCAP 当时本来想使用 C++ 来编写 TiKV 的, 组里有很多 C++ 开发者, 但似乎都不太喜欢 C++, 他们最终选择使用 Rust 开发, 从现在看来, 这无疑算是一个正确的决定. RingsWave 开始使用 C++ 开发, 后来据说花了 3 个月重写为 Rust. 当然这些都是个例, 大公司的代码遗产往往十分庞大, 突然换一种 Language 这之后的代价需要思考. 而且目前来看关于 Rust 的职位也不是很多, 大多都是一些创业公司在使用. 这类公司无历史遗物, 选择当前市场上较为优秀的语言开发并无毛病，而且是一种优势. 借助于 Rust Crate.io 强大的 crate 很方便的引入各种第三方库. Rust 的成功也和他的开源方式笔者认为有很大一部分关系, Rust 使用 GitHub 来作为代码管理平台, 同时并未关闭 issue 列表. 很明显降低了开发者参与其中的门槛. Rust 的设计并没有 C++ 那么强烈的学术气息, 从 C++ 的命名来看, 例如 <code>std::chrono::time_point</code>, <code>std::numeris_limit</code> 我个人是不喜欢频繁 using 的, 所以每次都要打一场段, Rust 开始很明显的包容万象, 社区相对比较自由, 对于其他非官方开发者也很友好. gcc 还在使用邮件列表, clang 倒是稍微比 gcc 好点, 不过 apple 似乎投入的人越来越少了, 从 clang 对于标准的支持来看, 已经很差了. rust 生态有 rustup, cargo, rust-analyzer, rust-clippy, 这些组件皆已成为标配, 生态无疑比 C++ 要做的好很多了. 固然 C++ 有 clangd, clang-format, clang-tidy 但这些插件有时显得好无力.</p>
+<h3 id="我对-C-的一些想法"><a href="#我对-C-的一些想法" class="headerlink" title="我对 C++ 的一些想法"></a>我对 C++ 的一些想法</h3><p>过去我可能是一名驼峰命名法的粉丝, 但从现在看来, 过于臃肿的驼峰命名法实在是不好看, 例如 CreateTableWithReadLock() 个人觉得不如 create_table_with_read_readlock()这种, 因为我在学习 Rust 语言的过程中其实也在思考, 为什么这个语言的易读性这么好, 我们通常都默认的很有默契的规定 类名称必须要大写, 但是关于函数的写法则不太统一，包括对于参数的命名，函数内部的命名, 我觉得可以多多借鉴一些 Rust 中的做法来提高 C++ 代码的可读性, 我个人认为这是非常值得的。</p>
 
       
     </div>
@@ -301,7 +302,7 @@ var a = new Donate({
     <div id="toc" class="toc-article">
     <strong class="toc-title">Contents</strong>
     
-        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%84%9F%E6%83%B3"><span class="nav-number">2.</span> <span class="nav-text">感想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rust-%E7%9A%84%E9%97%AE%E9%A2%98-%E5%92%8C-C-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">Rust 的问题 和 C++ 的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AA%E6%9D%A5"><span class="nav-number">4.</span> <span class="nav-text">未来</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%84%9F%E6%83%B3"><span class="nav-number">2.</span> <span class="nav-text">感想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rust-%E7%9A%84%E9%97%AE%E9%A2%98-%E5%92%8C-C-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">Rust 的问题 和 C++ 的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AA%E6%9D%A5"><span class="nav-number">4.</span> <span class="nav-text">未来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%91%E5%AF%B9-C-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%83%B3%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">我对 C++ 的一些想法</span></a></li></ol>
     
     </div>
   </aside>
